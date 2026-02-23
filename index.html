@@ -1,0 +1,660 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#1976d2">
+    <meta name="description" content="App profissional para cálculos elétricos, tabelas técnicas e orçamentos">
+    <title>Elétrico Pro - Calculadoras e Tabelas</title>
+    <link rel="manifest" href="manifest.json">
+    <link rel="icon" type="image/png" href="icons/icon-192.png">
+    <link rel="apple-touch-icon" href="icons/icon-192.png">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #1976d2;
+            --primary-dark: #115293;
+            --secondary: #ffa726;
+            --bg-color: #f5f5f5;
+            --card-bg: #ffffff;
+            --text-dark: #212121;
+            --text-light: #757575;
+            --success: #4caf50;
+            --warning: #ff9800;
+            --danger: #f44336;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: var(--bg-color);
+            color: var(--text-dark);
+            line-height: 1.6;
+        }
+
+        .header {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: white;
+            padding: 1.5rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header h1 {
+            font-size: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .header .subtitle {
+            font-size: 0.85rem;
+            opacity: 0.9;
+            margin-top: 0.3rem;
+        }
+
+        .trial-banner {
+            background: linear-gradient(135deg, #ffa726 0%, #fb8c00 100%);
+            color: white;
+            padding: 0.75rem 1.5rem;
+            text-align: center;
+            font-weight: 500;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 1.5rem;
+        }
+
+        .screen {
+            display: none;
+        }
+
+        .screen.active {
+            display: block;
+            animation: fadeIn 0.3s ease-in;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .menu-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1.5rem;
+        }
+
+        .menu-card {
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 2rem;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+
+        .menu-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+            border-color: var(--primary);
+        }
+
+        .menu-card .icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        .menu-card h3 {
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .menu-card p {
+            color: var(--text-light);
+            font-size: 0.9rem;
+        }
+
+        .back-button {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1rem;
+            margin-bottom: 1.5rem;
+            transition: background 0.3s;
+        }
+
+        .back-button:hover {
+            background: var(--primary-dark);
+        }
+
+        .calc-card {
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 2rem;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: var(--text-dark);
+            font-weight: 500;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 0.75rem;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: border-color 0.3s;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+
+        .btn {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: inline-block;
+            margin-right: 0.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .btn:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(25, 118, 210, 0.3);
+        }
+
+        .btn-secondary {
+            background: var(--secondary);
+        }
+
+        .btn-secondary:hover {
+            background: #ff9100;
+        }
+
+        .result-box {
+            background: #e3f2fd;
+            border-left: 4px solid var(--primary);
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin-top: 1.5rem;
+        }
+
+        .result-box h4 {
+            color: var(--primary);
+            margin-bottom: 1rem;
+        }
+
+        .result-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.5rem 0;
+            border-bottom: 1px solid #bbdefb;
+        }
+
+        .result-item:last-child {
+            border-bottom: none;
+        }
+
+        .result-item strong {
+            color: var(--text-dark);
+        }
+
+        .table-responsive {
+            overflow-x: auto;
+            margin-top: 1rem;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+
+        thead {
+            background: var(--primary);
+            color: white;
+        }
+
+        th, td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        tr:hover {
+            background: #f5f5f5;
+        }
+
+        .tabs {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .tab {
+            padding: 0.75rem 1.5rem;
+            background: white;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .tab.active {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+
+        .orcamento-item {
+            background: white;
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+
+        .orcamento-item button {
+            background: var(--danger);
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+
+        .total-box {
+            background: var(--success);
+            color: white;
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin-top: 1rem;
+            font-size: 1.2rem;
+            font-weight: bold;
+            text-align: center;
+        }
+
+        @media (max-width: 768px) {
+            .menu-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .header h1 {
+                font-size: 1.2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Trial Banner -->
+    <div class="trial-banner" id="trialBanner">
+        🎁 Período de teste: <span id="daysLeft">7</span> dias restantes
+    </div>
+
+    <!-- Header -->
+    <header class="header">
+        <h1>⚡ Elétrico Pro</h1>
+        <div class="subtitle">Calculadoras, Tabelas e Orçamentos Profissionais</div>
+    </header>
+
+    <div class="container">
+        <!-- Menu Principal -->
+        <div id="menuScreen" class="screen active">
+            <div class="menu-grid">
+                <div class="menu-card" onclick="showScreen('calculadorasScreen')">
+                    <div class="icon">🧮</div>
+                    <h3>Calculadoras</h3>
+                    <p>Lei de Ohm, Potência, Quedas de Tensão, Dimensionamento de Condutores e mais</p>
+                </div>
+
+                <div class="menu-card" onclick="showScreen('tabelasScreen')">
+                    <div class="icon">📊</div>
+                    <h3>Tabelas Técnicas</h3>
+                    <p>Tabelas de condutores, disjuntores, bitolas e normas técnicas</p>
+                </div>
+
+                <div class="menu-card" onclick="showScreen('orcamentosScreen')">
+                    <div class="icon">💰</div>
+                    <h3>Orçamentos</h3>
+                    <p>Crie orçamentos profissionais e gere PDFs para seus clientes</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tela de Calculadoras -->
+        <div id="calculadorasScreen" class="screen">
+            <button class="back-button" onclick="showScreen('menuScreen')">← Voltar</button>
+            
+            <div class="tabs">
+                <div class="tab active" onclick="showCalc('leiOhm')">Lei de Ohm</div>
+                <div class="tab" onclick="showCalc('potencia')">Potência</div>
+                <div class="tab" onclick="showCalc('quedaTensao')">Queda de Tensão</div>
+                <div class="tab" onclick="showCalc('condutor')">Dimensionamento</div>
+            </div>
+
+            <!-- Calculadora Lei de Ohm -->
+            <div id="calcLeiOhm" class="calc-content">
+                <div class="calc-card">
+                    <h3>🔌 Lei de Ohm (V = I × R)</h3>
+                    <div class="form-group">
+                        <label>Tensão (V - Volts):</label>
+                        <input type="number" id="tensaoOhm" placeholder="Ex: 220">
+                    </div>
+                    <div class="form-group">
+                        <label>Corrente (I - Amperes):</label>
+                        <input type="number" id="correnteOhm" placeholder="Ex: 10">
+                    </div>
+                    <div class="form-group">
+                        <label>Resistência (R - Ohms):</label>
+                        <input type="number" id="resistenciaOhm" placeholder="Ex: 22">
+                    </div>
+                    <button class="btn" onclick="calcularLeiOhm()">Calcular</button>
+                    <button class="btn btn-secondary" onclick="gerarPDFCalc('Lei de Ohm')">📄 Gerar PDF</button>
+                    <div id="resultLeiOhm"></div>
+                </div>
+            </div>
+
+            <!-- Calculadora de Potência -->
+            <div id="calcPotencia" class="calc-content" style="display:none;">
+                <div class="calc-card">
+                    <h3>⚡ Cálculo de Potência</h3>
+                    <div class="form-group">
+                        <label>Tensão (V - Volts):</label>
+                        <input type="number" id="tensaoPot" placeholder="Ex: 220">
+                    </div>
+                    <div class="form-group">
+                        <label>Corrente (A - Amperes):</label>
+                        <input type="number" id="correntePot" placeholder="Ex: 10">
+                    </div>
+                    <div class="form-group">
+                        <label>Fator de Potência (cos φ):</label>
+                        <input type="number" id="fatorPot" placeholder="Ex: 0.92" step="0.01" value="0.92">
+                    </div>
+                    <div class="form-group">
+                        <label>Tipo de Circuito:</label>
+                        <select id="tipoCircuito">
+                            <option value="monofasico">Monofásico</option>
+                            <option value="trifasico">Trifásico</option>
+                        </select>
+                    </div>
+                    <button class="btn" onclick="calcularPotencia()">Calcular</button>
+                    <button class="btn btn-secondary" onclick="gerarPDFCalc('Potência')">📄 Gerar PDF</button>
+                    <div id="resultPotencia"></div>
+                </div>
+            </div>
+
+            <!-- Calculadora Queda de Tensão -->
+            <div id="calcQuedaTensao" class="calc-content" style="display:none;">
+                <div class="calc-card">
+                    <h3>📉 Queda de Tensão</h3>
+                    <div class="form-group">
+                        <label>Corrente (A):</label>
+                        <input type="number" id="correnteQueda" placeholder="Ex: 20">
+                    </div>
+                    <div class="form-group">
+                        <label>Distância do circuito (m):</label>
+                        <input type="number" id="distanciaQueda" placeholder="Ex: 50">
+                    </div>
+                    <div class="form-group">
+                        <label>Seção do condutor (mm²):</label>
+                        <select id="secaoQueda">
+                            <option value="1.5">1,5 mm²</option>
+                            <option value="2.5">2,5 mm²</option>
+                            <option value="4">4 mm²</option>
+                            <option value="6">6 mm²</option>
+                            <option value="10">10 mm²</option>
+                            <option value="16">16 mm²</option>
+                            <option value="25">25 mm²</option>
+                            <option value="35">35 mm²</option>
+                            <option value="50">50 mm²</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Tensão do circuito (V):</label>
+                        <input type="number" id="tensaoQueda" placeholder="Ex: 220" value="220">
+                    </div>
+                    <button class="btn" onclick="calcularQuedaTensao()">Calcular</button>
+                    <button class="btn btn-secondary" onclick="gerarPDFCalc('Queda de Tensão')">📄 Gerar PDF</button>
+                    <div id="resultQuedaTensao"></div>
+                </div>
+            </div>
+
+            <!-- Calculadora Dimensionamento de Condutor -->
+            <div id="calcCondutor" class="calc-content" style="display:none;">
+                <div class="calc-card">
+                    <h3>📏 Dimensionamento de Condutor</h3>
+                    <div class="form-group">
+                        <label>Potência (W):</label>
+                        <input type="number" id="potenciaCondutor" placeholder="Ex: 5500">
+                    </div>
+                    <div class="form-group">
+                        <label>Tensão (V):</label>
+                        <input type="number" id="tensaoCondutor" placeholder="Ex: 220" value="220">
+                    </div>
+                    <div class="form-group">
+                        <label>Distância (m):</label>
+                        <input type="number" id="distanciaCondutor" placeholder="Ex: 30">
+                    </div>
+                    <div class="form-group">
+                        <label>Tipo de instalação:</label>
+                        <select id="tipoInstalacao">
+                            <option value="B1">B1 - Eletrodutos em parede</option>
+                            <option value="B2">B2 - Cabo multipolar em parede</option>
+                            <option value="C">C - Cabo multipolar ao ar livre</option>
+                        </select>
+                    </div>
+                    <button class="btn" onclick="dimensionarCondutor()">Dimensionar</button>
+                    <button class="btn btn-secondary" onclick="gerarPDFCalc('Dimensionamento')">📄 Gerar PDF</button>
+                    <div id="resultCondutor"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tela de Tabelas -->
+        <div id="tabelasScreen" class="screen">
+            <button class="back-button" onclick="showScreen('menuScreen')">← Voltar</button>
+            
+            <div class="tabs">
+                <div class="tab active" onclick="showTable('condutores')">Condutores</div>
+                <div class="tab" onclick="showTable('disjuntores')">Disjuntores</div>
+                <div class="tab" onclick="showTable('correntes')">Capacidade</div>
+            </div>
+
+            <div id="tableCondutores" class="table-content">
+                <div class="calc-card">
+                    <h3>🔧 Tabela de Condutores</h3>
+                    <button class="btn btn-secondary" onclick="gerarPDFTabela('Condutores')">📄 Gerar PDF</button>
+                    <div class="table-responsive">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Seção (mm²)</th>
+                                    <th>Diâmetro (mm)</th>
+                                    <th>Peso (kg/km)</th>
+                                    <th>Resistência (Ω/km)</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr><td>1,5</td><td>1,38</td><td>13,3</td><td>12,1</td></tr>
+                                <tr><td>2,5</td><td>1,78</td><td>22,2</td><td>7,41</td></tr>
+                                <tr><td>4</td><td>2,25</td><td>35,5</td><td>4,61</td></tr>
+                                <tr><td>6</td><td>2,76</td><td>53,3</td><td>3,08</td></tr>
+                                <tr><td>10</td><td>3,57</td><td>88,8</td><td>1,83</td></tr>
+                                <tr><td>16</td><td>4,51</td><td>142</td><td>1,15</td></tr>
+                                <tr><td>25</td><td>5,64</td><td>222</td><td>0,727</td></tr>
+                                <tr><td>35</td><td>6,68</td><td>311</td><td>0,524</td></tr>
+                                <tr><td>50</td><td>7,98</td><td>444</td><td>0,387</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <div id="tableDisjuntores" class="table-content" style="display:none;">
+                <div class="calc-card">
+                    <h3>🔌 Tabela de Disjuntores</h3>
+                    <button class="btn btn-secondary" onclick="gerarPDFTabela('Disjuntores')">📄 Gerar PDF</button>
+                    <div class="table-responsive">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Corrente (A)</th>
+                                    <th>Condutor Mín. (mm²)</th>
+                                    <th>Potência 127V (W)</th>
+                                    <th>Potência 220V (W)</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr><td>10</td><td>1,5</td><td>1.270</td><td>2.200</td></tr>
+                                <tr><td>16</td><td>2,5</td><td>2.032</td><td>3.520</td></tr>
+                                <tr><td>20</td><td>4</td><td>2.540</td><td>4.400</td></tr>
+                                <tr><td>25</td><td>4</td><td>3.175</td><td>5.500</td></tr>
+                                <tr><td>32</td><td>6</td><td>4.064</td><td>7.040</td></tr>
+                                <tr><td>40</td><td>10</td><td>5.080</td><td>8.800</td></tr>
+                                <tr><td>50</td><td>10</td><td>6.350</td><td>11.000</td></tr>
+                                <tr><td>63</td><td>16</td><td>8.001</td><td>13.860</td></tr>
+                                <tr><td>70</td><td>25</td><td>8.890</td><td>15.400</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <div id="tableCorrentes" class="table-content" style="display:none;">
+                <div class="calc-card">
+                    <h3>⚡ Capacidade de Corrente</h3>
+                    <button class="btn btn-secondary" onclick="gerarPDFTabela('Capacidade de Corrente')">📄 Gerar PDF</button>
+                    <div class="table-responsive">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Seção (mm²)</th>
+                                    <th>Método B1 (A)</th>
+                                    <th>Método B2 (A)</th>
+                                    <th>Método C (A)</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr><td>1,5</td><td>15,5</td><td>17,5</td><td>19,5</td></tr>
+                                <tr><td>2,5</td><td>21</td><td>24</td><td>27</td></tr>
+                                <tr><td>4</td><td>28</td><td>32</td><td>36</td></tr>
+                                <tr><td>6</td><td>36</td><td>41</td><td>46</td></tr>
+                                <tr><td>10</td><td>50</td><td>57</td><td>63</td></tr>
+                                <tr><td>16</td><td>68</td><td>76</td><td>85</td></tr>
+                                <tr><td>25</td><td>89</td><td>101</td><td>112</td></tr>
+                                <tr><td>35</td><td>110</td><td>125</td><td>138</td></tr>
+                                <tr><td>50</td><td>134</td><td>151</td><td>168</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tela de Orçamentos -->
+        <div id="orcamentosScreen" class="screen">
+            <button class="back-button" onclick="showScreen('menuScreen')">← Voltar</button>
+            
+            <div class="calc-card">
+                <h3>💼 Dados do Cliente</h3>
+                <div class="form-group">
+                    <label>Nome do Cliente:</label>
+                    <input type="text" id="nomeCliente" placeholder="Ex: João Silva">
+                </div>
+                <div class="form-group">
+                    <label>Telefone:</label>
+                    <input type="text" id="telefoneCliente" placeholder="Ex: (11) 99999-9999">
+                </div>
+                <div class="form-group">
+                    <label>Endereço:</label>
+                    <input type="text" id="enderecoCliente" placeholder="Ex: Rua das Flores, 123">
+                </div>
+            </div>
+
+            <div class="calc-card">
+                <h3>🛠️ Adicionar Item</h3>
+                <div class="form-group">
+                    <label>Descrição:</label>
+                    <input type="text" id="itemDescricao" placeholder="Ex: Instalação de tomada 220V">
+                </div>
+                <div class="form-group">
+                    <label>Quantidade:</label>
+                    <input type="number" id="itemQuantidade" placeholder="Ex: 5" value="1">
+                </div>
+                <div class="form-group">
+                    <label>Valor Unitário (R$):</label>
+                    <input type="number" id="itemValor" placeholder="Ex: 150.00" step="0.01">
+                </div>
+                <button class="btn" onclick="adicionarItem()">➕ Adicionar Item</button>
+            </div>
+
+            <div class="calc-card">
+                <h3>📋 Itens do Orçamento</h3>
+                <div id="listaItens"></div>
+                <div class="total-box" id="totalOrcamento">
+                    Total: R$ 0,00
+                </div>
+                <button class="btn btn-secondary" onclick="gerarPDFOrcamento()">📄 Gerar PDF do Orçamento</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.31/jspdf.plugin.autotable.min.js"></script>
+    <script src="app.js"></script>
+    <script>
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('sw.js')
+                .then(reg => console.log('Service Worker registrado'))
+                .catch(err => console.log('Erro no Service Worker:', err));
+        }
+    </script>
+</body>
+</html>
