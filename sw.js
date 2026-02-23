@@ -1,11 +1,11 @@
 const CACHE_NAME = 'eletrico-pro-v2';
 const urlsToCache = [
-  '/',
-  '/index.html',
-  '/app.js',
-  '/manifest.json',
-  '/icons/icon-192.png',
-  '/icons/icon-512.png',
+  '/eletrico/',
+  '/eletricopro/index.html',
+  '/eletricopro/app.js',
+  '/eletricopro/manifest.json',
+  '/eletricopro/icons/icon-192.png',
+  '/eletricopro/icons/icon-512.png',
   //'https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js',
   //'https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.31/jspdf.plugin.autotable.min.js'
 ];
