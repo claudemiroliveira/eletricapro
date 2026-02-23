@@ -651,7 +651,7 @@
     <script src="app.js"></script>
     <script>
         if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.register('sw.js')
+            navigator.serviceWorker.register('/eletricopro/sw.js')
                 .then(reg => console.log('Service Worker registrado'))
                 .catch(err => console.log('Erro no Service Worker:', err));
         }
