@@ -1,6 +1,6 @@
 const CACHE_NAME = 'eletrico-pro-v3';
 const urlsToCache = [
-  '/eletrico/',
+  '/eletricopro/',
   '/eletricopro/index.html',
   '/eletricopro/app.js',
   '/eletricopro/manifest.json',
