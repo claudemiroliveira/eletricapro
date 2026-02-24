@@ -83,7 +83,29 @@
     @keyframes fadeIn {  
         from { opacity: 0; transform: translateY(10px); }  
         to { opacity: 1; transform: translateY(0); }  
-    }  
+    }
+     /* ===== TITULO DESTACADO (SUBMENU) ===== */
+.menu-title{
+    font-size:1.35rem;
+    font-weight:700;
+    letter-spacing:.5px;
+    margin-bottom:6px;
+    text-transform:uppercase;
+}
+
+/* ===== DESCRIÇÃO ESTILO SUBMENU ===== */
+.menu-sub{
+    font-size:1rem;
+    color:#e6f0ff;
+    opacity:.95;
+    line-height:1.5;
+
+    background:rgba(255,255,255,0.08);
+    padding:8px 12px;
+    border-radius:10px;
+
+    margin-top:8px;
+}   
 
     .menu-grid {  
         display: grid;  
@@ -356,7 +378,8 @@
             <div class="menu-card" onclick="showScreen('tabelasScreen')">  
                 <div class="icon">📊</div>  
                 <h3>Tabelas Técnicas</h3>  
-                <p>Tabelas de condutores, disjuntores, bitolas e normas técnicas</p>  
+                <p class="menu-title">
+                    Tabelas de condutores. disjuntores. bitolas.normas técnicas</p>  
             </div>  
 
             <div class="menu-card" onclick="showScreen('orcamentosScreen')">  
