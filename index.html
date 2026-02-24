@@ -406,7 +406,7 @@
                 <p>Potência </p>
                 <p>Quedas de Tensão</p>
                 <p>Dimensionamento de Condutores e mais</p>  
-            </div>  <div class="menu-card" onclick="toggleMenu(this)">
+            </div>  <div class="menu-card" onclick="toggleMenu(event,this)">
 
     <div class="menu-main">
         <div class="icon">📊</div>
@@ -732,9 +732,10 @@
     if ('serviceWorker' in navigator) {  
         navigator.serviceWorker.register('/eletricopro/sw.js')  
             .then(reg => console.log('Service Worker registrado'))  
-            .catch(err => console.log('Erro no Service Worker:', err));  
+            .catch(err => console.log('Erro no Service Worker:', err));
+        </script>
     }  <script>
-function toggleMenu(card){
+function toggleMenu(event,card){
 
     // impede clique do submenu fechar
     event.stopPropagation();
@@ -747,7 +748,6 @@ function toggleMenu(card){
 
     card.classList.toggle('active');
 }
-</script>
 </script>
 
 </body>  
