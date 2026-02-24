@@ -2,7 +2,7 @@
   "name": "Elétrico Pro",
   "short_name": "Elétrico Pro",
   "description": "App profissional para cálculos elétricos, tabelas técnicas e orçamentos",
-  "start_url": "/",
+  "start_url": "/eletricopro",
   "display": "standalone",
   "background_color": "#1976d2",
   "theme_color": "#1976d2",
