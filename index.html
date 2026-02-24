@@ -348,7 +348,40 @@
         .header h1 {  
             font-size: 1.2rem;  
         }  
-    }  
+    }  /* linha principal do card */
+.menu-main{
+    display:flex;
+    align-items:center;
+    gap:12px;
+}
+
+/* submenu escondido */
+.submenu{
+    max-height:0;
+    overflow:hidden;
+    transition:max-height .35s ease;
+    margin-top:10px;
+}
+
+/* quando abre */
+.menu-card.active .submenu{
+    max-height:260px;
+}
+
+/* itens submenu */
+.submenu-item{
+    background:rgba(255,255,255,.08);
+    padding:12px;
+    margin-top:8px;
+    border-radius:10px;
+    font-size:.95rem;
+}
+
+/* efeito toque */
+.submenu-item:active{
+    transform:scale(.97);
+}
+        
 </style>
 
 </head>  
@@ -373,14 +406,38 @@
                 <p>Potência </p>
                 <p>Quedas de Tensão</p>
                 <p>Dimensionamento de Condutores e mais</p>  
-            </div>  
+            </div>  <div class="menu-card" onclick="toggleMenu(this)">
 
-            <div class="menu-card" onclick="showScreen('tabelasScreen')">  
-                <div class="icon">📊</div>  
-                <h3>Tabelas Técnicas</h3>  
-                <p class="menu-title">
-                    Tabelas de condutores. disjuntores. bitolas.normas técnicas</p>  
-            </div>  
+    <div class="menu-main">
+        <div class="icon">📊</div>
+        <h3>Tabelas Técnicas</h3>
+    </div>
+
+    <!-- SUBMENU -->
+    <div class="submenu">
+
+        <div class="submenu-item" onclick="showScreen('tabelaCondutores')">
+            Condutores
+        </div>
+
+        <div class="submenu-item" onclick="showScreen('tabelaDisjuntores')">
+            Disjuntores
+        </div>
+
+        <div class="submenu-item" onclick="showScreen('tabelaBitolas')">
+            Bitolas
+        </div>
+
+        <div class="submenu-item" onclick="showScreen('tabelasScreen')">
+            Normas Técnicas
+        </div>
+
+    </div>
+
+</div>
+            
+
+            
 
             <div class="menu-card" onclick="showScreen('orcamentosScreen')">  
                 <div class="icon">💰</div>  
@@ -676,7 +733,21 @@
         navigator.serviceWorker.register('/eletricopro/sw.js')  
             .then(reg => console.log('Service Worker registrado'))  
             .catch(err => console.log('Erro no Service Worker:', err));  
-    }  
+    }  <script>
+function toggleMenu(card){
+
+    // impede clique do submenu fechar
+    event.stopPropagation();
+
+    // fecha outros menus
+    document.querySelectorAll('.menu-card')
+        .forEach(c=>{
+            if(c !== card) c.classList.remove('active');
+        });
+
+    card.classList.toggle('active');
+}
+</script>
 </script>
 
 </body>  
