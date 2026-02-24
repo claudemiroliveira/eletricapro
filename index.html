@@ -4,7 +4,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">  
     <meta name="theme-color" content="#1976d2">  
     <meta name="description" content="App profissional para cálculos elétricos, tabelas técnicas e orçamentos">  
-    <title>Elétrica Pro - Calculadoras e Tabelas</title>  
+    <title>Elétrico Pro - Calculadoras e Tabelas</title>  
     <link rel="manifest" href="manifest.json">  
     <link rel="icon" type="image/png" href="icons/icon-192.png">  
     <link rel="apple-touch-icon" href="icons/icon-192.png">  
@@ -44,10 +44,10 @@
     }  
 
     .header h1 {  
-        font-size: 3.0rem;  
+        font-size: 1.5rem;  
         display: flex;  
         align-items: center;  
-        gap: 1.5rem;  
+        gap: 0.5rem;  
     }  
 
     .header .subtitle {  
@@ -83,29 +83,7 @@
     @keyframes fadeIn {  
         from { opacity: 0; transform: translateY(10px); }  
         to { opacity: 1; transform: translateY(0); }  
-    }
-     /* ===== TITULO DESTACADO (SUBMENU) ===== */
-.menu-title{
-    font-size:1.35rem;
-    font-weight:700;
-    letter-spacing:.5px;
-    margin-bottom:6px;
-    text-transform:uppercase;
-}
-
-/* ===== DESCRIÇÃO ESTILO SUBMENU ===== */
-.menu-sub{
-    font-size:1rem;
-    color:#e6f0ff;
-    opacity:.95;
-    line-height:1.5;
-
-    background:rgba(255,255,255,0.08);
-    padding:8px 12px;
-    border-radius:10px;
-
-    margin-top:8px;
-}   
+    }  
 
     .menu-grid {  
         display: grid;  
@@ -137,12 +115,12 @@
 
     .menu-card h3 {  
         color: var(--primary);  
-        margin-bottom: 0.9rem;  
+        margin-bottom: 0.5rem;  
     }  
 
     .menu-card p {  
         color: var(--text-light);  
-        font-size: 1.3rem;  
+        font-size: 0.9rem;  
     }  
 
     .back-button {  
@@ -348,40 +326,7 @@
         .header h1 {  
             font-size: 1.2rem;  
         }  
-    }  /* linha principal do card */
-.menu-main{
-    display:flex;
-    align-items:center;
-    gap:12px;
-}
-
-/* submenu escondido */
-.submenu{
-    max-height:0;
-    overflow:hidden;
-    transition:max-height .35s ease;
-    margin-top:10px;
-}
-
-/* quando abre */
-.menu-card.active .submenu{
-    max-height:260px;
-}
-
-/* itens submenu */
-.submenu-item{
-    background:rgba(255,255,255,.08);
-    padding:12px;
-    margin-top:8px;
-    border-radius:10px;
-    font-size:.95rem;
-}
-
-/* efeito toque */
-.submenu-item:active{
-    transform:scale(.97);
-}
-        
+    }  
 </style>
 
 </head>  
@@ -391,7 +336,7 @@
         🎁 Período de teste: <span id="daysLeft">7</span> dias restantes  
     </div>  <!-- Header -->  
 <header class="header">  
-    <h1>⚡ Elétrica Pro</h1>  
+    <h1>⚡ Elétrico Pro</h1>  
     <div class="subtitle">Calculadoras, Tabelas e Orçamentos Profissionais</div>  
 </header>  
 
@@ -402,42 +347,14 @@
             <div class="menu-card" onclick="showScreen('calculadorasScreen')">  
                 <div class="icon">🧮</div>  
                 <h3>Calculadoras</h3>  
-                <p>Lei de Ohm</p> 
-                <p>Potência </p>
-                <p>Quedas de Tensão</p>
-                <p>Dimensionamento de Condutores e mais</p>  
-            </div>  <div class="menu-card" onclick="toggleMenu(event,this)">
+                <p>Lei de Ohm, Potência, Quedas de Tensão, Dimensionamento de Condutores e mais</p>  
+            </div>  
 
-    <div class="menu-main">
-        <div class="icon">📊</div>
-        <h3>Tabelas Técnicas</h3>
-    </div>
-
-    <!-- SUBMENU -->
-    <div class="submenu">
-
-        <div class="submenu-item" onclick="showScreen('tabelaCondutores')">
-            Condutores
-        </div>
-
-        <div class="submenu-item" onclick="showScreen('tabelaDisjuntores')">
-            Disjuntores
-        </div>
-
-        <div class="submenu-item" onclick="showScreen('tabelaBitolas')">
-            Bitolas
-        </div>
-
-        <div class="submenu-item" onclick="showScreen('tabelasScreen')">
-            Normas Técnicas
-        </div>
-
-    </div>
-
-</div>
-            
-
-            
+            <div class="menu-card" onclick="showScreen('tabelasScreen')">  
+                <div class="icon">📊</div>  
+                <h3>Tabelas Técnicas</h3>  
+                <p>Tabelas de condutores, disjuntores, bitolas e normas técnicas</p>  
+            </div>  
 
             <div class="menu-card" onclick="showScreen('orcamentosScreen')">  
                 <div class="icon">💰</div>  
@@ -730,26 +647,11 @@
 <script src="app.js"></script>  
 <script>  
     if ('serviceWorker' in navigator) {  
-        navigator.serviceWorker.register('/eletricopro/sw.js')  
+        navigator.serviceWorker.register('sw.js')  
             .then(reg => console.log('Service Worker registrado'))  
-            .catch(err => console.log('Erro no Service Worker:', err));
-        </script>
-    }  <script>
-function toggleMenu(event,card){
-
-    // impede clique do submenu fechar
-    event.stopPropagation();
-
-    // fecha outros menus
-    document.querySelectorAll('.menu-card')
-        .forEach(c=>{
-            if(c !== card) c.classList.remove('active');
-        });
-
-    card.classList.toggle('active');
-}
+            .catch(err => console.log('Erro no Service Worker:', err));  
+    }  
 </script>
 
 </body>  
-</html> 
-
+</html> acrescente consumo 
