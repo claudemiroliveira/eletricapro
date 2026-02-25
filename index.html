@@ -373,7 +373,27 @@
     .consumo-result-summary h4 { color:var(--yellow-soft); margin-bottom:0.8rem; font-size:0.9rem; }
     .consumo-big { font-size:2rem; font-weight:800; color:var(--yellow); text-align:center; margin:0.5rem 0; }
     .consumo-big span { font-size:1rem; font-weight:400; color:var(--text-muted); }
+    
+.install-body{
+  max-height:0;
+  overflow:hidden;
+  transition:max-height .35s ease;
+  padding:0 16px;
+}
 
+.install-item.open .install-body{
+  max-height:600px;
+  padding:16px;
+}
+
+/* anima seta */
+.install-chevron{
+  transition:0.3s;
+}
+
+.install-item.open .install-chevron{
+  transform:rotate(180deg);
+}
     /* ===== INSTALAÇÕES ===== */
     .install-item {
       background: var(--card-bg);
