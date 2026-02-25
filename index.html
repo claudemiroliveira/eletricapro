@@ -1218,5 +1218,66 @@ function gerarPDFOrcamento(){
 window.addEventListener('load', initTrial);
 </script>
   <script src="js/app.js"></script>
+
+  <script>
+/* =============================
+   NAVEGAÇÃO ENTRE TELAS
+============================= */
+
+function openScreen(screenId, title) {
+
+  // esconder todas as telas
+  document.querySelectorAll('.screen').forEach(screen => {
+    screen.classList.remove('active');
+  });
+
+  // mostrar tela selecionada
+  const target = document.getElementById(screenId);
+  if (target) {
+    target.classList.add('active');
+  }
+
+  // mostrar botão voltar
+  const back = document.getElementById('headerBack');
+  if (back) back.style.display = 'block';
+
+  // atualizar subtítulo
+  const subtitle = document.getElementById('headerSubtitle');
+  if (subtitle && title) {
+    subtitle.textContent = title;
+  }
+
+  window.scrollTo(0,0);
+}
+
+function goHome() {
+
+  document.querySelectorAll('.screen').forEach(screen => {
+    screen.classList.remove('active');
+  });
+
+  document.getElementById('homeScreen').classList.add('active');
+
+  // esconder botão voltar
+  document.getElementById('headerBack').style.display = 'none';
+
+  document.getElementById('headerSubtitle').textContent =
+    'Calculadoras, Tabelas e Instalações';
+
+  window.scrollTo(0,0);
+}
+
+
+/* =============================
+   INSTALAÇÕES (abre/fecha)
+============================= */
+
+function toggleInstall(id){
+  const item = document.getElementById(id);
+  if(item){
+    item.classList.toggle('open');
+  }
+}
+  </script>
 </body>
 </html>
