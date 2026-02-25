@@ -1145,133 +1145,92 @@ function calcularConsumo(){
   html+=`</div>`;
   document.getElementById('resultConsumo').innerHTML=html;
 }
-  // ===== Atualiza unidades conforme tipo =====
-document.getElementById("tipoConversao").addEventListener("change", atualizarUnidades);
+  
+ // ===============================
+// CONVERSÃO DE POTÊNCIA
+// ===============================
+function converterPotencia(origem) {
 
-function atualizarUnidades() {
-  const tipo = document.getElementById("tipoConversao").value;
-  const select = document.getElementById("unidadeConversao");
+    let w  = parseFloat(document.getElementById("conv_w").value);
+    let kw = parseFloat(document.getElementById("conv_kw").value);
+    let cv = parseFloat(document.getElementById("conv_cv").value);
+    let hp = parseFloat(document.getElementById("conv_hp").value);
 
-  select.innerHTML = "";
+    // limpa NaN
+    w  = isNaN(w)  ? 0 : w;
+    kw = isNaN(kw) ? 0 : kw;
+    cv = isNaN(cv) ? 0 : cv;
+    hp = isNaN(hp) ? 0 : hp;
 
-  if (tipo === "potencia") {
-    select.innerHTML = `
-      <option value="W">W</option>
-      <option value="kW">kW</option>
-      <option value="CV">CV</option>`;
-  }
+    // constantes
+    const CV_W = 735.5;
+    const HP_W = 745.7;
 
-  if (tipo === "tensao") {
-    select.innerHTML = `
-      <option value="V">V</option>
-      <option value="kV">kV</option>`;
-  }
-
-  if (tipo === "corrente") {
-    select.innerHTML = `
-      <option value="A">A</option>
-      <option value="mA">mA</option>`;
-  }
-
-  if (tipo === "bitola") {
-    select.innerHTML = `
-      <option value="mm2">mm²</option>
-      <option value="awg">AWG</option>`;
-  }
-}
-
-// inicia unidades
-setTimeout(atualizarUnidades, 100);
-
-// ===== CALCULAR CONVERSÃO =====
-function calcularConversao() {
-
-  const tipo = document.getElementById("tipoConversao").value;
-  const valor = parseFloat(document.getElementById("valorConversao").value);
-  const unidade = document.getElementById("unidadeConversao").value;
-
-  if (!valor) {
-    alert("Digite um valor válido");
-    return;
-  }
-
-  let resultado = "";
-
-  // POTÊNCIA
-  if (tipo === "potencia") {
-    let W;
-
-    if (unidade === "W") W = valor;
-    if (unidade === "kW") W = valor * 1000;
-    if (unidade === "CV") W = valor * 735.5;
-
-    resultado = `
-      <div class="result-box">
-        <h4>Resultado</h4>
-        <div class="result-item"><span>Watts:</span><strong>${W.toFixed(2)} W</strong></div>
-        <div class="result-item"><span>kW:</span><strong>${(W/1000).toFixed(3)} kW</strong></div>
-        <div class="result-item"><span>CV:</span><strong>${(W/735.5).toFixed(3)} CV</strong></div>
-      </div>`;
-  }
-
-  // TENSÃO
-  if (tipo === "tensao") {
-    let V = unidade === "kV" ? valor * 1000 : valor;
-
-    resultado = `
-      <div class="result-box">
-        <h4>Resultado</h4>
-        <div class="result-item"><span>Volts:</span><strong>${V.toFixed(2)} V</strong></div>
-        <div class="result-item"><span>kV:</span><strong>${(V/1000).toFixed(3)} kV</strong></div>
-      </div>`;
-  }
-
-  // CORRENTE
-  if (tipo === "corrente") {
-    let A = unidade === "mA" ? valor / 1000 : valor;
-
-    resultado = `
-      <div class="result-box">
-        <h4>Resultado</h4>
-        <div class="result-item"><span>Amperes:</span><strong>${A.toFixed(3)} A</strong></div>
-        <div class="result-item"><span>mA:</span><strong>${(A*1000).toFixed(0)} mA</strong></div>
-      </div>`;
-  }
-
-  // BITOLA
-  if (tipo === "bitola") {
-
-    const tabelaAWG = {
-      14:2.08, 12:3.31, 10:5.26, 8:8.37, 6:13.3, 4:21.1, 2:33.6
-    };
-
-    let texto = "";
-
-    if (unidade === "awg") {
-      const mm2 = tabelaAWG[valor];
-      texto = mm2
-        ? `<div class="result-item"><span>Equivalente:</span><strong>${mm2} mm²</strong></div>`
-        : `<div class="result-item"><strong>AWG não cadastrado</strong></div>`;
-    } else {
-      let awgEncontrado = "—";
-      for (let awg in tabelaAWG) {
-        if (Math.abs(tabelaAWG[awg] - valor) < 1) {
-          awgEncontrado = awg;
-        }
-      }
-      texto = `<div class="result-item"><span>Equivalente:</span><strong>AWG ${awgEncontrado}</strong></div>`;
+    if (origem === "w") {
+        kw = w / 1000;
+        cv = w / CV_W;
+        hp = w / HP_W;
     }
 
-    resultado = `
-      <div class="result-box">
-        <h4>Resultado</h4>
-        ${texto}
-      </div>`;
-  }
+    if (origem === "kw") {
+        w = kw * 1000;
+        cv = w / CV_W;
+        hp = w / HP_W;
+    }
 
-  document.getElementById("resultConversao").innerHTML = resultado;
+    if (origem === "cv") {
+        w = cv * CV_W;
+        kw = w / 1000;
+        hp = w / HP_W;
+    }
+
+    if (origem === "hp") {
+        w = hp * HP_W;
+        kw = w / 1000;
+        cv = w / CV_W;
+    }
+
+    document.getElementById("conv_w").value  = w.toFixed(2);
+    document.getElementById("conv_kw").value = kw.toFixed(3);
+    document.getElementById("conv_cv").value = cv.toFixed(3);
+    document.getElementById("conv_hp").value = hp.toFixed(3);
 }
+  
+  // ===============================
+// CONVERSÃO DE ENERGIA
+// ===============================
+function converterEnergia(origem) {
 
+    let kwh = parseFloat(document.getElementById("ener_kwh").value);
+    let wh  = parseFloat(document.getElementById("ener_wh").value);
+    let j   = parseFloat(document.getElementById("ener_j").value);
+
+    kwh = isNaN(kwh) ? 0 : kwh;
+    wh  = isNaN(wh)  ? 0 : wh;
+    j   = isNaN(j)   ? 0 : j;
+
+    const J_WH = 3600;
+
+    if (origem === "kwh") {
+        wh = kwh * 1000;
+        j = wh * J_WH;
+    }
+
+    if (origem === "wh") {
+        kwh = wh / 1000;
+        j = wh * J_WH;
+    }
+
+    if (origem === "j") {
+        wh = j / J_WH;
+        kwh = wh / 1000;
+    }
+
+    document.getElementById("ener_kwh").value = kwh.toFixed(3);
+    document.getElementById("ener_wh").value  = wh.toFixed(2);
+    document.getElementById("ener_j").value   = j.toFixed(0);
+}
+  
 /* ======================== ORÇAMENTOS ======================== */
 let itensOrcamento=[];
 function adicionarItem(){
