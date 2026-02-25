@@ -1215,7 +1215,22 @@ function gerarPDFOrcamento(){
 }
 
 /* ======================== INIT ======================== */
-window.addEventListener('load', initTrial);
+window.addEventListener('load', initTrial);<script>
+  </script>
+  <script>
+/* ===== REGISTRO DO SERVICE WORKER ===== */
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('./sw.js')
+      .then(reg => {
+        console.log('✅ Service Worker registrado:', reg.scope);
+      })
+      .catch(err => {
+        console.error('❌ Erro ao registrar SW:', err);
+      });
+  });
+}
+  
 </script>
 </body>
 </html>
