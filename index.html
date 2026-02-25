@@ -1,1 +1,805 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#1976D2">
+    <meta name="description" content="Elétrico Pro - Calculadoras elétricas profissionais para engenheiros e eletricistas">
+    <title>⚡ Elétrico Pro - Calculadoras Elétricas Profissionais</title>
+    
+    <!-- PWA -->
+    <link rel="manifest" href="manifest.json">
+    <link rel="apple-touch-icon" href="icon-192.png">
+    
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    
+    <!-- CSS -->
+    <link rel="stylesheet" href="styles.css">
+    
+    <!-- Firebase -->
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+    
+    <!-- PDF -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.31/jspdf.plugin.autotable.min.js"></script>
+    
+    <!-- Stripe -->
+    <script src="https://js.stripe.com/v3/"></script>
+</head>
+<body>
+    <!-- Loading Screen -->
+    <div id="loadingScreen" class="loading-screen">
+        <div class="loading-content">
+            <div class="loading-logo">⚡</div>
+            <h2>Elétrico Pro</h2>
+            <div class="loading-spinner"></div>
+        </div>
+    </div>
 
+    <!-- Auth Screen -->
+    <div id="authScreen" class="screen active">
+        <div class="auth-container">
+            <div class="auth-logo">
+                <div class="logo-icon">⚡</div>
+                <h1>Elétrico Pro</h1>
+                <p>Calculadoras Elétricas Profissionais</p>
+            </div>
+
+            <!-- Login Form -->
+            <div id="loginForm" class="auth-form">
+                <h2>Bem-vindo de volta!</h2>
+                <div class="input-group">
+                    <span class="material-icons">email</span>
+                    <input type="email" id="loginEmail" placeholder="E-mail" required>
+                </div>
+                <div class="input-group">
+                    <span class="material-icons">lock</span>
+                    <input type="password" id="loginPassword" placeholder="Senha" required>
+                </div>
+                <button onclick="login()" class="btn btn-primary btn-block">
+                    Entrar
+                </button>
+                <div class="auth-divider">ou</div>
+                <button onclick="loginWithGoogle()" class="btn btn-google btn-block">
+                    <svg width="18" height="18" viewBox="0 0 18 18"><path fill="#4285F4" d="M16.51 8H8.98v3h4.3c-.18 1-.74 1.48-1.6 2.04v2.01h2.6a7.8 7.8 0 0 0 2.38-5.88c0-.57-.05-.66-.15-1.18z"/><path fill="#34A853" d="M8.98 17c2.16 0 3.97-.72 5.3-1.94l-2.6-2a4.8 4.8 0 0 1-7.18-2.54H1.83v2.07A8 8 0 0 0 8.98 17z"/><path fill="#FBBC05" d="M4.5 10.52a4.8 4.8 0 0 1 0-3.04V5.41H1.83a8 8 0 0 0 0 7.18l2.67-2.07z"/><path fill="#EA4335" d="M8.98 4.18c1.17 0 2.23.4 3.06 1.2l2.3-2.3A8 8 0 0 0 1.83 5.4L4.5 7.49a4.77 4.77 0 0 1 4.48-3.3z"/></svg>
+                    Continuar com Google
+                </button>
+                <p class="auth-switch">
+                    Não tem conta? <a href="#" onclick="showRegister()">Criar conta</a>
+                </p>
+            </div>
+
+            <!-- Register Form -->
+            <div id="registerForm" class="auth-form" style="display:none;">
+                <h2>Criar conta</h2>
+                <div class="input-group">
+                    <span class="material-icons">person</span>
+                    <input type="text" id="registerName" placeholder="Nome completo" required>
+                </div>
+                <div class="input-group">
+                    <span class="material-icons">email</span>
+                    <input type="email" id="registerEmail" placeholder="E-mail" required>
+                </div>
+                <div class="input-group">
+                    <span class="material-icons">lock</span>
+                    <input type="password" id="registerPassword" placeholder="Senha (mínimo 6 caracteres)" required>
+                </div>
+                <button onclick="register()" class="btn btn-primary btn-block">
+                    Criar conta
+                </button>
+                <div class="auth-divider">ou</div>
+                <button onclick="loginWithGoogle()" class="btn btn-google btn-block">
+                    <svg width="18" height="18" viewBox="0 0 18 18"><path fill="#4285F4" d="M16.51 8H8.98v3h4.3c-.18 1-.74 1.48-1.6 2.04v2.01h2.6a7.8 7.8 0 0 0 2.38-5.88c0-.57-.05-.66-.15-1.18z"/><path fill="#34A853" d="M8.98 17c2.16 0 3.97-.72 5.3-1.94l-2.6-2a4.8 4.8 0 0 1-7.18-2.54H1.83v2.07A8 8 0 0 0 8.98 17z"/><path fill="#FBBC05" d="M4.5 10.52a4.8 4.8 0 0 1 0-3.04V5.41H1.83a8 8 0 0 0 0 7.18l2.67-2.07z"/><path fill="#EA4335" d="M8.98 4.18c1.17 0 2.23.4 3.06 1.2l2.3-2.3A8 8 0 0 0 1.83 5.4L4.5 7.49a4.77 4.77 0 0 1 4.48-3.3z"/></svg>
+                    Continuar com Google
+                </button>
+                <p class="auth-switch">
+                    Já tem conta? <a href="#" onclick="showLogin()">Fazer login</a>
+                </p>
+            </div>
+
+            <!-- Trial Info -->
+            <div class="trial-info">
+                <span class="material-icons">info</span>
+                <p>7 dias de teste grátis • Cancele quando quiser</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main App -->
+    <div id="mainApp" style="display:none;">
+        <!-- Header -->
+        <header class="app-header">
+            <div class="header-content">
+                <div class="header-left">
+                    <button class="menu-btn" onclick="toggleSidebar()">
+                        <span class="material-icons">menu</span>
+                    </button>
+                    <div class="logo">⚡ <span>Elétrico Pro</span></div>
+                </div>
+                <div class="header-right">
+                    <div id="subscriptionBadge" class="subscription-badge"></div>
+                    <button class="icon-btn" onclick="showProfile()">
+                        <span class="material-icons">account_circle</span>
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <!-- Sidebar -->
+        <aside id="sidebar" class="sidebar">
+            <nav class="sidebar-nav">
+                <a href="#" onclick="showScreen('homeScreen')" class="nav-item active">
+                    <span class="material-icons">home</span>
+                    <span>Início</span>
+                </a>
+                <a href="#" onclick="showScreen('calculadorasScreen')" class="nav-item">
+                    <span class="material-icons">calculate</span>
+                    <span>Calculadoras</span>
+                </a>
+                <a href="#" onclick="showScreen('tabelasScreen')" class="nav-item">
+                    <span class="material-icons">table_chart</span>
+                    <span>Tabelas</span>
+                </a>
+                <a href="#" onclick="showScreen('orcamentosScreen')" class="nav-item">
+                    <span class="material-icons">receipt_long</span>
+                    <span>Orçamentos</span>
+                </a>
+                <a href="#" onclick="showScreen('historicoScreen')" class="nav-item">
+                    <span class="material-icons">history</span>
+                    <span>Histórico</span>
+                </a>
+                <div class="nav-divider"></div>
+                <a href="#" onclick="showScreen('plansScreen')" class="nav-item nav-premium">
+                    <span class="material-icons">workspace_premium</span>
+                    <span>Planos PRO</span>
+                </a>
+                <a href="#" onclick="showScreen('configScreen')" class="nav-item">
+                    <span class="material-icons">settings</span>
+                    <span>Configurações</span>
+                </a>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Home Screen -->
+            <div id="homeScreen" class="content-screen active">
+                <div class="welcome-section">
+                    <h1>Bem-vindo ao <span class="text-primary">Elétrico Pro</span></h1>
+                    <p>Suas ferramentas profissionais para cálculos elétricos</p>
+                </div>
+
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <span class="material-icons">calculate</span>
+                        <div>
+                            <h3 id="totalCalculos">0</h3>
+                            <p>Cálculos realizados</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <span class="material-icons">receipt_long</span>
+                        <div>
+                            <h3 id="totalOrcamentos">0</h3>
+                            <p>Orçamentos gerados</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <span class="material-icons">picture_as_pdf</span>
+                        <div>
+                            <h3 id="totalPDFs">0</h3>
+                            <p>PDFs exportados</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <span class="material-icons">access_time</span>
+                        <div>
+                            <h3 id="diasRestantes">0</h3>
+                            <p>Dias restantes</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="quick-access">
+                    <h2>Acesso Rápido</h2>
+                    <div class="quick-grid">
+                        <div class="quick-card" onclick="showScreen('calculadorasScreen'); showCalc('leiohm')">
+                            <span class="material-icons">flash_on</span>
+                            <h3>Lei de Ohm</h3>
+                            <p>V = I × R</p>
+                        </div>
+                        <div class="quick-card" onclick="showScreen('calculadorasScreen'); showCalc('potencia')">
+                            <span class="material-icons">bolt</span>
+                            <h3>Potência</h3>
+                            <p>P = V × I × cos φ</p>
+                        </div>
+                        <div class="quick-card" onclick="showScreen('calculadorasScreen'); showCalc('quedatensao')">
+                            <span class="material-icons">show_chart</span>
+                            <h3>Queda de Tensão</h3>
+                            <p>ΔV = 2 × ρ × L × I / S</p>
+                        </div>
+                        <div class="quick-card" onclick="showScreen('calculadorasScreen'); showCalc('condutor')">
+                            <span class="material-icons">cable</span>
+                            <h3>Condutor</h3>
+                            <p>Dimensionamento</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Calculadoras Screen -->
+            <div id="calculadorasScreen" class="content-screen">
+                <h1>Calculadoras</h1>
+                
+                <div class="tabs">
+                    <button class="tab active" onclick="showCalc('leiohm')">Lei de Ohm</button>
+                    <button class="tab" onclick="showCalc('potencia')">Potência</button>
+                    <button class="tab" onclick="showCalc('quedatensao')">Queda de Tensão</button>
+                    <button class="tab" onclick="showCalc('condutor')">Dimensionamento</button>
+                </div>
+
+                <!-- Lei de Ohm -->
+                <div id="calcLeiohm" class="calc-content">
+                    <div class="card">
+                        <h2>⚡ Lei de Ohm</h2>
+                        <p class="formula">V = I × R</p>
+                        <div class="form-grid">
+                            <div class="input-group">
+                                <label>Tensão (V)</label>
+                                <input type="number" id="tensaoOhm" placeholder="0">
+                            </div>
+                            <div class="input-group">
+                                <label>Corrente (A)</label>
+                                <input type="number" id="correnteOhm" placeholder="0">
+                            </div>
+                            <div class="input-group">
+                                <label>Resistência (Ω)</label>
+                                <input type="number" id="resistenciaOhm" placeholder="0">
+                            </div>
+                        </div>
+                        <div class="alert alert-info">
+                            <span class="material-icons">info</span>
+                            <p>Preencha apenas 2 dos 3 campos</p>
+                        </div>
+                        <div class="btn-group">
+                            <button onclick="calcularLeiOhm()" class="btn btn-primary">
+                                <span class="material-icons">calculate</span>
+                                Calcular
+                            </button>
+                            <button onclick="limparForm('leiohm')" class="btn btn-secondary">
+                                <span class="material-icons">refresh</span>
+                                Limpar
+                            </button>
+                        </div>
+                        <div id="resultLeiOhm"></div>
+                    </div>
+                </div>
+
+                <!-- Potência -->
+                <div id="calcPotencia" class="calc-content" style="display:none;">
+                    <div class="card">
+                        <h2>⚡ Cálculo de Potência</h2>
+                        <div class="form-grid">
+                            <div class="input-group">
+                                <label>Tipo de Circuito</label>
+                                <select id="tipoCircuito">
+                                    <option value="monofasico">Monofásico</option>
+                                    <option value="trifasico">Trifásico</option>
+                                </select>
+                            </div>
+                            <div class="input-group">
+                                <label>Tensão (V)</label>
+                                <input type="number" id="tensaoPot" placeholder="0">
+                            </div>
+                            <div class="input-group">
+                                <label>Corrente (A)</label>
+                                <input type="number" id="correntePot" placeholder="0">
+                            </div>
+                            <div class="input-group">
+                                <label>Fator de Potência</label>
+                                <input type="number" id="fatorPot" step="0.01" min="0" max="1" value="0.92">
+                            </div>
+                        </div>
+                        <div class="btn-group">
+                            <button onclick="calcularPotencia()" class="btn btn-primary">
+                                <span class="material-icons">calculate</span>
+                                Calcular
+                            </button>
+                            <button onclick="limparForm('potencia')" class="btn btn-secondary">
+                                <span class="material-icons">refresh</span>
+                                Limpar
+                            </button>
+                        </div>
+                        <div id="resultPotencia"></div>
+                    </div>
+                </div>
+
+                <!-- Queda de Tensão -->
+                <div id="calcQuedatensao" class="calc-content" style="display:none;">
+                    <div class="card">
+                        <h2>📉 Queda de Tensão</h2>
+                        <div class="form-grid">
+                            <div class="input-group">
+                                <label>Corrente (A)</label>
+                                <input type="number" id="correnteQueda" placeholder="0">
+                            </div>
+                            <div class="input-group">
+                                <label>Distância (m)</label>
+                                <input type="number" id="distanciaQueda" placeholder="0">
+                            </div>
+                            <div class="input-group">
+                                <label>Seção do Condutor (mm²)</label>
+                                <input type="number" id="secaoQueda" placeholder="0">
+                            </div>
+                            <div class="input-group">
+                                <label>Tensão do Circuito (V)</label>
+                                <input type="number" id="tensaoQueda" placeholder="220">
+                            </div>
+                        </div>
+                        <div class="btn-group">
+                            <button onclick="calcularQuedaTensao()" class="btn btn-primary">
+                                <span class="material-icons">calculate</span>
+                                Calcular
+                            </button>
+                            <button onclick="limparForm('quedatensao')" class="btn btn-secondary">
+                                <span class="material-icons">refresh</span>
+                                Limpar
+                            </button>
+                        </div>
+                        <div id="resultQuedaTensao"></div>
+                    </div>
+                </div>
+
+                <!-- Dimensionamento -->
+                <div id="calcCondutor" class="calc-content" style="display:none;">
+                    <div class="card">
+                        <h2>🔌 Dimensionamento de Condutor</h2>
+                        <div class="form-grid">
+                            <div class="input-group">
+                                <label>Potência (W)</label>
+                                <input type="number" id="potenciaCondutor" placeholder="0">
+                            </div>
+                            <div class="input-group">
+                                <label>Tensão (V)</label>
+                                <input type="number" id="tensaoCondutor" placeholder="220">
+                            </div>
+                            <div class="input-group">
+                                <label>Distância (m)</label>
+                                <input type="number" id="distanciaCondutor" placeholder="0">
+                            </div>
+                            <div class="input-group">
+                                <label>Tipo de Instalação</label>
+                                <select id="tipoInstalacao">
+                                    <option value="B1">B1 - Eletroduto em parede</option>
+                                    <option value="B2">B2 - Eletroduto embutido</option>
+                                    <option value="C">C - Eletroduto aparente</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="btn-group">
+                            <button onclick="dimensionarCondutor()" class="btn btn-primary">
+                                <span class="material-icons">calculate</span>
+                                Dimensionar
+                            </button>
+                            <button onclick="limparForm('condutor')" class="btn btn-secondary">
+                                <span class="material-icons">refresh</span>
+                                Limpar
+                            </button>
+                        </div>
+                        <div id="resultCondutor"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tabelas Screen -->
+            <div id="tabelasScreen" class="content-screen">
+                <h1>Tabelas Técnicas</h1>
+                
+                <div class="tabs">
+                    <button class="tab active" onclick="showTable('condutores')">Condutores</button>
+                    <button class="tab" onclick="showTable('disjuntores')">Disjuntores</button>
+                    <button class="tab" onclick="showTable('capacidade')">Capacidade</button>
+                </div>
+
+                <!-- Tabela Condutores -->
+                <div id="tableCondutores" class="table-content">
+                    <div class="card">
+                        <div class="card-header">
+                            <h2>📊 Tabela de Condutores</h2>
+                            <button onclick="gerarPDFTabela('Condutores')" class="btn btn-secondary">
+                                <span class="material-icons">picture_as_pdf</span>
+                                Exportar PDF
+                            </button>
+                        </div>
+                        <div class="table-responsive">
+                            <table class="data-table">
+                                <thead>
+                                    <tr>
+                                        <th>Seção (mm²)</th>
+                                        <th>Diâmetro (mm)</th>
+                                        <th>Peso (kg/km)</th>
+                                        <th>Resistência (Ω/km)</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr><td>1,5</td><td>1,38</td><td>13,3</td><td>12,1</td></tr>
+                                    <tr><td>2,5</td><td>1,78</td><td>22,2</td><td>7,41</td></tr>
+                                    <tr><td>4</td><td>2,25</td><td>35,5</td><td>4,61</td></tr>
+                                    <tr><td>6</td><td>2,76</td><td>53,3</td><td>3,08</td></tr>
+                                    <tr><td>10</td><td>3,57</td><td>88,8</td><td>1,83</td></tr>
+                                    <tr><td>16</td><td>4,51</td><td>142</td><td>1,15</td></tr>
+                                    <tr><td>25</td><td>5,64</td><td>222</td><td>0,727</td></tr>
+                                    <tr><td>35</td><td>6,68</td><td>311</td><td>0,524</td></tr>
+                                    <tr><td>50</td><td>7,98</td><td>444</td><td>0,387</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tabela Disjuntores -->
+                <div id="tableDisjuntores" class="table-content" style="display:none;">
+                    <div class="card">
+                        <div class="card-header">
+                            <h2>🔌 Tabela de Disjuntores</h2>
+                            <button onclick="gerarPDFTabela('Disjuntores')" class="btn btn-secondary">
+                                <span class="material-icons">picture_as_pdf</span>
+                                Exportar PDF
+                            </button>
+                        </div>
+                        <div class="table-responsive">
+                            <table class="data-table">
+                                <thead>
+                                    <tr>
+                                        <th>Corrente (A)</th>
+                                        <th>Condutor Mín. (mm²)</th>
+                                        <th>Potência 127V (W)</th>
+                                        <th>Potência 220V (W)</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr><td>10</td><td>1,5</td><td>1.270</td><td>2.200</td></tr>
+                                    <tr><td>16</td><td>2,5</td><td>2.032</td><td>3.520</td></tr>
+                                    <tr><td>20</td><td>4</td><td>2.540</td><td>4.400</td></tr>
+                                    <tr><td>25</td><td>4</td><td>3.175</td><td>5.500</td></tr>
+                                    <tr><td>32</td><td>6</td><td>4.064</td><td>7.040</td></tr>
+                                    <tr><td>40</td><td>10</td><td>5.080</td><td>8.800</td></tr>
+                                    <tr><td>50</td><td>10</td><td>6.350</td><td>11.000</td></tr>
+                                    <tr><td>63</td><td>16</td><td>8.001</td><td>13.860</td></tr>
+                                    <tr><td>70</td><td>25</td><td>8.890</td><td>15.400</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tabela Capacidade -->
+                <div id="tableCapacidade" class="table-content" style="display:none;">
+                    <div class="card">
+                        <div class="card-header">
+                            <h2>⚡ Capacidade de Corrente</h2>
+                            <button onclick="gerarPDFTabela('Capacidade de Corrente')" class="btn btn-secondary">
+                                <span class="material-icons">picture_as_pdf</span>
+                                Exportar PDF
+                            </button>
+                        </div>
+                        <div class="table-responsive">
+                            <table class="data-table">
+                                <thead>
+                                    <tr>
+                                        <th>Seção (mm²)</th>
+                                        <th>Método B1 (A)</th>
+                                        <th>Método B2 (A)</th>
+                                        <th>Método C (A)</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr><td>1,5</td><td>15,5</td><td>17,5</td><td>19,5</td></tr>
+                                    <tr><td>2,5</td><td>21</td><td>24</td><td>27</td></tr>
+                                    <tr><td>4</td><td>28</td><td>32</td><td>36</td></tr>
+                                    <tr><td>6</td><td>36</td><td>41</td><td>46</td></tr>
+                                    <tr><td>10</td><td>50</td><td>57</td><td>63</td></tr>
+                                    <tr><td>16</td><td>68</td><td>76</td><td>85</td></tr>
+                                    <tr><td>25</td><td>89</td><td>101</td><td>112</td></tr>
+                                    <tr><td>35</td><td>110</td><td>125</td><td>138</td></tr>
+                                    <tr><td>50</td><td>134</td><td>151</td><td>168</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Orçamentos Screen -->
+            <div id="orcamentosScreen" class="content-screen">
+                <h1>Gerador de Orçamentos</h1>
+                
+                <div class="card">
+                    <h2>📋 Novo Orçamento</h2>
+                    
+                    <div class="section">
+                        <h3>Dados do Cliente</h3>
+                        <div class="form-grid">
+                            <div class="input-group">
+                                <label>Nome Completo *</label>
+                                <input type="text" id="nomeCliente" placeholder="João Silva">
+                            </div>
+                            <div class="input-group">
+                                <label>Telefone</label>
+                                <input type="tel" id="telefoneCliente" placeholder="(11) 99999-9999">
+                            </div>
+                            <div class="input-group full-width">
+                                <label>Endereço</label>
+                                <input type="text" id="enderecoCliente" placeholder="Rua, Número, Bairro, Cidade">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="section">
+                        <h3>Adicionar Item</h3>
+                        <div class="form-grid">
+                            <div class="input-group">
+                                <label>Descrição *</label>
+                                <input type="text" id="itemDescricao" placeholder="Ex: Tomada 2P+T">
+                            </div>
+                            <div class="input-group">
+                                <label>Quantidade *</label>
+                                <input type="number" id="itemQuantidade" value="1" min="1">
+                            </div>
+                            <div class="input-group">
+                                <label>Valor Unitário (R$) *</label>
+                                <input type="number" id="itemValor" step="0.01" placeholder="0.00">
+                            </div>
+                            <div class="input-group">
+                                <button onclick="adicionarItem()" class="btn btn-primary">
+                                    <span class="material-icons">add</span>
+                                    Adicionar
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="section">
+                        <h3>Itens do Orçamento</h3>
+                        <div id="listaItens" class="items-list">
+                            <p class="text-muted">Nenhum item adicionado</p>
+                        </div>
+                        <div class="total-display">
+                            <h3 id="totalOrcamento">Total: R$ 0,00</h3>
+                        </div>
+                    </div>
+
+                    <div class="btn-group">
+                        <button onclick="gerarPDFOrcamento()" class="btn btn-primary">
+                            <span class="material-icons">picture_as_pdf</span>
+                            Gerar PDF
+                        </button>
+                        <button onclick="salvarOrcamento()" class="btn btn-secondary">
+                            <span class="material-icons">save</span>
+                            Salvar
+                        </button>
+                        <button onclick="limparOrcamento()" class="btn btn-secondary">
+                            <span class="material-icons">delete</span>
+                            Limpar
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Histórico Screen -->
+            <div id="historicoScreen" class="content-screen">
+                <h1>Histórico</h1>
+                <div class="card">
+                    <div class="tabs">
+                        <button class="tab active" onclick="showHistorico('calculos')">Cálculos</button>
+                        <button class="tab" onclick="showHistorico('orcamentos')">Orçamentos</button>
+                    </div>
+                    <div id="historicoCalculos" class="historico-content">
+                        <div id="listaCalculos" class="historico-list"></div>
+                    </div>
+                    <div id="historicoOrcamentos" class="historico-content" style="display:none;">
+                        <div id="listaOrcamentosSalvos" class="historico-list"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Plans Screen -->
+            <div id="plansScreen" class="content-screen">
+                <h1>Planos PRO</h1>
+                <p class="subtitle">Escolha o melhor plano para você</p>
+                
+                <div class="plans-grid">
+                    <!-- Mensal -->
+                    <div class="plan-card">
+                        <div class="plan-badge">Mensal</div>
+                        <div class="plan-price">
+                            <span class="currency">R$</span>
+                            <span class="amount">19</span>
+                            <span class="cents">,90</span>
+                        </div>
+                        <p class="plan-period">por mês</p>
+                        <ul class="plan-features">
+                            <li><span class="material-icons">check_circle</span>Todas as calculadoras</li>
+                            <li><span class="material-icons">check_circle</span>Exportação em PDF</li>
+                            <li><span class="material-icons">check_circle</span>Histórico ilimitado</li>
+                            <li><span class="material-icons">check_circle</span>Orçamentos profissionais</li>
+                            <li><span class="material-icons">check_circle</span>Sem anúncios</li>
+                            <li><span class="material-icons">check_circle</span>Suporte prioritário</li>
+                        </ul>
+                        <button onclick="selectPlan('monthly', 19.90)" class="btn btn-primary btn-block">
+                            Assinar Mensal
+                        </button>
+                    </div>
+
+                    <!-- Semestral -->
+                    <div class="plan-card plan-featured">
+                        <div class="plan-badge badge-popular">Mais Popular</div>
+                        <div class="plan-price">
+                            <span class="currency">R$</span>
+                            <span class="amount">39</span>
+                            <span class="cents">,90</span>
+                        </div>
+                        <p class="plan-period">por 6 meses</p>
+                        <div class="plan-discount">Economize R$ 79,50</div>
+                        <ul class="plan-features">
+                            <li><span class="material-icons">check_circle</span>Todas as calculadoras</li>
+                            <li><span class="material-icons">check_circle</span>Exportação em PDF</li>
+                            <li><span class="material-icons">check_circle</span>Histórico ilimitado</li>
+                            <li><span class="material-icons">check_circle</span>Orçamentos profissionais</li>
+                            <li><span class="material-icons">check_circle</span>Sem anúncios</li>
+                            <li><span class="material-icons">check_circle</span>Suporte prioritário</li>
+                            <li><span class="material-icons">star</span>Acesso antecipado</li>
+                        </ul>
+                        <button onclick="selectPlan('semiannual', 39.90)" class="btn btn-primary btn-block">
+                            Assinar Semestral
+                        </button>
+                    </div>
+
+                    <!-- Vitalício -->
+                    <div class="plan-card">
+                        <div class="plan-badge badge-lifetime">Melhor Valor</div>
+                        <div class="plan-price">
+                            <span class="currency">R$</span>
+                            <span class="amount">59</span>
+                            <span class="cents">,90</span>
+                        </div>
+                        <p class="plan-period">pagamento único</p>
+                        <div class="plan-discount">Acesso para sempre!</div>
+                        <ul class="plan-features">
+                            <li><span class="material-icons">check_circle</span>Todas as calculadoras</li>
+                            <li><span class="material-icons">check_circle</span>Exportação em PDF</li>
+                            <li><span class="material-icons">check_circle</span>Histórico ilimitado</li>
+                            <li><span class="material-icons">check_circle</span>Orçamentos profissionais</li>
+                            <li><span class="material-icons">check_circle</span>Sem anúncios</li>
+                            <li><span class="material-icons">check_circle</span>Suporte prioritário</li>
+                            <li><span class="material-icons">star</span>Acesso antecipado</li>
+                            <li><span class="material-icons">star</span>Todas atualizações futuras</li>
+                        </ul>
+                        <button onclick="selectPlan('lifetime', 59.90)" class="btn btn-primary btn-block">
+                            Comprar Vitalício
+                        </button>
+                    </div>
+                </div>
+
+                <div class="payment-info">
+                    <h3>Formas de Pagamento</h3>
+                    <div class="payment-methods">
+                        <div class="payment-method">
+                            <span class="material-icons">credit_card</span>
+                            <span>Cartão de Crédito</span>
+                        </div>
+                        <div class="payment-method">
+                            <span class="material-icons">pix</span>
+                            <span>PIX</span>
+                        </div>
+                        <div class="payment-method">
+                            <span class="material-icons">account_balance</span>
+                            <span>Boleto</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Config Screen -->
+            <div id="configScreen" class="content-screen">
+                <h1>Configurações</h1>
+                
+                <div class="card">
+                    <h2>👤 Perfil</h2>
+                    <div class="profile-info">
+                        <div class="profile-avatar">
+                            <span class="material-icons">account_circle</span>
+                        </div>
+                        <div>
+                            <h3 id="userName"></h3>
+                            <p id="userEmail"></p>
+                            <span id="userPlan" class="badge"></span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h2>⚙️ Preferências</h2>
+                    <div class="settings-list">
+                        <div class="setting-item">
+                            <div>
+                                <h4>Notificações</h4>
+                                <p>Receber alertas sobre novidades</p>
+                            </div>
+                            <label class="switch">
+                                <input type="checkbox" id="notificationsToggle" checked>
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                        <div class="setting-item">
+                            <div>
+                                <h4>Modo Escuro</h4>
+                                <p>Tema escuro para o aplicativo</p>
+                            </div>
+                            <label class="switch">
+                                <input type="checkbox" id="darkModeToggle">
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h2>ℹ️ Sobre</h2>
+                    <div class="about-info">
+                        <p><strong>Versão:</strong> 2.0.0</p>
+                        <p><strong>Desenvolvedor:</strong> Elétrico Pro Team</p>
+                        <p><strong>E-mail:</strong> contato@eletricopro.com</p>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <button onclick="logout()" class="btn btn-danger btn-block">
+                        <span class="material-icons">logout</span>
+                        Sair da Conta
+                    </button>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Payment Modal -->
+    <div id="paymentModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Finalizar Pagamento</h2>
+                <button onclick="closePaymentModal()" class="close-btn">
+                    <span class="material-icons">close</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div id="paymentContent"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div id="toast" class="toast"></div>
+
+    <!-- Scripts -->
+    <script src="config.js"></script>
+    <script src="auth.js"></script>
+    <script src="app.js"></script>
+    <script src="payments.js"></script>
+    
+    <script>
+        // Service Worker
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('sw.js')
+                    .then(reg => console.log('Service Worker registrado'))
+                    .catch(err => console.log('Erro ao registrar SW:', err));
+            });
+        }
+    </script>
+</body>
+</html>
