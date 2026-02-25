@@ -1,6 +1,6 @@
 {
-  "name": "Elétrico Pro",
-  "short_name": "Elétrico Pro",
+  "name": "Elétrica Pro",
+  "short_name": "Elétrica Pro",
   "description": "App profissional para cálculos elétricos, tabelas técnicas e orçamentos",
   "start_url": "/eletricopro/",
   "display": "standalone",
