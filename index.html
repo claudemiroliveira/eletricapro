@@ -1232,5 +1232,58 @@ if ('serviceWorker' in navigator) {
 }
   
 </script>
+<script>
+/* ===============================
+   NAVEGAÇÃO ENTRE TELAS (APP REAL)
+================================= */
+
+function openScreen(screenId, title = '') {
+
+  // esconder todas as telas
+  document.querySelectorAll('.screen').forEach(screen => {
+    screen.classList.remove('active');
+  });
+
+  // mostrar tela escolhida
+  const target = document.getElementById(screenId);
+
+  if (target) {
+    target.classList.add('active');
+  } else {
+    console.error("Tela não encontrada:", screenId);
+    return;
+  }
+
+  // mostrar botão voltar
+  document.getElementById("headerBack").style.display = "block";
+
+  // mudar subtítulo do header
+  if (title) {
+    document.getElementById("headerSubtitle").textContent = title;
+  }
+
+  // voltar topo
+  window.scrollTo({ top: 0, behavior: "smooth" });
+}
+
+
+/* ===== VOLTAR PARA HOME ===== */
+function goHome() {
+
+  document.querySelectorAll('.screen').forEach(screen => {
+    screen.classList.remove('active');
+  });
+
+  document.getElementById('homeScreen').classList.add('active');
+
+  document.getElementById("headerBack").style.display = "none";
+
+  document.getElementById("headerSubtitle").textContent =
+    "Calculadoras, Tabelas e Instalações";
+
+  window.scrollTo({ top: 0, behavior: "smooth" });
+}
+</script>
+  
 </body>
 </html>
