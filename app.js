@@ -1,6 +1,6 @@
 // Sistema de Trial de 7 dias
 const TRIAL_KEY = 'eletrico_pro_trial';
-const TRIAL_DAYS = 7;
+const TRIAL_DAYS = 5;
 
 // Inicializar trial
 function initTrial() {
