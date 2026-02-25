@@ -1,4 +1,4 @@
-const CACHE_NAME = 'eletrico-pro-v7';
+const CACHE_NAME = 'eletrico-pro-v8';
 const urlsToCache = [
   '/eletricopro/',
   '/eletricopro/index.html',
