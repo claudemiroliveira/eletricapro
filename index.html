@@ -1124,11 +1124,21 @@ function renderItens(){
 }
 
 /* ======================== INSTALAÇÕES TOGGLE ======================== */
-function toggleInstall(id){
-  const el=document.getElementById(id);
+
+}
+<script>
+function toggleInstall(id) {
+
+  const el = document.getElementById(id);
+
+  if (!el) {
+    console.error("Elemento não encontrado:", id);
+    return;
+  }
+
   el.classList.toggle('open');
 }
-
+</script>
 /* ======================== PDF ======================== */
 function pdfHeader(doc, subtitle){
   doc.setFillColor(10,22,40); doc.rect(0,0,210,45,'F');
