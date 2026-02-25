@@ -1213,20 +1213,24 @@ function gerarPDFOrcamento(){
   pdfFooter(doc);
   doc.save(`orcamento_${nome.replace(/ /g,'_')}_${Date.now()}.pdf`);
 }
-/* ======================== INIT ======================== */
+<!-- ======================== INIT ======================== -->
+<script>
 window.addEventListener('load', initTrial);
 
 function initTrial() {
   console.log("App iniciado");
 }
+</script>
 
-
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<!-- ===== LIBS PDF ===== -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.31/jspdf.plugin.autotable.min.js"></script>
-  
-  <script src="./app.js"></script>
-  <script>
-/* ===== REGISTRO DO SERVICE WORKER ===== */
+
+<!-- ===== APP ===== -->
+<script src="./app.js"></script>
+
+<!-- ===== SERVICE WORKER ===== -->
+<script>
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
     navigator.serviceWorker.register('./sw.js')
@@ -1238,44 +1242,36 @@ if ('serviceWorker' in navigator) {
       });
   });
 }
-  
 </script>
-<script>
-/* ===============================
-   NAVEGAÇÃO ENTRE TELAS (APP REAL)
-================================= */
 
+<!-- ===============================
+     NAVEGAÇÃO ENTRE TELAS
+================================= -->
+<script>
 function openScreen(screenId, title = '') {
 
-  // esconder todas as telas
   document.querySelectorAll('.screen').forEach(screen => {
     screen.classList.remove('active');
   });
 
-  // mostrar tela escolhida
   const target = document.getElementById(screenId);
 
-  if (target) {
-    target.classList.add('active');
-  } else {
+  if (!target) {
     console.error("Tela não encontrada:", screenId);
     return;
   }
 
-  // mostrar botão voltar
+  target.classList.add('active');
+
   document.getElementById("headerBack").style.display = "block";
 
-  // mudar subtítulo do header
   if (title) {
     document.getElementById("headerSubtitle").textContent = title;
   }
 
-  // voltar topo
   window.scrollTo({ top: 0, behavior: "smooth" });
 }
 
-
-/* ===== VOLTAR PARA HOME ===== */
 function goHome() {
 
   document.querySelectorAll('.screen').forEach(screen => {
@@ -1292,6 +1288,6 @@ function goHome() {
   window.scrollTo({ top: 0, behavior: "smooth" });
 }
 </script>
-  
+
 </body>
 </html>
