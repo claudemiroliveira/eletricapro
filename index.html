@@ -1145,91 +1145,11 @@ function calcularConsumo(){
   html+=`</div>`;
   document.getElementById('resultConsumo').innerHTML=html;
 }
+
+    }  
+
+
   
- // ===============================
-// CONVERSÃO DE POTÊNCIA
-// ===============================
-function converterPotencia(origem) {
-
-    let w  = parseFloat(document.getElementById("conv_w").value);
-    let kw = parseFloat(document.getElementById("conv_kw").value);
-    let cv = parseFloat(document.getElementById("conv_cv").value);
-    let hp = parseFloat(document.getElementById("conv_hp").value);
-
-    // limpa NaN
-    w  = isNaN(w)  ? 0 : w;
-    kw = isNaN(kw) ? 0 : kw;
-    cv = isNaN(cv) ? 0 : cv;
-    hp = isNaN(hp) ? 0 : hp;
-
-    // constantes
-    const CV_W = 735.5;
-    const HP_W = 745.7;
-
-    if (origem === "w") {
-        kw = w / 1000;
-        cv = w / CV_W;
-        hp = w / HP_W;
-    }
-
-    if (origem === "kw") {
-        w = kw * 1000;
-        cv = w / CV_W;
-        hp = w / HP_W;
-    }
-
-    if (origem === "cv") {
-        w = cv * CV_W;
-        kw = w / 1000;
-        hp = w / HP_W;
-    }
-
-    if (origem === "hp") {
-        w = hp * HP_W;
-        kw = w / 1000;
-        cv = w / CV_W;
-    }
-
-    document.getElementById("conv_w").value  = w.toFixed(2);
-    document.getElementById("conv_kw").value = kw.toFixed(3);
-    document.getElementById("conv_cv").value = cv.toFixed(3);
-    document.getElementById("conv_hp").value = hp.toFixed(3);
-}
-  
-  // ===============================
-// CONVERSÃO DE ENERGIA
-// ===============================
-function converterEnergia(origem) {
-
-    let kwh = parseFloat(document.getElementById("ener_kwh").value);
-    let wh  = parseFloat(document.getElementById("ener_wh").value);
-    let j   = parseFloat(document.getElementById("ener_j").value);
-
-    kwh = isNaN(kwh) ? 0 : kwh;
-    wh  = isNaN(wh)  ? 0 : wh;
-    j   = isNaN(j)   ? 0 : j;
-
-    const J_WH = 3600;
-
-    if (origem === "kwh") {
-        wh = kwh * 1000;
-        j = wh * J_WH;
-    }
-
-    if (origem === "wh") {
-        kwh = wh / 1000;
-        j = wh * J_WH;
-    }
-
-    if (origem === "j") {
-        wh = j / J_WH;
-        kwh = wh / 1000;
-    }
-
-    document.getElementById("ener_kwh").value = kwh.toFixed(3);
-    document.getElementById("ener_wh").value  = wh.toFixed(2);
-    document.getElementById("ener_j").value   = j.toFixed(0);
-}
   
 /* ======================== ORÇAMENTOS ======================== */
 let itensOrcamento=[];
