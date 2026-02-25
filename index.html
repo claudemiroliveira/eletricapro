@@ -1219,81 +1219,22 @@ function gerarPDFOrcamento(){
   doc.save(`orcamento_${nome.replace(/ /g,'_')}_${Date.now()}.pdf`);
 }
 
-/* ======================== INIT ======================== */
-window.addEventListener('load', initTrial);
-</script>
-  
-  <script src="js/app.js"></script>
-<script src="js/pdf.js"></script>
-<script src="js/jspdf.umd.min.js"></script>
+<!-- Bibliotecas -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.31/jspdf.plugin.autotable.min.js"></script>
 
-  <script>
-/* =============================
-   NAVEGAÇÃO ENTRE TELAS
-============================= */
+<!-- Seu app -->
+<script src="./app.js"></script>
 
-function openScreen(screenId, title) {
-
-  // esconder todas as telas
-  document.querySelectorAll('.screen').forEach(screen => {
-    screen.classList.remove('active');
-  });
-
-  // mostrar tela selecionada
-  const target = document.getElementById(screenId);
-  if (target) {
-    target.classList.add('active');
-  }
-
-  // mostrar botão voltar
-  const back = document.getElementById('headerBack');
-  if (back) back.style.display = 'block';
-
-  // atualizar subtítulo
-  const subtitle = document.getElementById('headerSubtitle');
-  if (subtitle && title) {
-    subtitle.textContent = title;
-  }
-
-  window.scrollTo(0,0);
-}
-
-function goHome() {
-
-  document.querySelectorAll('.screen').forEach(screen => {
-    screen.classList.remove('active');
-  });
-
-  document.getElementById('homeScreen').classList.add('active');
-
-  // esconder botão voltar
-  document.getElementById('headerBack').style.display = 'none';
-
-  document.getElementById('headerSubtitle').textContent =
-    'Calculadoras, Tabelas e Instalações';
-
-  window.scrollTo(0,0);
-}
-
-
-/* =============================
-   INSTALAÇÕES (abre/fecha)
-============================= */
-
-function toggleInstall(id){
-  const item = document.getElementById(id);
-  if(item){
-    item.classList.toggle('open');
-  }
-}
-    <script>
+<!-- Service Worker -->
+<script>
 if ('serviceWorker' in navigator) {
-  navigator.serviceWorker
-    .register('./sw.js')
-    .then(() => console.log("SW registrado"))
-    .catch(err => console.log("Erro SW:", err));
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('./sw.js')
+      .then(reg => console.log('✅ Service Worker registrado:', reg.scope))
+      .catch(err => console.error('❌ Erro SW:', err));
+  });
 }
 </script>
-  </script>
 </body>
 </html>
