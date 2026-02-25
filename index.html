@@ -498,6 +498,10 @@
         <div class="s-icon">📏</div>
         <div class="s-text"><strong>Dimensionamento</strong><span>Condutor & Disjuntor</span></div>
       </div>
+      <div class="sub-tile" onclick="openScreen('calcConversao','Conversões')">
+      <div class="s-icon">🔄</div>
+      <div class="s-text"><strong>Conversões</strong><span>Unidades elétricas</span></div>
+</div>
     </div>
   </div>
 
@@ -579,6 +583,43 @@
       <div id="resultCondutor"></div>
     </div>
   </div>
+  
+<!-- ========== CALC: CONVERSÕES ========== -->
+<div id="calcConversao" class="screen">
+  <div class="screen-title">
+    <div class="dot"></div>Conversões Elétricas
+  </div>
+
+  <div class="calc-card">
+    <h3>🔄 Conversor de Unidades</h3>
+
+    <div class="form-group">
+      <label>Tipo de Conversão:</label>
+      <select id="tipoConversao">
+        <option value="potencia">Potência (W / kW / CV)</option>
+        <option value="tensao">Tensão (V / kV)</option>
+        <option value="corrente">Corrente (A / mA)</option>
+        <option value="bitola">Bitola (mm² / AWG)</option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label>Valor:</label>
+      <input type="number" id="valorConversao" placeholder="Digite o valor">
+    </div>
+
+    <div class="form-group">
+      <label>Unidade:</label>
+      <select id="unidadeConversao"></select>
+    </div>
+
+    <button class="btn" onclick="calcularConversao()">⚡ Converter</button>
+
+    <div id="resultConversao"></div>
+  </div>
+</div>
+  
+  
 
   <!-- ========== TABELAS HOME ========== -->
   <div id="tabelasHome" class="screen">
@@ -1103,6 +1144,132 @@ function calcularConsumo(){
   items.forEach(it=>{ html+=`<div class="result-item"><span>${it.nome} (${it.W}W × ${it.h}h/dia)</span><strong>${it.kwh} kWh</strong></div>`; });
   html+=`</div>`;
   document.getElementById('resultConsumo').innerHTML=html;
+}
+  // ===== Atualiza unidades conforme tipo =====
+document.getElementById("tipoConversao").addEventListener("change", atualizarUnidades);
+
+function atualizarUnidades() {
+  const tipo = document.getElementById("tipoConversao").value;
+  const select = document.getElementById("unidadeConversao");
+
+  select.innerHTML = "";
+
+  if (tipo === "potencia") {
+    select.innerHTML = `
+      <option value="W">W</option>
+      <option value="kW">kW</option>
+      <option value="CV">CV</option>`;
+  }
+
+  if (tipo === "tensao") {
+    select.innerHTML = `
+      <option value="V">V</option>
+      <option value="kV">kV</option>`;
+  }
+
+  if (tipo === "corrente") {
+    select.innerHTML = `
+      <option value="A">A</option>
+      <option value="mA">mA</option>`;
+  }
+
+  if (tipo === "bitola") {
+    select.innerHTML = `
+      <option value="mm2">mm²</option>
+      <option value="awg">AWG</option>`;
+  }
+}
+
+// inicia unidades
+setTimeout(atualizarUnidades, 100);
+
+// ===== CALCULAR CONVERSÃO =====
+function calcularConversao() {
+
+  const tipo = document.getElementById("tipoConversao").value;
+  const valor = parseFloat(document.getElementById("valorConversao").value);
+  const unidade = document.getElementById("unidadeConversao").value;
+
+  if (!valor) {
+    alert("Digite um valor válido");
+    return;
+  }
+
+  let resultado = "";
+
+  // POTÊNCIA
+  if (tipo === "potencia") {
+    let W;
+
+    if (unidade === "W") W = valor;
+    if (unidade === "kW") W = valor * 1000;
+    if (unidade === "CV") W = valor * 735.5;
+
+    resultado = `
+      <div class="result-box">
+        <h4>Resultado</h4>
+        <div class="result-item"><span>Watts:</span><strong>${W.toFixed(2)} W</strong></div>
+        <div class="result-item"><span>kW:</span><strong>${(W/1000).toFixed(3)} kW</strong></div>
+        <div class="result-item"><span>CV:</span><strong>${(W/735.5).toFixed(3)} CV</strong></div>
+      </div>`;
+  }
+
+  // TENSÃO
+  if (tipo === "tensao") {
+    let V = unidade === "kV" ? valor * 1000 : valor;
+
+    resultado = `
+      <div class="result-box">
+        <h4>Resultado</h4>
+        <div class="result-item"><span>Volts:</span><strong>${V.toFixed(2)} V</strong></div>
+        <div class="result-item"><span>kV:</span><strong>${(V/1000).toFixed(3)} kV</strong></div>
+      </div>`;
+  }
+
+  // CORRENTE
+  if (tipo === "corrente") {
+    let A = unidade === "mA" ? valor / 1000 : valor;
+
+    resultado = `
+      <div class="result-box">
+        <h4>Resultado</h4>
+        <div class="result-item"><span>Amperes:</span><strong>${A.toFixed(3)} A</strong></div>
+        <div class="result-item"><span>mA:</span><strong>${(A*1000).toFixed(0)} mA</strong></div>
+      </div>`;
+  }
+
+  // BITOLA
+  if (tipo === "bitola") {
+
+    const tabelaAWG = {
+      14:2.08, 12:3.31, 10:5.26, 8:8.37, 6:13.3, 4:21.1, 2:33.6
+    };
+
+    let texto = "";
+
+    if (unidade === "awg") {
+      const mm2 = tabelaAWG[valor];
+      texto = mm2
+        ? `<div class="result-item"><span>Equivalente:</span><strong>${mm2} mm²</strong></div>`
+        : `<div class="result-item"><strong>AWG não cadastrado</strong></div>`;
+    } else {
+      let awgEncontrado = "—";
+      for (let awg in tabelaAWG) {
+        if (Math.abs(tabelaAWG[awg] - valor) < 1) {
+          awgEncontrado = awg;
+        }
+      }
+      texto = `<div class="result-item"><span>Equivalente:</span><strong>AWG ${awgEncontrado}</strong></div>`;
+    }
+
+    resultado = `
+      <div class="result-box">
+        <h4>Resultado</h4>
+        ${texto}
+      </div>`;
+  }
+
+  document.getElementById("resultConversao").innerHTML = resultado;
 }
 
 /* ======================== ORÇAMENTOS ======================== */
