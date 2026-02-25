@@ -501,7 +501,11 @@
       <div class="sub-tile" onclick="openScreen('calcConversao','Conversões')">
       <div class="s-icon">🔄</div>
       <div class="s-text"><strong>Conversões</strong><span>Unidades elétricas</span></div>
-</div>
+      </div>
+      <div class="sub-tile" onclick="openScreen('calcConversao','Conversões')"> 
+      <div class="s-icon">🔄</div> <div class="s-text"><strong>Conversões</strong><span>Unidades elétricas</span></div>
+      </div>
+      
     </div>
   </div>
 
@@ -1145,7 +1149,99 @@ function calcularConsumo(){
   html+=`</div>`;
   document.getElementById('resultConsumo').innerHTML=html;
 }
+<script>
+// ===========================
+// CONVERSÕES ELÉTRICAS PRO
+// ===========================
 
+const unidades = {
+  potencia: ["W","kW","CV","HP"],
+  energia: ["Wh","kWh","J"]
+};
+
+// atualizar unidades quando trocar tipo
+document.getElementById("tipoConversao").addEventListener("change", atualizarUnidades);
+
+function atualizarUnidades(){
+    const tipo = document.getElementById("tipoConversao").value;
+    const select = document.getElementById("unidadeConversao");
+
+    select.innerHTML = "";
+
+    unidades[tipo].forEach(u=>{
+        const opt = document.createElement("option");
+        opt.value = u;
+        opt.textContent = u;
+        select.appendChild(opt);
+    });
+}
+
+// iniciar automaticamente
+atualizarUnidades();
+
+
+// ===========================
+// CALCULAR CONVERSÃO
+// ===========================
+
+function calcularConversao(){
+
+    const tipo = document.getElementById("tipoConversao").value;
+    const valor = parseFloat(document.getElementById("valorConversao").value);
+    const unidade = document.getElementById("unidadeConversao").value;
+    const result = document.getElementById("resultConversao");
+
+    if(!valor){
+        result.innerHTML = "<p>Digite um valor válido.</p>";
+        return;
+    }
+
+    let W, Wh;
+    let html = '<div class="result-box"><h4>Resultado</h4>';
+
+    // ================= POTÊNCIA =================
+    if(tipo === "potencia"){
+
+        // converter tudo para W (base)
+        if(unidade === "W") W = valor;
+        if(unidade === "kW") W = valor * 1000;
+        if(unidade === "CV") W = valor * 735.5;
+        if(unidade === "HP") W = valor * 745.7;
+
+        html += item("Watts (W)", W.toFixed(2));
+        html += item("Kilowatts (kW)", (W/1000).toFixed(4));
+        html += item("Cavalo-vapor (CV)", (W/735.5).toFixed(4));
+        html += item("Horsepower (HP)", (W/745.7).toFixed(4));
+    }
+
+    // ================= ENERGIA =================
+    if(tipo === "energia"){
+
+        // base = Wh
+        if(unidade === "Wh") Wh = valor;
+        if(unidade === "kWh") Wh = valor * 1000;
+        if(unidade === "J") Wh = valor / 3600;
+
+        html += item("Watt-hora (Wh)", Wh.toFixed(2));
+        html += item("Kilowatt-hora (kWh)", (Wh/1000).toFixed(4));
+        html += item("Joules (J)", (Wh*3600).toFixed(2));
+    }
+
+    html += "</div>";
+    result.innerHTML = html;
+}
+
+
+// helper visual
+function item(nome, valor){
+    return `
+    <div class="result-item">
+        <span>${nome}</span>
+        <strong>${valor}</strong>
+    </div>`;
+}
+
+</script>
   
 /* ======================== ORÇAMENTOS ======================== */
 let itensOrcamento=[];
