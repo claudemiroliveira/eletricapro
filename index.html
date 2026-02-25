@@ -1213,14 +1213,18 @@ function gerarPDFOrcamento(){
   pdfFooter(doc);
   doc.save(`orcamento_${nome.replace(/ /g,'_')}_${Date.now()}.pdf`);
 }
-
 /* ======================== INIT ======================== */
 window.addEventListener('load', initTrial);
-<script src="/eletricopro/app.js"></script>
+
+function initTrial() {
+  console.log("App iniciado");
+}
+
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.31/jspdf.plugin.autotable.min.js"></script>
   
+  <script src="./app.js"></script>
   <script>
 /* ===== REGISTRO DO SERVICE WORKER ===== */
 if ('serviceWorker' in navigator) {
