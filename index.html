@@ -1102,25 +1102,11 @@
     </div>
   </div>
 
-</div><!-- /container -->
+</div>
+  <!-- /container -->
 <!-- jsPDF -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.31/jspdf.plugin.autotable.min.js"></script>
 
-<!-- SEU SCRIPT PRINCIPAL (muito importante) -->
-<script src="app.js"></script>
-
-<!-- REGISTRO DO SERVICE WORKER (PWA OFFLINE) -->
-<script>
-if ('serviceWorker' in navigator) {
-  window.addEventListener('load', () => {
-    navigator.serviceWorker.register('./sw.js')
-      .then(() => console.log('✅ Service Worker ativo'))
-      .catch(err => console.log('Erro SW:', err));
-  });
-}
-</script>
   
 /* ======================== STARS ======================== */
 (function(){
@@ -1778,5 +1764,25 @@ function initTheme() {
 }
 
 </script>
+    <!-- /container -->
+<!-- jsPDF -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.31/jspdf.plugin.autotable.min.js"></script>
+
+<!-- SEU SCRIPT PRINCIPAL (muito importante) -->
+<script src="app.js"></script>
+
+<!-- REGISTRO DO SERVICE WORKER (PWA OFFLINE) -->
+<script>
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('./sw.js')
+      .then(() => console.log('✅ Service Worker ativo'))
+      .catch(err => console.log('Erro SW:', err));
+  });
+}
+</script>
+    
 </body>
 </html>
