@@ -672,10 +672,25 @@ function gerarPDFOrcamento() {
     
     doc.save(`orcamento_${nomeCliente.replace(/ /g, '_')}_${Date.now()}.pdf`);
 }
+/* =========================
+   FUNÇÃO DE TROCA DE TELAS
+========================= */
+function openScreen(screenId) {
 
-// Inicializar app
-window.addEventListener('load', () => {
-    initTrial();
-});// tornar função global para o HTML
+    document.querySelectorAll('.screen').forEach(screen => {
+        screen.classList.remove('active');
+    });
+
+    document.getElementById(screenId).classList.add('active');
+}
+
+/* TORNA GLOBAL (IMPORTANTE) */
 window.openScreen = openScreen;
 
+
+/* =========================
+   INICIALIZAÇÃO DO APP
+========================= */
+window.addEventListener('load', () => {
+    initTrial();
+});
