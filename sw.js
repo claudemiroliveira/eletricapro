@@ -4,7 +4,8 @@ const FILES_TO_CACHE = [
   "./",
   "./index.html",
   "./manifest.json",
-  "./app.js"
+  "./app.js","./js/jspdf.umd.min.js",
+  "./js/jspdf.plugin.autotable.min.js"
 ];
 
 // INSTALAÇÃO SEGURA
