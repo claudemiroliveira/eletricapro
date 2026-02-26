@@ -676,4 +676,6 @@ function gerarPDFOrcamento() {
 // Inicializar app
 window.addEventListener('load', () => {
     initTrial();
-});
+});// tornar função global para o HTML
+window.openScreen = openScreen;
+
