@@ -429,10 +429,11 @@
       <polygon points="13,2 4.5,13.5 11,13.5 11,22 19.5,10.5 13,10.5" fill="#FFD600"/>
     </svg>
   </div>
-  <div class="header-text">
+  <div class="header-text" style="flex:1;">
     <h1>Elétrica<span>Pro</span></h1>
     <p id="headerSubtitle">Calculadoras, Tabelas e Instalações</p>
   </div>
+  <button id="darkModeBtn" onclick="toggleDarkMode()" style="background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.2);color:white;padding:0.4rem 0.8rem;border-radius:8px;cursor:pointer;font-size:0.8rem;white-space:nowrap;">☀️ Modo Claro</button>
 </header>
 
 <div class="container">
@@ -497,6 +498,22 @@
       <div class="sub-tile" onclick="openScreen('calcCondutor','Dimensionamento')">
         <div class="s-icon">📏</div>
         <div class="s-text"><strong>Dimensionamento</strong><span>Condutor & Disjuntor</span></div>
+      </div>
+      <div class="sub-tile" onclick="openScreen('calcConversao','Conversão de Unidades'); updateUnidades();">
+        <div class="s-icon">🔄</div>
+        <div class="s-text"><strong>Conversão</strong><span>W, kW, CV, V, A...</span></div>
+      </div>
+      <div class="sub-tile" onclick="openScreen('calcIluminacao','Iluminação')">
+        <div class="s-icon">💡</div>
+        <div class="s-text"><strong>Iluminação</strong><span>Lux, Luminárias</span></div>
+      </div>
+      <div class="sub-tile" onclick="openScreen('calcCurtoCircuito','Curto-Circuito')">
+        <div class="s-icon">⚡</div>
+        <div class="s-text"><strong>Curto-Circuito</strong><span>Icc, Poder de Corte</span></div>
+      </div>
+      <div class="sub-tile" onclick="openScreen('calcFatorDemanda','Fator de Demanda')">
+        <div class="s-icon">📊</div>
+        <div class="s-text"><strong>Fator de Demanda</strong><span>Demanda Máxima</span></div>
       </div>
     </div>
   </div>
@@ -591,11 +608,13 @@
 
     <div class="form-group">
       <label>Tipo de Conversão:</label>
-      <select id="tipoConversao">
-        <option value="potencia">Potência (W / kW / CV)</option>
-        <option value="tensao">Tensão (V / kV)</option>
-        <option value="corrente">Corrente (A / mA)</option>
-        <option value="bitola">Bitola (mm² / AWG)</option>
+      <select id="tipoConversao" onchange="updateUnidades()">
+        <option value="potencia">Potência (W / kW / CV / MW)</option>
+        <option value="tensao">Tensão (V / kV / mV / µV)</option>
+        <option value="corrente">Corrente (A / mA / kA / µA)</option>
+        <option value="resistencia">Resistência (Ω / kΩ / MΩ)</option>
+        <option value="energia">Energia (kWh / Wh / J / kcal)</option>
+        <option value="bitola">Bitola (mm² ↔ AWG)</option>
       </select>
     </div>
 
@@ -616,6 +635,125 @@
 </div>
   
   
+
+
+  <!-- ========== CALC: ILUMINAÇÃO ========== -->
+  <div id="calcIluminacao" class="screen">
+    <div class="screen-title"><div class="dot"></div>Cálculo de Iluminação</div>
+    <div class="calc-card">
+      <h3>💡 Dimensionamento de Iluminação (NBR ISO/CIE 8995-1)</h3>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.8rem;">
+        <div class="form-group">
+          <label>Área do ambiente (m²):</label>
+          <input type="number" id="areaIlum" placeholder="Ex: 20">
+        </div>
+        <div class="form-group">
+          <label>Altura do teto (m):</label>
+          <input type="number" id="alturaIlum" placeholder="Ex: 2.80" step="0.1">
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Tipo de Ambiente:</label>
+        <select id="tipoAmbienteIlum">
+          <option value="sala">Sala de Estar (200 lux)</option>
+          <option value="quarto">Quarto (100 lux)</option>
+          <option value="cozinha">Cozinha (300 lux)</option>
+          <option value="escritorio">Escritório (500 lux)</option>
+          <option value="banheiro">Banheiro (200 lux)</option>
+          <option value="garagem">Garagem (75 lux)</option>
+          <option value="corredor">Corredor (100 lux)</option>
+          <option value="externo">Área Externa (50 lux)</option>
+        </select>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.8rem;">
+        <div class="form-group">
+          <label>Fluxo luminoso da lâmpada (lm):</label>
+          <input type="number" id="fluxoLamp" placeholder="Ex: 800 (LED 9W)">
+        </div>
+        <div class="form-group">
+          <label>Plano de trabalho (m):</label>
+          <input type="number" id="planoTrabalho" placeholder="0.75" value="0.75" step="0.05">
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Eficiência da luminária (Fu estimado 0,5–0,9):</label>
+        <input type="number" id="efLuminaria" placeholder="0.70" value="0.70" step="0.05" min="0.1" max="1">
+      </div>
+      <p style="font-size:0.78rem;color:var(--text-muted);margin-bottom:0.8rem;">💡 Lâmpadas comuns: LED 9W ≈ 800 lm | LED 12W ≈ 1100 lm | LED 15W ≈ 1500 lm | Fluorescente 32W ≈ 2400 lm</p>
+      <button class="btn" onclick="calcularIluminacao()">💡 Calcular</button>
+      <button class="btn btn-yellow" onclick="gerarPDFCalc('Iluminação')">📄 PDF</button>
+      <div id="resultIluminacao"></div>
+    </div>
+  </div>
+
+  <!-- ========== CALC: CURTO-CIRCUITO ========== -->
+  <div id="calcCurtoCircuito" class="screen">
+    <div class="screen-title"><div class="dot"></div>Corrente de Curto-Circuito</div>
+    <div class="calc-card">
+      <h3>⚡ Cálculo de Corrente de Curto-Circuito</h3>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.8rem;">
+        <div class="form-group">
+          <label>Tensão do sistema (V):</label>
+          <input type="number" id="tensaoCC" placeholder="Ex: 220" value="220">
+        </div>
+        <div class="form-group">
+          <label>Potência do transformador (kVA):</label>
+          <input type="number" id="potTrafo" placeholder="Ex: 75">
+        </div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.8rem;">
+        <div class="form-group">
+          <label>Impedância do trafo (% — padrão 4%):</label>
+          <input type="number" id="impedTrafo" placeholder="4" value="4" step="0.1">
+        </div>
+        <div class="form-group">
+          <label>Tipo de curto:</label>
+          <select id="tipoCC">
+            <option value="trifasico">Trifásico (3φ — mais severo)</option>
+            <option value="bifasico">Bifásico (2φ)</option>
+            <option value="monofasico">Monofásico (1φ — fase/neutro)</option>
+          </select>
+        </div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.8rem;">
+        <div class="form-group">
+          <label>Seção do cabo (mm²):</label>
+          <input type="number" id="secCaboCC" placeholder="Ex: 10">
+        </div>
+        <div class="form-group">
+          <label>Comprimento do cabo (m):</label>
+          <input type="number" id="distCaboCC" placeholder="Ex: 50">
+        </div>
+      </div>
+      <button class="btn" onclick="calcularCurtoCircuito()">⚡ Calcular</button>
+      <button class="btn btn-yellow" onclick="gerarPDFCalc('Curto-Circuito')">📄 PDF</button>
+      <div id="resultCurtoCircuito"></div>
+    </div>
+  </div>
+
+  <!-- ========== CALC: FATOR DE DEMANDA ========== -->
+  <div id="calcFatorDemanda" class="screen">
+    <div class="screen-title"><div class="dot"></div>Fator de Demanda</div>
+    <div class="calc-card">
+      <h3>📊 Calculadora de Fator de Demanda</h3>
+      <div class="form-group">
+        <label>Tensão do sistema (V):</label>
+        <input type="number" id="tensaoFD" placeholder="220" value="220">
+      </div>
+      <div id="cargasFD">
+        <div class="carga-fd-row consumo-item-row">
+          <div class="form-group"><label>Carga</label><input type="text" placeholder="Ex: Ar-cond. 9000 BTU"></div>
+          <div class="form-group"><label>Potência (W)</label><input type="number" placeholder="Ex: 900"></div>
+          <div class="form-group"><label>Qtd</label><input type="number" placeholder="1" value="1" min="1"></div>
+          <div class="form-group"><label>FD (%)</label><input type="number" placeholder="75" value="75" min="1" max="100"></div>
+        </div>
+      </div>
+      <p style="font-size:0.78rem;color:var(--text-muted);margin-top:0.5rem;">FD típico: Iluminação 75% | Tomadas 50% | Motores 65% | AR cond. 80%</p>
+      <button class="btn" onclick="adicionarCargaFD()">➕ Adicionar Carga</button>
+      <button class="btn btn-yellow" onclick="calcularFatorDemanda()">📊 Calcular Demanda</button>
+      <div id="resultFatorDemanda"></div>
+    </div>
+  </div>
 
   <!-- ========== TABELAS HOME ========== -->
   <div id="tabelasHome" class="screen">
@@ -1258,7 +1396,374 @@ function gerarPDFOrcamento(){
 }
 
 /* ======================== INIT ======================== */
-window.addEventListener('load', initTrial);
+window.addEventListener('load', () => { initTrial(); initTheme(); updateUnidades(); });
+
+/* ======================== NOVAS FUNCIONALIDADES ======================== */
+// ===== NOVAS FUNCIONALIDADES - ELETRICOPRO =====
+
+// ===== 1. CALCULADORA DE CONVERSÃO =====
+const conversaoData = {
+  potencia: {
+    unidades: ['Watts (W)', 'Quilowatts (kW)', 'Cavalos-Vapor (CV/HP)', 'Megawatts (MW)', 'Milliwatts (mW)'],
+    valores:  ['W', 'kW', 'CV', 'MW', 'mW'],
+    toW: { W:1, kW:1000, CV:735.499, MW:1e6, mW:0.001 },
+    fromW: { W:1, kW:0.001, CV:1/735.499, MW:1e-6, mW:1000 }
+  },
+  tensao: {
+    unidades: ['Volts (V)', 'Quilovolts (kV)', 'Milivolts (mV)', 'Microvolts (µV)'],
+    valores:  ['V', 'kV', 'mV', 'µV'],
+    toV: { V:1, kV:1000, mV:0.001, 'µV':0.000001 },
+    fromV: { V:1, kV:0.001, mV:1000, 'µV':1000000 }
+  },
+  corrente: {
+    unidades: ['Amperes (A)', 'Miliamperes (mA)', 'Quiloamperes (kA)', 'Microamperes (µA)'],
+    valores:  ['A', 'mA', 'kA', 'µA'],
+    toA: { A:1, mA:0.001, kA:1000, 'µA':0.000001 },
+    fromA: { A:1, mA:1000, kA:0.001, 'µA':1000000 }
+  },
+  resistencia: {
+    unidades: ['Ohms (Ω)', 'Quiloohms (kΩ)', 'Megaohms (MΩ)', 'Miliohms (mΩ)'],
+    valores:  ['Ω', 'kΩ', 'MΩ', 'mΩ'],
+    toOhm: { 'Ω':1, 'kΩ':1000, 'MΩ':1e6, 'mΩ':0.001 },
+    fromOhm: { 'Ω':1, 'kΩ':0.001, 'MΩ':1e-6, 'mΩ':1000 }
+  },
+  energia: {
+    unidades: ['Quilowatt-hora (kWh)', 'Watt-hora (Wh)', 'Joule (J)', 'Megajoule (MJ)', 'Caloria (kcal)'],
+    valores:  ['kWh', 'Wh', 'J', 'MJ', 'kcal'],
+    toKwh: { kWh:1, Wh:0.001, J:2.778e-7, MJ:0.2778, kcal:0.001163 },
+    fromKwh: { kWh:1, Wh:1000, J:3600000, MJ:3.6, kcal:860 }
+  },
+  bitola: {
+    // AWG to mm² table
+    awgTable: [
+      {awg:'4/0', mm2:107.2},  {awg:'3/0', mm2:85.0},   {awg:'2/0', mm2:67.4},
+      {awg:'1/0', mm2:53.5},   {awg:'1',   mm2:42.4},   {awg:'2',   mm2:33.6},
+      {awg:'3',   mm2:26.7},   {awg:'4',   mm2:21.1},   {awg:'6',   mm2:13.3},
+      {awg:'8',   mm2:8.37},   {awg:'10',  mm2:5.26},   {awg:'12',  mm2:3.31},
+      {awg:'14',  mm2:2.08},   {awg:'16',  mm2:1.31},   {awg:'18',  mm2:0.823},
+      {awg:'20',  mm2:0.519},  {awg:'22',  mm2:0.326},  {awg:'24',  mm2:0.205}
+    ]
+  }
+};
+
+function updateUnidades() {
+  const tipo = document.getElementById('tipoConversao').value;
+  const sel = document.getElementById('unidadeConversao');
+  sel.innerHTML = '';
+  if (tipo === 'bitola') {
+    ['mm² → AWG', 'AWG → mm²'].forEach(u => {
+      const opt = document.createElement('option'); opt.value = u; opt.textContent = u; sel.appendChild(opt);
+    });
+  } else {
+    const data = conversaoData[tipo];
+    data.unidades.forEach((u, i) => {
+      const opt = document.createElement('option'); opt.value = data.valores[i]; opt.textContent = u; sel.appendChild(opt);
+    });
+  }
+}
+
+function calcularConversao() {
+  if(checkTrialExpired()) return;
+  const tipo = document.getElementById('tipoConversao').value;
+  const valor = parseFloat(document.getElementById('valorConversao').value);
+  const unidade = document.getElementById('unidadeConversao').value;
+  
+  if (isNaN(valor) || valor === '') { alert('Digite um valor válido!'); return; }
+  
+  let html = '<div class="result-box"><h4>🔄 Resultados da Conversão</h4>';
+  
+  if (tipo === 'bitola') {
+    const tbl = conversaoData.bitola.awgTable;
+    if (unidade === 'mm² → AWG') {
+      const closest = tbl.reduce((prev, curr) => Math.abs(curr.mm2 - valor) < Math.abs(prev.mm2 - valor) ? curr : prev);
+      html += `<div class="result-item"><span>Valor inserido</span><strong>${valor} mm²</strong></div>`;
+      html += `<div class="result-item"><span>AWG equivalente mais próximo</span><strong>AWG ${closest.awg}</strong></div>`;
+      html += `<div class="result-item"><span>mm² exato do AWG ${closest.awg}</span><strong>${closest.mm2} mm²</strong></div>`;
+      html += '<div style="margin-top:1rem;font-size:0.82rem;color:var(--text-muted);">📋 Tabela AWG ↔ mm² completa:</div>';
+      html += '<div class="table-responsive" style="margin-top:0.5rem;"><table><thead><tr><th>AWG</th><th>mm²</th><th>AWG</th><th>mm²</th></tr></thead><tbody>';
+      for (let i=0; i<tbl.length-1; i+=2) {
+        html += `<tr><td>${tbl[i].awg}</td><td>${tbl[i].mm2}</td><td>${tbl[i+1]?.awg||''}</td><td>${tbl[i+1]?.mm2||''}</td></tr>`;
+      }
+      html += '</tbody></table></div>';
+    } else {
+      const awgStr = prompt('Digite o número AWG (ex: 12, 4/0, 1/0):');
+      const found = tbl.find(r => r.awg === awgStr?.trim());
+      if (!found) { alert('AWG não encontrado. Use: 4/0, 3/0, 2/0, 1/0, 1, 2, 3, 4, 6, 8, 10, 12, 14, 16, 18, 20, 22, 24'); return; }
+      html += `<div class="result-item"><span>AWG ${found.awg}</span><strong>${found.mm2} mm²</strong></div>`;
+    }
+  } else {
+    const data = conversaoData[tipo];
+    const keys = Object.keys(data.unidades ? {} : {});
+    // Convert to base unit first
+    let baseKey, baseUnit, toBase, fromBase;
+    if (tipo === 'potencia')      { toBase = data.toW;   fromBase = data.fromW;  baseUnit = 'W'; }
+    else if (tipo === 'tensao')   { toBase = data.toV;   fromBase = data.fromV;  baseUnit = 'V'; }
+    else if (tipo === 'corrente') { toBase = data.toA;   fromBase = data.fromA;  baseUnit = 'A'; }
+    else if (tipo === 'resistencia') { toBase = data.toOhm; fromBase = data.fromOhm; baseUnit = 'Ω'; }
+    else if (tipo === 'energia')  { toBase = data.toKwh; fromBase = data.fromKwh; baseUnit = 'kWh'; }
+    
+    const baseVal = valor * toBase[unidade];
+    
+    html += `<div class="result-item"><span>Valor original</span><strong>${valor} ${unidade}</strong></div>`;
+    html += `<div style="height:0.5rem;"></div>`;
+    
+    Object.keys(fromBase).forEach(u => {
+      if (u !== unidade) {
+        const converted = baseVal * fromBase[u];
+        let display = converted;
+        if (converted >= 1e6) display = converted.toExponential(4);
+        else if (converted < 0.0001 && converted !== 0) display = converted.toExponential(4);
+        else display = parseFloat(converted.toFixed(6)).toString();
+        html += `<div class="result-item"><span>${u}</span><strong>${display} ${u}</strong></div>`;
+      }
+    });
+  }
+  
+  html += '</div>';
+  document.getElementById('resultConversao').innerHTML = html;
+}
+
+// ===== 2. CALCULADORA DE ILUMINAÇÃO =====
+function calcularIluminacao() {
+  if(checkTrialExpired()) return;
+  
+  const area = parseFloat(document.getElementById('areaIlum').value);
+  const altura = parseFloat(document.getElementById('alturaIlum').value);
+  const planoTrabalho = parseFloat(document.getElementById('planoTrabalho').value) || 0.75;
+  const tipoAmbiente = document.getElementById('tipoAmbienteIlum').value;
+  const efLuminaria = parseFloat(document.getElementById('efLuminaria').value) || 0.7;
+  const fluxoLamp = parseFloat(document.getElementById('fluxoLamp').value);
+  
+  if (!area || !altura || !fluxoLamp) { alert('Preencha todos os campos obrigatórios!'); return; }
+  
+  // Iluminâncias recomendadas (ABNT NBR ISO/CIE 8995-1)
+  const iluminancias = {
+    sala:       { E: 200, nome: 'Sala de Estar' },
+    quarto:     { E: 100, nome: 'Quarto' },
+    cozinha:    { E: 300, nome: 'Cozinha' },
+    escritorio: { E: 500, nome: 'Escritório' },
+    banheiro:   { E: 200, nome: 'Banheiro' },
+    garagem:    { E: 75,  nome: 'Garagem' },
+    corredor:   { E: 100, nome: 'Corredor' },
+    externo:    { E: 50,  nome: 'Área Externa' }
+  };
+  
+  const { E, nome } = iluminancias[tipoAmbiente];
+  
+  // Índice do Local (K)
+  const larguraEst = Math.sqrt(area * 0.75);
+  const comprimentoEst = area / larguraEst;
+  const h = altura - planoTrabalho;
+  const K = (larguraEst * comprimentoEst) / (h * (larguraEst + comprimentoEst));
+  
+  // Fator de Utilização (aproximação baseada em K)
+  let fu = 0.5;
+  if (K >= 0.6 && K < 1) fu = 0.55;
+  else if (K >= 1 && K < 1.5) fu = 0.60;
+  else if (K >= 1.5 && K < 2) fu = 0.65;
+  else if (K >= 2 && K < 2.5) fu = 0.70;
+  else if (K >= 2.5) fu = 0.75;
+  
+  // Fator de Manutenção (depreciação, teto claro)
+  const fm = 0.80;
+  
+  // Número de lâmpadas necessárias
+  const nLampadas = Math.ceil((E * area) / (fluxoLamp * fu * fm));
+  const nLuminarias = Math.ceil(nLampadas / 2); // assumindo 2 lâmpadas por luminária
+  const fluxoTotal = nLampadas * fluxoLamp;
+  const iluminanciaReal = (fluxoTotal * fu * fm) / area;
+  
+  const html = `
+    <div class="result-box">
+      <h4>💡 Resultado — ${nome}</h4>
+      <div class="result-item"><span>Iluminância recomendada (ABNT)</span><strong>${E} lux</strong></div>
+      <div class="result-item"><span>Área do ambiente</span><strong>${area} m²</strong></div>
+      <div class="result-item"><span>Índice do local (K)</span><strong>${K.toFixed(2)}</strong></div>
+      <div class="result-item"><span>Fator de utilização (Fu)</span><strong>${fu.toFixed(2)}</strong></div>
+      <div class="result-item"><span>Fator de manutenção (Fm)</span><strong>${fm}</strong></div>
+      <div style="border-top:2px solid var(--blue-glow);margin:0.8rem 0;"></div>
+      <div class="result-item"><span>🔆 Nº de lâmpadas necessárias</span><strong style="color:var(--yellow);font-size:1.1rem;">${nLampadas} lâmpadas</strong></div>
+      <div class="result-item"><span>💡 Nº de luminárias (2 lâmp/lum.)</span><strong>${nLuminarias} luminárias</strong></div>
+      <div class="result-item"><span>Iluminância resultante</span><strong>${iluminanciaReal.toFixed(0)} lux</strong></div>
+      <div class="result-item"><span>Status</span><strong style="color:${iluminanciaReal>=E?'#4caf50':'#ff9800'}">${iluminanciaReal>=E?'✅ Dentro da norma':'⚠️ Abaixo do recomendado'}</strong></div>
+    </div>`;
+  
+  document.getElementById('resultIluminacao').innerHTML = html;
+}
+
+// ===== 3. CALCULADORA DE CURTO-CIRCUITO =====
+function calcularCurtoCircuito() {
+  if(checkTrialExpired()) return;
+  
+  const tensao = parseFloat(document.getElementById('tensaoCC').value);
+  const potTrafo = parseFloat(document.getElementById('potTrafo').value);
+  const impedTrafo = parseFloat(document.getElementById('impedTrafo').value) || 4;
+  const secCabo = parseFloat(document.getElementById('secCaboCC').value);
+  const distCabo = parseFloat(document.getElementById('distCaboCC').value);
+  const tipoCC = document.getElementById('tipoCC').value;
+  
+  if (!tensao || !potTrafo || !secCabo || !distCabo) { alert('Preencha todos os campos!'); return; }
+  
+  // Impedância do transformador (Ω)
+  const zTrafo = (impedTrafo / 100) * (tensao * tensao) / (potTrafo * 1000);
+  
+  // Resistência do cabo (Ω) — cobre, ρ = 0.0172
+  const ro = 0.0172;
+  const rCabo = (ro * distCabo) / secCabo;  // ida
+  const xCabo = 0; // reativo do cabo (simplificado)
+  
+  // Impedância total (trifásico)
+  const zTotal = Math.sqrt(Math.pow(zTrafo + rCabo * 2, 2));
+  
+  // Corrente de curto-circuito trifásico
+  let Icc3f = tensao / (Math.sqrt(3) * zTotal);
+  
+  // Corrente bifásico e monofásico (aproximações)
+  const Icc2f = Icc3f * 0.866; // √3/2
+  const Icc1f = tensao / (2 * zTotal); // simplificado
+  
+  const resultado = tipoCC === 'trifasico' ? Icc3f 
+                  : tipoCC === 'bifasico'  ? Icc2f 
+                  : Icc1f;
+  const nomeCC = tipoCC === 'trifasico' ? 'Trifásico (mais severo)' 
+               : tipoCC === 'bifasico'  ? 'Bifásico'
+               : 'Monofásico (fase-neutro)';
+  
+  // Poder de interrupção do disjuntor recomendado
+  const podInterr = resultado <= 6000 ? 6 : resultado <= 10000 ? 10 : resultado <= 15000 ? 15 : 25;
+  
+  const html = `
+    <div class="result-box">
+      <h4>⚡ Corrente de Curto-Circuito — ${nomeCC}</h4>
+      <div class="result-item"><span>Impedância do transformador (Zt)</span><strong>${zTrafo.toFixed(4)} Ω</strong></div>
+      <div class="result-item"><span>Resistência do cabo (Rc ida+volta)</span><strong>${(rCabo*2).toFixed(4)} Ω</strong></div>
+      <div class="result-item"><span>Impedância total (Ztotal)</span><strong>${zTotal.toFixed(4)} Ω</strong></div>
+      <div style="border-top:2px solid var(--blue-glow);margin:0.8rem 0;"></div>
+      <div class="result-item"><span>⚡ Icc Trifásico</span><strong>${(Icc3f/1000).toFixed(2)} kA (${Icc3f.toFixed(0)} A)</strong></div>
+      <div class="result-item"><span>⚡ Icc Bifásico</span><strong>${(Icc2f/1000).toFixed(2)} kA (${Icc2f.toFixed(0)} A)</strong></div>
+      <div class="result-item"><span>⚡ Icc Monofásico</span><strong>${(Icc1f/1000).toFixed(2)} kA (${Icc1f.toFixed(0)} A)</strong></div>
+      <div style="border-top:2px solid var(--yellow);margin:0.8rem 0;"></div>
+      <div class="result-item"><span>🔒 Poder de corte mínimo do disjuntor</span><strong style="color:var(--yellow)">${podInterr} kA</strong></div>
+    </div>`;
+  
+  document.getElementById('resultCurtoCircuito').innerHTML = html;
+}
+
+// ===== 4. CALCULADORA DE FATOR DE DEMANDA =====
+function adicionarCargaFD() {
+  const container = document.getElementById('cargasFD');
+  const count = container.querySelectorAll('.carga-fd-row').length;
+  const div = document.createElement('div');
+  div.className = 'carga-fd-row consumo-item-row';
+  div.innerHTML = `
+    <div class="form-group"><label>Carga</label><input type="text" placeholder="Ex: Ar-condicionado"></div>
+    <div class="form-group"><label>Potência (W)</label><input type="number" placeholder="Ex: 2000"></div>
+    <div class="form-group"><label>Qtd</label><input type="number" placeholder="1" value="1" min="1"></div>
+    <div class="form-group"><label>FD (%)</label><input type="number" placeholder="Ex: 75" value="75" min="1" max="100"></div>
+    <div style="padding-bottom:0.9rem;display:flex;align-items:flex-end;">
+      <button class="btn btn-red" onclick="this.closest('.carga-fd-row').remove()">🗑️</button>
+    </div>`;
+  container.appendChild(div);
+}
+
+function calcularFatorDemanda() {
+  if(checkTrialExpired()) return;
+  
+  const rows = document.querySelectorAll('.carga-fd-row');
+  if (!rows.length) { alert('Adicione pelo menos uma carga!'); return; }
+  
+  let potenciaInstalada = 0;
+  let demandaMaxima = 0;
+  let itens = [];
+  
+  rows.forEach(row => {
+    const inputs = row.querySelectorAll('input');
+    const nome = inputs[0].value || 'Carga';
+    const pot = parseFloat(inputs[1].value) || 0;
+    const qtd = parseFloat(inputs[2].value) || 1;
+    const fd = parseFloat(inputs[3].value) || 75;
+    
+    if (pot > 0) {
+      const potTotal = pot * qtd;
+      const demanda = potTotal * (fd / 100);
+      potenciaInstalada += potTotal;
+      demandaMaxima += demanda;
+      itens.push({ nome, potTotal, fd, demanda });
+    }
+  });
+  
+  if (!potenciaInstalada) { alert('Preencha as potências das cargas!'); return; }
+  
+  const fdGlobal = (demandaMaxima / potenciaInstalada) * 100;
+  const tensao = parseFloat(document.getElementById('tensaoFD').value) || 220;
+  const correnteDemanda = demandaMaxima / tensao;
+  const secoesDisponiveis = [1.5, 2.5, 4, 6, 10, 16, 25, 35, 50, 70, 95];
+  const cap220 = [15.5, 21, 28, 36, 50, 68, 89, 110, 134, 170, 210];
+  let secaoRec = 50;
+  for(let i = 0; i < cap220.length; i++) {
+    if(cap220[i] >= correnteDemanda * 1.25) { secaoRec = secoesDisponiveis[i]; break; }
+  }
+  const disjRec = [10,16,20,25,32,40,50,63,70,80,100].find(d => d >= correnteDemanda * 1.25) || 100;
+  
+  let html = `<div class="result-box"><h4>📊 Resultado — Fator de Demanda</h4>`;
+  html += `<div class="result-item"><span>Potência Total Instalada</span><strong>${(potenciaInstalada/1000).toFixed(2)} kW</strong></div>`;
+  html += `<div class="result-item"><span>Demanda Máxima Estimada</span><strong>${(demandaMaxima/1000).toFixed(2)} kW</strong></div>`;
+  html += `<div class="result-item"><span>Fator de Demanda Global</span><strong>${fdGlobal.toFixed(1)}%</strong></div>`;
+  html += `<div class="result-item"><span>Corrente de demanda (${tensao}V)</span><strong>${correnteDemanda.toFixed(1)} A</strong></div>`;
+  html += `<div style="border-top:2px solid var(--yellow);margin:0.8rem 0;"></div>`;
+  html += `<div class="result-item"><span>Seção recomendada</span><strong style="color:var(--yellow)">${secaoRec} mm²</strong></div>`;
+  html += `<div class="result-item"><span>Disjuntor recomendado</span><strong style="color:var(--yellow)">${disjRec} A</strong></div>`;
+  html += `<div style="margin-top:1rem;font-size:0.82rem;color:var(--text-muted);">Detalhamento por carga:</div>`;
+  itens.forEach(it => {
+    html += `<div class="result-item"><span>${it.nome} (FD ${it.fd}%)</span><strong>${(it.demanda/1000).toFixed(2)} kW</strong></div>`;
+  });
+  html += `</div>`;
+  
+  document.getElementById('resultFatorDemanda').innerHTML = html;
+}
+
+// ===== 5. MODO ESCURO =====
+function toggleDarkMode() {
+  const root = document.documentElement;
+  const btn = document.getElementById('darkModeBtn');
+  const isDark = root.getAttribute('data-theme') === 'dark' || !root.getAttribute('data-theme');
+  
+  if (isDark) {
+    // Mudar para modo claro
+    root.style.setProperty('--blue-deep', '#f0f4f8');
+    root.style.setProperty('--blue-mid', '#e2ecf7');
+    root.style.setProperty('--blue-bright', '#1565c0');
+    root.style.setProperty('--card-bg', 'rgba(255,255,255,0.92)');
+    root.style.setProperty('--card-border', 'rgba(21,101,192,0.25)');
+    root.style.setProperty('--text-muted', 'rgba(10,22,40,0.6)');
+    document.body.style.color = '#0a1628';
+    btn.textContent = '🌙 Modo Escuro';
+    root.setAttribute('data-theme', 'light');
+    localStorage.setItem('eletricapro_theme', 'light');
+  } else {
+    // Voltar para modo escuro
+    root.style.setProperty('--blue-deep', '#0a1628');
+    root.style.setProperty('--blue-mid', '#0d2347');
+    root.style.setProperty('--blue-bright', '#1565c0');
+    root.style.setProperty('--card-bg', 'rgba(13,35,71,0.85)');
+    root.style.setProperty('--card-border', 'rgba(33,150,243,0.35)');
+    root.style.setProperty('--text-muted', 'rgba(255,255,255,0.65)');
+    document.body.style.color = '#ffffff';
+    btn.textContent = '☀️ Modo Claro';
+    root.setAttribute('data-theme', 'dark');
+    localStorage.setItem('eletricapro_theme', 'dark');
+  }
+}
+
+// Aplicar tema salvo ao carregar
+function initTheme() {
+  const savedTheme = localStorage.getItem('eletricapro_theme');
+  if (savedTheme === 'light') {
+    document.documentElement.setAttribute('data-theme', 'light');
+    toggleDarkMode();
+  }
+}
+
 </script>
 </body>
 </html>
