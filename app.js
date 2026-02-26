@@ -661,9 +661,9 @@ function gerarPDFOrcamento() {
     const finalY = doc.lastAutoTable.finalY + 15;
     doc.setFontSize(10);
     doc.text('Observações:', 20, finalY);
-    doc.text('- Validade do orçamento: 30 dias', 20, finalY + 7);
+    doc.text('**', 20, finalY + 7);
     doc.text('- Condições de pagamento: A combinar', 20, finalY + 14);
-    doc.text('- Material e mão de obra inclusos', 20, finalY + 21);
+    doc.text('**', 20, finalY + 21);
     
     // Footer
     doc.setFontSize(8);
