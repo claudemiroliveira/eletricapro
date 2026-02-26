@@ -1150,30 +1150,6 @@ const unidades = {
   potencia: ["W","kW","CV","HP"],
   energia: ["Wh","kWh","J"]
 };
-
-// atualizar unidades quando trocar tipo
-document.getElementById("tipoConversao").addEventListener("change", atualizarUnidades);
-
-function atualizarUnidades(){
-    const tipo = document.getElementById("tipoConversao").value;
-    const select = document.getElementById("unidadeConversao");
-
-    select.innerHTML = "";
-
-    unidades[tipo].forEach(u=>{
-        const opt = document.createElement("option");
-        opt.value = u;
-        opt.textContent = u;
-        select.appendChild(opt);
-    });
-}
-
-// iniciar automaticamente
-atualizarUnidades();
-
-
-
-</script>
   
 /* ======================== ORÇAMENTOS ======================== */
 let itensOrcamento=[];
