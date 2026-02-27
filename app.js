@@ -821,6 +821,5 @@ window.openScreen = openScreen;
 /* =========================
    INICIALIZAÇÃO DO APP
 ========================= */
-window.addEventListener('load', () => {
-    initTrial();
-});
+window.addEventListener('load', () => { initTrial(); initTheme(); updateUnidades(); updateProBtn(); });
+
