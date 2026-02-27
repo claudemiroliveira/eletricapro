@@ -2031,6 +2031,68 @@ function initTheme() {
 
     <!-- /container -->
       </script>
+
+  <!-- ===== MODAL PRO ===== -->
+<div id="proOverlay" class="pro-overlay" style="display:none;" onclick="handleOverlayClick(event)">
+  <div class="pro-modal" id="proModal">
+    <button class="pro-modal-close" onclick="closeProModal()">✕</button>
+
+    <!-- VIEW: Upgrade (padrão) -->
+    <div id="proUpgradeView">
+      <div class="pro-modal-header">
+        <span class="pro-crown">👑</span>
+        <h2>ElétricaPro PRO</h2>
+        <p>Desbloqueie todo o potencial da ferramenta</p>
+      </div>
+
+      <ul class="pro-features">
+        <li><span class="feat-icon">♾️</span> Acesso ilimitado a todas as calculadoras</li>
+        <li><span class="feat-icon">📄</span> Geração ilimitada de PDFs e relatórios</li>
+        <li><span class="feat-icon">💼</span> Orçamentos ilimitados com exportação</li>
+        <li><span class="feat-icon">🌙</span> Modo escuro e personalização completa</li>
+        <li><span class="feat-icon">🔄</span> Atualizações e novas ferramentas inclusas</li>
+        <li><span class="feat-icon">🎯</span> Sem expiração — acesso vitalício</li>
+      </ul>
+
+      <div class="pro-price-box">
+        <div class="price-label">Pagamento único</div>
+        <div class="price-value">R$ 29,90</div>
+        <div class="price-period">acesso vitalício — sem mensalidade</div>
+        <div class="price-note">✅ Garantia de 7 dias ou seu dinheiro de volta</div>
+      </div>
+
+      <button class="btn-upgrade" onclick="iniciarPagamento()">
+        ⚡ Ativar Versão PRO Agora
+      </button>
+
+      <div class="pro-code-section">
+        <p>Já possui um código de ativação?</p>
+        <div class="pro-code-input-row">
+          <input type="text" id="proCodeInput" placeholder="Digite seu código (ex: ELETRICA2024)" maxlength="20">
+          <button class="btn-code" onclick="ativarComCodigo()">✓ Ativar</button>
+        </div>
+        <p id="proCodeMsg" style="margin-top:0.5rem;font-size:0.8rem;min-height:1rem;"></p>
+      </div>
+    </div>
+
+    <!-- VIEW: PRO já ativo -->
+    <div id="proActiveView" class="pro-active-view" style="display:none;">
+      <span class="pro-crown">🌟</span>
+      <h2>Versão PRO Ativa!</h2>
+      <p>Você tem acesso completo a todas as funcionalidades.</p>
+      <div class="pro-active-info">
+        ✅ Calculadoras ilimitadas<br>
+        ✅ PDFs e relatórios ilimitados<br>
+        ✅ Orçamentos sem restrições<br>
+        ✅ Todas as atualizações inclusas
+      </div>
+      <button class="btn" style="width:100%;justify-content:center;" onclick="closeProModal()">
+        Continuar usando o app
+      </button>
+    </div>
+  </div>
+</div>
+
 <!-- jsPDF -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
