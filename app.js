@@ -55,15 +55,145 @@ function checkTrialExpired() {
     return false;
 }
 
-function ativarPro() {
-    if (confirm('🌟 Deseja ativar a versão PRO?\n\n✅ Acesso ilimitado a todas as funcionalidades\n✅ Sem anúncios\n✅ Suporte prioritário')) {
-        const trialData = JSON.parse(localStorage.getItem(TRIAL_KEY));
-        trialData.isPro = true;
-        localStorage.setItem(TRIAL_KEY, JSON.stringify(trialData));
-        updateTrialBanner();
-        alert('🎉 Versão PRO ativada com sucesso!');
-    }
+//mudanças do pro
+// ===== BOTÃO PRO — FUNÇÕES =====
+
+/** Abre o modal PRO */
+function showProModal() {
+  const d = JSON.parse(localStorage.getItem(TRIAL_KEY) || '{}');
+  const overlay = document.getElementById('proOverlay');
+  const upgradeView = document.getElementById('proUpgradeView');
+  const activeView  = document.getElementById('proActiveView');
+
+  if (d.isPro) {
+    upgradeView.style.display = 'none';
+    activeView.style.display  = 'block';
+  } else {
+    upgradeView.style.display = 'block';
+    activeView.style.display  = 'none';
+    document.getElementById('proCodeInput').value = '';
+    document.getElementById('proCodeMsg').textContent = '';
+  }
+  overlay.style.display = 'flex';
+  document.body.style.overflow = 'hidden';
 }
+
+/** Fecha o modal PRO */
+function closeProModal() {
+  document.getElementById('proOverlay').style.display = 'none';
+  document.body.style.overflow = '';
+}
+
+/** Clique fora do modal fecha */
+function handleOverlayClick(e) {
+  if (e.target === document.getElementById('proOverlay')) closeProModal();
+}
+
+/** Atualiza o botão/badge PRO no header */
+function updateProBtn() {
+  const d   = JSON.parse(localStorage.getItem(TRIAL_KEY) || '{}');
+  const div = document.getElementById('proHeaderBtn');
+  if (d.isPro) {
+    div.innerHTML = `<span class="badge-pro">✅ PRO</span>`;
+  } else {
+    div.innerHTML = `<button class="btn-pro" onclick="showProModal()">👑 Seja PRO</button>`;
+  }
+}
+
+/** Simula início de pagamento (substitua pela sua integração de pagamento real) */
+function iniciarPagamento() {
+  // Aqui você integra com Mercado Pago, Hotmart, Stripe, etc.
+  // Por ora, simula a confirmação e ativa o PRO:
+  const confirmou = confirm(
+    '🌟 Ativar Versão PRO — R$ 29,90\n\n' +
+    '✅ Acesso vitalício a todas as ferramentas\n' +
+    '✅ PDFs ilimitados\n' +
+    '✅ Orçamentos sem restrição\n\n' +
+    'Confirmar ativação?'
+  );
+  if (confirmou) _ativarProInterno('pagamento');
+}
+
+/** Ativa PRO por código */
+function ativarComCodigo() {
+  const codigo = document.getElementById('proCodeInput').value.trim().toUpperCase();
+  const msgEl  = document.getElementById('proCodeMsg');
+
+  // Lista de códigos válidos (adicione os seus)
+  const CODIGOS_VALIDOS = ['ELETRICA2024', 'ELETRICAPRO', 'PROMO50', 'BETA2025', 'ATIVARPRO'];
+
+  if (!codigo) {
+    msgEl.style.color = '#ff7043';
+    msgEl.textContent = '⚠️ Digite um código para ativar.';
+    return;
+  }
+  if (CODIGOS_VALIDOS.includes(codigo)) {
+    msgEl.style.color = '#4caf50';
+    msgEl.textContent = '✅ Código válido! Ativando...';
+    setTimeout(() => _ativarProInterno('codigo'), 800);
+  } else {
+    msgEl.style.color = '#f44336';
+    msgEl.textContent = '❌ Código inválido. Verifique e tente novamente.';
+    document.getElementById('proCodeInput').style.borderColor = '#f44336';
+    setTimeout(() => {
+      document.getElementById('proCodeInput').style.borderColor = '';
+    }, 2000);
+  }
+}
+
+/** Função interna que efetiva a ativação PRO */
+function _ativarProInterno(origem) {
+  const d = JSON.parse(localStorage.getItem(TRIAL_KEY) || '{}');
+  d.isPro        = true;
+  d.ativadoEm    = new Date().toISOString();
+  d.origemAtivacao = origem;
+  localStorage.setItem(TRIAL_KEY, JSON.stringify(d));
+
+  updateTrialBanner();
+  updateProBtn();
+
+  // Troca a view do modal
+  document.getElementById('proUpgradeView').style.display = 'none';
+  document.getElementById('proActiveView').style.display  = 'block';
+
+  // Efeito sonoro / visual de sucesso (confetes simples)
+  _dispararConfetes();
+}
+
+/** Efeito de confetes leve no modal */
+function _dispararConfetes() {
+  const colors = ['#ffd600','#4caf50','#2196f3','#ff9800','#ffffff'];
+  const container = document.getElementById('proModal');
+  for (let i = 0; i < 30; i++) {
+    const el = document.createElement('div');
+    el.style.cssText = `
+      position:absolute; width:8px; height:8px; border-radius:50%;
+      background:${colors[Math.floor(Math.random()*colors.length)]};
+      left:${Math.random()*100}%; top:0;
+      pointer-events:none; z-index:9999;
+      animation: confettiFall ${0.8+Math.random()*1.2}s ease-out forwards;
+      opacity:0.9;
+    `;
+    container.appendChild(el);
+    setTimeout(() => el.remove(), 2200);
+  }
+}
+
+// Adicionar keyframe de confetes (só uma vez)
+(function adicionarKeyframeConfetes() {
+  if (document.getElementById('confettiStyle')) return;
+  const s = document.createElement('style');
+  s.id = 'confettiStyle';
+  s.textContent = `@keyframes confettiFall {
+    0%   { transform: translateY(0) rotate(0deg);   opacity: 1; }
+    100% { transform: translateY(300px) rotate(720deg); opacity: 0; }
+  }`;
+  document.head.appendChild(s);
+})();
+
+/** Compatibilidade: antiga função ativarPro() usada no banner */
+function ativarPro() { showProModal(); }
+
 
 // Navegação entre telas
 function showScreen(screenId) {
