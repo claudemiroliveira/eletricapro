@@ -409,6 +409,268 @@
     /* ===== SCROLLBAR ===== */
     ::-webkit-scrollbar { width:5px; background:var(--blue-deep); }
     ::-webkit-scrollbar-thumb { background:var(--blue-bright); border-radius:4px; }
+
+
+/*implantação do botão pro*/
+    
+  /* ===== BOTÃO PRO (HEADER) ===== */
+.btn-pro {
+  background: linear-gradient(135deg, #f9a825, #ffd600);
+  color: #0a1628;
+  border: none;
+  padding: 0.45rem 1rem;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 0.82rem;
+  font-weight: 700;
+  white-space: nowrap;
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  box-shadow: 0 3px 12px rgba(255,214,0,0.4);
+  transition: var(--trans);
+  letter-spacing: 0.4px;
+}
+.btn-pro:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(255,214,0,0.6);
+}
+
+/* Badge PRO Ativo */
+.badge-pro {
+  background: linear-gradient(135deg, #2e7d32, #43a047);
+  color: white;
+  border: none;
+  padding: 0.45rem 1rem;
+  border-radius: 8px;
+  font-size: 0.82rem;
+  font-weight: 700;
+  white-space: nowrap;
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  box-shadow: 0 3px 12px rgba(76,175,80,0.4);
+  cursor: default;
+}
+
+/* ===== MODAL PRO ===== */
+.pro-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.75);
+  backdrop-filter: blur(6px);
+  z-index: 9000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+  animation: fadeInOverlay 0.25s ease;
+}
+@keyframes fadeInOverlay {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+.pro-modal {
+  background: linear-gradient(160deg, #0d2347 0%, #0a1628 100%);
+  border: 1px solid rgba(255,214,0,0.4);
+  border-radius: 20px;
+  padding: 2rem 1.8rem;
+  max-width: 480px;
+  width: 100%;
+  position: relative;
+  box-shadow: 0 30px 80px rgba(0,0,0,0.7), 0 0 40px rgba(255,214,0,0.15);
+  animation: slideUpModal 0.3s ease;
+}
+@keyframes slideUpModal {
+  from { opacity: 0; transform: translateY(30px) scale(0.96); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+.pro-modal-close {
+  position: absolute;
+  top: 1rem; right: 1.2rem;
+  background: rgba(255,255,255,0.1);
+  border: none; color: white;
+  width: 32px; height: 32px;
+  border-radius: 50%;
+  cursor: pointer;
+  font-size: 1rem;
+  display: flex; align-items: center; justify-content: center;
+  transition: var(--trans);
+}
+.pro-modal-close:hover { background: rgba(255,255,255,0.25); }
+
+.pro-modal-header {
+  text-align: center;
+  margin-bottom: 1.5rem;
+}
+.pro-crown {
+  font-size: 3rem;
+  display: block;
+  margin-bottom: 0.5rem;
+  filter: drop-shadow(0 0 12px rgba(255,214,0,0.6));
+  animation: floatCrown 2.5s ease-in-out infinite;
+}
+@keyframes floatCrown {
+  0%,100% { transform: translateY(0); }
+  50%      { transform: translateY(-6px); }
+}
+.pro-modal-header h2 {
+  font-size: 1.6rem; font-weight: 800;
+  background: linear-gradient(135deg, #ffd600, #fff9c4, #ffd600);
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+.pro-modal-header p {
+  font-size: 0.88rem;
+  color: rgba(255,255,255,0.6);
+  margin-top: 0.3rem;
+}
+
+/* Features list */
+.pro-features {
+  list-style: none;
+  margin: 0 0 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+}
+.pro-features li {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  font-size: 0.9rem;
+  color: rgba(255,255,255,0.9);
+}
+.pro-features li .feat-icon {
+  width: 30px; height: 30px; flex-shrink: 0;
+  background: linear-gradient(135deg, rgba(255,214,0,0.15), rgba(255,214,0,0.25));
+  border: 1px solid rgba(255,214,0,0.4);
+  border-radius: 8px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1rem;
+}
+
+/* Preço */
+.pro-price-box {
+  background: linear-gradient(135deg, rgba(255,214,0,0.1), rgba(255,214,0,0.05));
+  border: 1px solid rgba(255,214,0,0.35);
+  border-radius: 14px;
+  padding: 1.2rem;
+  text-align: center;
+  margin-bottom: 1.2rem;
+}
+.pro-price-box .price-label {
+  font-size: 0.8rem;
+  color: rgba(255,255,255,0.55);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+.pro-price-box .price-value {
+  font-size: 2.2rem;
+  font-weight: 800;
+  color: #ffd600;
+  line-height: 1.1;
+  margin: 0.3rem 0;
+}
+.pro-price-box .price-period {
+  font-size: 0.82rem;
+  color: rgba(255,255,255,0.5);
+}
+.pro-price-box .price-note {
+  font-size: 0.78rem;
+  color: rgba(76,175,80,0.9);
+  margin-top: 0.3rem;
+}
+
+/* Botões do modal */
+.btn-upgrade {
+  width: 100%;
+  background: linear-gradient(135deg, #f9a825, #ffd600);
+  color: #0a1628;
+  border: none;
+  padding: 1rem;
+  border-radius: 11px;
+  font-size: 1rem;
+  font-weight: 800;
+  cursor: pointer;
+  transition: var(--trans);
+  box-shadow: 0 6px 20px rgba(255,214,0,0.4);
+  letter-spacing: 0.3px;
+  margin-bottom: 0.8rem;
+}
+.btn-upgrade:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 28px rgba(255,214,0,0.6);
+}
+
+/* Ativação por código */
+.pro-code-section {
+  border-top: 1px solid rgba(255,255,255,0.1);
+  padding-top: 1rem;
+  margin-top: 0.3rem;
+}
+.pro-code-section p {
+  font-size: 0.8rem;
+  color: rgba(255,255,255,0.45);
+  text-align: center;
+  margin-bottom: 0.7rem;
+}
+.pro-code-input-row {
+  display: flex;
+  gap: 0.5rem;
+}
+.pro-code-input-row input {
+  flex: 1;
+  background: rgba(255,255,255,0.07);
+  border: 1.5px solid rgba(255,255,255,0.15);
+  border-radius: 8px;
+  color: white;
+  padding: 0.6rem 0.9rem;
+  font-size: 0.88rem;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+}
+.pro-code-input-row input:focus {
+  outline: none;
+  border-color: var(--yellow);
+  background: rgba(255,214,0,0.08);
+}
+.pro-code-input-row input::placeholder { text-transform: none; letter-spacing: 0; }
+.btn-code {
+  background: rgba(255,214,0,0.15);
+  border: 1.5px solid rgba(255,214,0,0.4);
+  color: var(--yellow);
+  padding: 0.6rem 1rem;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 0.85rem;
+  font-weight: 600;
+  transition: var(--trans);
+  white-space: nowrap;
+}
+.btn-code:hover {
+  background: rgba(255,214,0,0.25);
+}
+
+/* Modal PRO Ativo */
+.pro-active-view { text-align: center; }
+.pro-active-view .pro-crown { font-size: 4rem; }
+.pro-active-view h2 {
+  font-size: 1.5rem; font-weight: 800;
+  color: #4caf50; margin-bottom: 0.4rem;
+}
+.pro-active-view p { color: rgba(255,255,255,0.65); font-size: 0.9rem; }
+.pro-active-info {
+  background: rgba(76,175,80,0.1);
+  border: 1px solid rgba(76,175,80,0.3);
+  border-radius: 12px;
+  padding: 1rem;
+  margin: 1.2rem 0;
+  font-size: 0.88rem;
+  color: rgba(255,255,255,0.8);
+  line-height: 1.7;
+}
+
   </style>
 </head>
 <body>
