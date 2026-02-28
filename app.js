@@ -471,7 +471,7 @@ function gerarPDFCalc(tipo) {
     
     doc.setTextColor(0, 0, 0);
     doc.setFontSize(16);
-    doc.text(`Cálculo: ${tipo}`, 20, 55);
+    doc.text(pdeSafe(`Cálculo: ${tipo}`), 20, 55);
     
     doc.setFontSize(10);
     doc.text(`Data: ${new Date().toLocaleDateString('pt-BR')}`, 20, 62);
@@ -535,13 +535,13 @@ function gerarPDFTabela(tipo) {
     doc.rect(0, 0, 210, 40, 'F');
     doc.setTextColor(255, 255, 255);
     doc.setFontSize(24);
-    doc.text(pdeSafe('⚡ Elétrico Pro'), 20, 20);
+    doc.text(pdfSafe('⚡ Elétrico Pro'), 20, 20);
     doc.setFontSize(12);
     doc.text('Tabelas Técnicas', 20, 30);
     
     doc.setTextColor(0, 0, 0);
     doc.setFontSize(16);
-    doc.text(`Tabela: ${tipo}`, 20, 55);
+    doc.text(pdfSafe(`Tabela: ${tipo}`), 20, 55);
     
     doc.setFontSize(10);
     doc.text(`Data: ${new Date().toLocaleDateString('pt-BR')}`, 20, 62);
