@@ -1,7 +1,7 @@
 // Sistema de Trial de 7 dias
 const TRIAL_KEY = 'eletrico_pro_trial';
 const TRIAL_DAYS = 5;
-console.log("APP.JS EXECUTADO");
+
 // Inicializar trial
 function initTrial() {
     const trialData = localStorage.getItem(TRIAL_KEY);
