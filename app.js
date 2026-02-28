@@ -465,7 +465,7 @@ function gerarPDFCalc(tipo) {
     doc.rect(0, 0, 210, 40, 'F');
     doc.setTextColor(255, 255, 255);
     doc.setFontSize(24);
-    doc.text('⚡ Elétrico Pro', 20, 20);
+    doc.text(semAcento('⚡ Elétrico Pro'), 20, 20);
     doc.setFontSize(12);
     doc.text('Relatório de Cálculo', 20, 30);
     
@@ -535,7 +535,7 @@ function gerarPDFTabela(tipo) {
     doc.rect(0, 0, 210, 40, 'F');
     doc.setTextColor(255, 255, 255);
     doc.setFontSize(24);
-    doc.text('⚡ Elétrico Pro', 20, 20);
+    doc.text(semAcento('⚡ Elétrico Pro'), 20, 20);
     doc.setFontSize(12);
     doc.text('Tabelas Técnicas', 20, 30);
     
@@ -627,7 +627,7 @@ function gerarPDFOrcamento() {
     doc.rect(0, 0, 210, 50, 'F');
     doc.setTextColor(255, 255, 255);
     doc.setFontSize(28);
-    doc.text('⚡ Elétrico Pro', 20, 25);
+    doc.text(semAcento('⚡ Elétrico Pro'), 20, 25);
     doc.setFontSize(14);
     doc.text('ORÇAMENTO', 20, 38);
     
