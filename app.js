@@ -676,7 +676,13 @@ function gerarPDFOrcamento() {
     doc.text('Gerado por Elétrico Pro - www.eletricopro.com', 105, 285, { align: 'center' });
     
     doc.save(`orcamento_${nomeCliente.replace(/ /g, '_')}_${Date.now()}.pdf`);
+}function removerAcentos(texto) {
+  return texto.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
 }
+function removerAcentos(texto) {
+  return texto.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+}
+
 /* =========================
    FUNÇÃO DE TROCA DE TELAS
 ========================= */
