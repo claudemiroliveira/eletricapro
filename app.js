@@ -496,21 +496,21 @@ function gerarPDFCalc(tipo) {
         doc.text(pdfSafe(`Potência Reativa: ${r.potenciaReativa} VAr`), 20, yPos + 42);
     } else if (tipo === 'Queda de Tensão' && lastCalcResults.quedaTensao) {
         const r = lastCalcResults.quedaTensao;
-        doc.text(`Corrente: ${r.corrente} A`, 20, yPos);
-        doc.text(`Distância: ${r.distancia} m`, 20, yPos + 7);
-        doc.text(`Seção do condutor: ${r.secao} mm²`, 20, yPos + 14);
-        doc.text(`Tensão do circuito: ${r.tensao} V`, 20, yPos + 21);
-        doc.text(`Queda de Tensão: ${r.quedaTensao} V`, 20, yPos + 28);
-        doc.text(`Percentual: ${r.percentual}%`, 20, yPos + 35);
-        doc.text(`Status: ${r.status}`, 20, yPos + 42);
+        doc.text(pdfSafe(`Corrente: ${r.corrente} A`), 20, yPos);
+        doc.text(pdfSafe(`Distância: ${r.distancia} m`), 20, yPos + 7);
+        doc.text(pdfSafe(`Seção do condutor: ${r.secao} mm²`), 20, yPos + 14);
+        doc.text(pdfSafe(`Tensão do circuito: ${r.tensao} V`), 20, yPos + 21);
+        doc.text(pdfSafe(`Queda de Tensão: ${r.quedaTensao} V`), 20, yPos + 28);
+        doc.text(pdfSafe(`Percentual: ${r.percentual}%`), 20, yPos + 35);
+        doc.text(pdfSafe(`Status: ${r.status}`), 20, yPos + 42);
     } else if (tipo === 'Dimensionamento' && lastCalcResults.condutor) {
         const r = lastCalcResults.condutor;
-        doc.text(`Potência: ${r.potencia} W`, 20, yPos);
-        doc.text(`Tensão: ${r.tensao} V`, 20, yPos + 7);
-        doc.text(`Corrente calculada: ${r.corrente} A`, 20, yPos + 14);
-        doc.text(`Seção recomendada: ${r.secao} mm²`, 20, yPos + 21);
-        doc.text(`Disjuntor recomendado: ${r.disjuntor} A`, 20, yPos + 28);
-        doc.text(`Queda de tensão: ${r.quedaTensao}%`, 20, yPos + 35);
+        doc.text(pdfSafe(`Potência: ${r.potencia} W`), 20, yPos);
+        doc.text(pdfSafe(`Tensão: ${r.tensao} V`), 20, yPos + 7);
+        doc.text(pdfSafe(`Corrente calculada: ${r.corrente} A`), 20, yPos + 14);
+        doc.text(pdfSafe(`Seção recomendada: ${r.secao} mm²`), 20, yPos + 21);
+        doc.text(pdfSafe(`Disjuntor recomendado: ${r.disjuntor} A`), 20, yPos + 28);
+        doc.text(pdfSafe(`Queda de tensão: ${r.quedaTensao}%`), 20, yPos + 35);
         if (r.recomendacao) {
             doc.text(pdfSafe(`Obs: ${r.recomendacao}`), 20, yPos + 42);
         }
