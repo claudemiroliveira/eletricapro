@@ -544,7 +544,7 @@ function gerarPDFTabela(tipo) {
     doc.text(pdfSafe(`Tabela: ${tipo}`), 20, 55);
     
     doc.setFontSize(10);
-    doc.text(pdfSafe)(`Data: ${new Date().toLocaleDateString('pt-BR')}`), 20, 62);
+    doc.text(pdfSafe(`Data: ${new Date().toLocaleDateString('pt-BR')}`), 20, 62);
     
     if (tipo === 'Condutores') {
         doc.autoTable({
@@ -602,7 +602,7 @@ function gerarPDFTabela(tipo) {
     // Footer
     doc.setFontSize(8);
     doc.setTextColor(128, 128, 128);
-    doc.text('Gerado por Elétrico Pro - www.eletricopro.com', 105, 285, { align: 'center' });
+    doc.text(pdfSafe('Gerado por Elétrico Pro - www.eletricopro.com'), 105, 285, { align: 'center' });
     
     doc.save(`tabela_${tipo.replace(/ /g, '_')}_${Date.now()}.pdf`);
 }
@@ -635,13 +635,13 @@ function gerarPDFOrcamento() {
     doc.setTextColor(0, 0, 0);
     doc.setFontSize(12);
     doc.setFont(undefined, 'bold');
-    doc.text('Dados do Cliente:', 20, 65);
+    doc.text(pdfSafe('Dados do Cliente:'), 20, 65);
     doc.setFont(undefined, 'normal');
     doc.setFontSize(10);
-    doc.text(`Nome: ${nomeCliente}`, 20, 73);
-    doc.text(`Telefone: ${telefoneCliente}`, 20, 80);
-    doc.text(`Endereço: ${enderecoCliente}`, 20, 87);
-    doc.text(`Data: ${new Date().toLocaleDateString('pt-BR')}`, 20, 94);
+    doc.text(pdfSafe(`Nome: ${nomeCliente}`), 20, 73);
+    doc.text(pdfSafe(`Telefone: ${telefoneCliente}`), 20, 80);
+    doc.text(pdfSafe(`Endereço: ${enderecoCliente}`), 20, 87);
+    doc.text(pdfSafe(`Data: ${new Date().toLocaleDateString('pt-BR')}`), 20, 94);
     
     // Tabela de itens
     const tableData = itensOrcamento.map(item => [
@@ -665,15 +665,15 @@ function gerarPDFOrcamento() {
     // Observações
     const finalY = doc.lastAutoTable.finalY + 15;
     doc.setFontSize(10);
-    doc.text('Observações:', 20, finalY);
-    doc.text('**', 20, finalY + 7);
-    doc.text('- Condições de pagamento: A combinar', 20, finalY + 14);
-    doc.text('**', 20, finalY + 21);
+    doc.text(pdfSafe('Observações:'), 20, finalY);
+    doc.text(pdfSafe('**'), 20, finalY + 7);
+    doc.text(pdfSafe('- Condições de pagamento: A combinar'), 20, finalY + 14);
+    doc.text(pdfSfe('**'), 20, finalY + 21);
     
     // Footer
     doc.setFontSize(8);
     doc.setTextColor(128, 128, 128);
-    doc.text('Gerado por Elétrico Pro - www.eletricopro.com', 105, 285, { align: 'center' });
+    doc.text(pdfSafe('Gerado por Elétrico Pro - www.eletricopro.com'), 105, 285, { align: 'center' });
     
     doc.save(`orcamento_${nomeCliente.replace(/ /g, '_')}_${Date.now()}.pdf`);
 
