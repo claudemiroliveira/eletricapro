@@ -16,7 +16,12 @@ function initTrial() {
     
     updateTrialBanner();
 }
-
+function pdfSafe(texto) {
+    return texto
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "") // remove acentos
+        .replace(/[^\x00-\x7F]/g, "");   // remove emoji e unicode
+}
 function updateTrialBanner() {
     const trialData = JSON.parse(localStorage.getItem(TRIAL_KEY));
     const startDate = new Date(trialData.startDate);
