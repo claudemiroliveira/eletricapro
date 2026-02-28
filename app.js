@@ -668,7 +668,7 @@ function gerarPDFOrcamento() {
     doc.text(pdfSafe('Observações:'), 20, finalY);
     doc.text(pdfSafe('**'), 20, finalY + 7);
     doc.text(pdfSafe('- Condições de pagamento: A combinar'), 20, finalY + 14);
-    doc.text(pdfSfe('**'), 20, finalY + 21);
+    doc.text(pdfSafe('**'), 20, finalY + 21);
     
     // Footer
     doc.setFontSize(8);
