@@ -474,22 +474,22 @@ function gerarPDFCalc(tipo) {
     doc.text(pdfSafe(`Cálculo: ${tipo}`), 20, 55);
     
     doc.setFontSize(10);
-    doc.text(`Data: ${new Date().toLocaleDateString('pt-BR')}`, 20, 62);
-    doc.text(`Hora: ${new Date().toLocaleTimeString('pt-BR')}`, 20, 68);
+    doc.text(pdfSafe(`Data: ${new Date().toLocaleDateString('pt-BR')}`), 20, 62);
+    doc.text(pdfSafe(`Hora: ${new Date().toLocaleTimeString('pt-BR')}`), 20, 68);
     
     let yPos = 80;
     
     if (tipo === 'Lei de Ohm' && lastCalcResults.leiOhm) {
         const r = lastCalcResults.leiOhm;
-        doc.text(`Tensão (V): ${r.tensao} V`, 20, yPos);
-        doc.text(`Corrente (I): ${r.corrente} A`, 20, yPos + 7);
+        doc.text(pdfSafe(`Tensão (V): ${r.tensao} V`), 20, yPos);
+        doc.text(pdfSafe(`Corrente (I): ${r.corrente} A`), 20, yPos + 7);
         doc.text(pdfSafe(`Resistência (R): ${r.resistencia} Ω`), 20, yPos + 14);
-        doc.text(`Fórmula: V = I × R`, 20, yPos + 25);
+        doc.text(pdfSafe(`Fórmula: V = I × R`), 20, yPos + 25);
     } else if (tipo === 'Potência' && lastCalcResults.potencia) {
         const r = lastCalcResults.potencia;
-        doc.text(`Tipo de Circuito: ${r.tipo}`, 20, yPos);
+        doc.text(pdfSafe(`Tipo de Circuito: ${r.tipo}`), 20, yPos);
         doc.text(pdfSafe(`Tensão: ${r.tensao} V`), 20, yPos + 7);
-        doc.text(`Corrente: ${r.corrente} A`, 20, yPos + 14);
+        doc.text(pdfSafe(`Corrente: ${r.corrente} A`), 20, yPos + 14);
         doc.text(pdfSafe(`Fator de Potência: ${r.fator}`), 20, yPos + 21);
         doc.text(pdfSafe(`Potência Ativa: ${r.potenciaAtiva} W`), 20, yPos + 28);
         doc.text(pdfSafe(`Potência Aparente: ${r.potenciaAparente} VA`), 20, yPos + 35);
@@ -512,14 +512,14 @@ function gerarPDFCalc(tipo) {
         doc.text(`Disjuntor recomendado: ${r.disjuntor} A`, 20, yPos + 28);
         doc.text(`Queda de tensão: ${r.quedaTensao}%`, 20, yPos + 35);
         if (r.recomendacao) {
-            doc.text(`Obs: ${r.recomendacao}`, 20, yPos + 42);
+            doc.text(pdfSafe(`Obs: ${r.recomendacao}`), 20, yPos + 42);
         }
     }
     
     // Footer
     doc.setFontSize(8);
     doc.setTextColor(128, 128, 128);
-    doc.text('Gerado por Elétrico Pro - www.eletricopro.com', 105, 285, { align: 'center' });
+    doc.text(pdfSafe('Gerado por Elétrico Pro - www.eletricopro.com'), 105, 285, { align: 'center' });
     
     doc.save(`calculo_${tipo.replace(/ /g, '_')}_${Date.now()}.pdf`);
 }
@@ -537,14 +537,14 @@ function gerarPDFTabela(tipo) {
     doc.setFontSize(24);
     doc.text(pdfSafe('⚡ Elétrico Pro'), 20, 20);
     doc.setFontSize(12);
-    doc.text('Tabelas Técnicas', 20, 30);
+    doc.text(pdfSafe('Tabelas Técnicas'), 20, 30);
     
     doc.setTextColor(0, 0, 0);
     doc.setFontSize(16);
     doc.text(pdfSafe(`Tabela: ${tipo}`), 20, 55);
     
     doc.setFontSize(10);
-    doc.text(`Data: ${new Date().toLocaleDateString('pt-BR')}`, 20, 62);
+    doc.text(pdfSafe)(`Data: ${new Date().toLocaleDateString('pt-BR')}`), 20, 62);
     
     if (tipo === 'Condutores') {
         doc.autoTable({
