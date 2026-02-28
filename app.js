@@ -679,9 +679,6 @@ function gerarPDFOrcamento() {
 }function removerAcentos(texto) {
   return texto.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
 }
-function removerAcentos(texto) {
-  return texto.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
-}
 
 /* =========================
    FUNÇÃO DE TROCA DE TELAS
