@@ -987,12 +987,13 @@
       </div>
       <button class="btn" style="margin-top:0.5rem;" onclick="addConsumoRow()">➕ Adicionar aparelho</button>
       <button class="btn btn-yellow" onclick="calcularConsumo()">⚡ Calcular</button>
+         <button class="btn btn-yellow" onclick="gerarPDFconsumo('Consumo')">📄 Gerar PDF</button>
       <div id="resultConsumo"></div>
     </div>
 
     <div class="calc-card">
       <h3>💡 Tabela de referência de potências</h3>
-      <button class="btn btn-yellow" onclick="gerarPDFTabela('Consumo')">📄 Gerar PDF</button>
+      
       <div class="table-responsive">
         <table>
           <thead><tr><th>Aparelho</th><th>Potência Típica (W)</th><th>Uso médio (h/dia)</th></tr></thead>
