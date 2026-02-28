@@ -467,11 +467,11 @@ function gerarPDFCalc(tipo) {
     doc.setFontSize(24);
     doc.text(pdfSafe('⚡ Elétrico Pro'), 20, 20);
     doc.setFontSize(12);
-    doc.text('Relatório de Cálculo', 20, 30);
+    doc.text(pdfSafe('Relatório de Cálculo'), 20, 30);
     
     doc.setTextColor(0, 0, 0);
     doc.setFontSize(16);
-    doc.text(pdeSafe(`Cálculo: ${tipo}`), 20, 55);
+    doc.text(pdfSafe(`Cálculo: ${tipo}`), 20, 55);
     
     doc.setFontSize(10);
     doc.text(`Data: ${new Date().toLocaleDateString('pt-BR')}`, 20, 62);
@@ -483,17 +483,17 @@ function gerarPDFCalc(tipo) {
         const r = lastCalcResults.leiOhm;
         doc.text(`Tensão (V): ${r.tensao} V`, 20, yPos);
         doc.text(`Corrente (I): ${r.corrente} A`, 20, yPos + 7);
-        doc.text(`Resistência (R): ${r.resistencia} Ω`, 20, yPos + 14);
+        doc.text(pdfSafe(`Resistência (R): ${r.resistencia} Ω`), 20, yPos + 14);
         doc.text(`Fórmula: V = I × R`, 20, yPos + 25);
     } else if (tipo === 'Potência' && lastCalcResults.potencia) {
         const r = lastCalcResults.potencia;
         doc.text(`Tipo de Circuito: ${r.tipo}`, 20, yPos);
-        doc.text(`Tensão: ${r.tensao} V`, 20, yPos + 7);
+        doc.text(pdfSafe(`Tensão: ${r.tensao} V`), 20, yPos + 7);
         doc.text(`Corrente: ${r.corrente} A`, 20, yPos + 14);
-        doc.text(`Fator de Potência: ${r.fator}`, 20, yPos + 21);
-        doc.text(`Potência Ativa: ${r.potenciaAtiva} W`, 20, yPos + 28);
-        doc.text(`Potência Aparente: ${r.potenciaAparente} VA`, 20, yPos + 35);
-        doc.text(`Potência Reativa: ${r.potenciaReativa} VAr`, 20, yPos + 42);
+        doc.text(pdfSafe(`Fator de Potência: ${r.fator}`), 20, yPos + 21);
+        doc.text(pdfSafe(`Potência Ativa: ${r.potenciaAtiva} W`), 20, yPos + 28);
+        doc.text(pdfSafe(`Potência Aparente: ${r.potenciaAparente} VA`), 20, yPos + 35);
+        doc.text(pdfSafe(`Potência Reativa: ${r.potenciaReativa} VAr`), 20, yPos + 42);
     } else if (tipo === 'Queda de Tensão' && lastCalcResults.quedaTensao) {
         const r = lastCalcResults.quedaTensao;
         doc.text(`Corrente: ${r.corrente} A`, 20, yPos);
