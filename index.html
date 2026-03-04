@@ -409,6 +409,128 @@
     /* ===== SCROLLBAR ===== */
     ::-webkit-scrollbar { width:5px; background:var(--blue-deep); }
     ::-webkit-scrollbar-thumb { background:var(--blue-bright); border-radius:4px; }
+
+    /* ===== BTN PRO UPGRADE (home) ===== */
+    .btn-pro-upgrade {
+      width: 100%;
+      background: linear-gradient(135deg, #2e7d32 0%, #66bb6a 50%, #a5d6a7 100%);
+      border: 2px solid #81c784;
+      border-radius: 16px;
+      padding: 1.1rem 1.4rem;
+      color: #fff;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      transition: var(--trans);
+      box-shadow: 0 6px 24px rgba(76,175,80,0.35);
+      text-align: left;
+    }
+    .btn-pro-upgrade:hover {
+      transform: translateY(-3px) scale(1.01);
+      box-shadow: 0 10px 32px rgba(76,175,80,0.5);
+    }
+    .pro-badge {
+      background: #fff;
+      color: #2e7d32;
+      font-weight: 900;
+      font-size: 0.85rem;
+      letter-spacing: 1px;
+      padding: 0.3rem 0.7rem;
+      border-radius: 8px;
+      flex-shrink: 0;
+    }
+    .pro-btn-text { flex: 1; }
+    .pro-btn-text strong { display:block; font-size:1rem; }
+    .pro-btn-text small  { font-size:0.78rem; opacity:0.85; }
+    .pro-arrow { font-size:1.4rem; flex-shrink:0; }
+
+    /* ===== PRO SCREEN ===== */
+    .pro-hero {
+      text-align: center;
+      padding: 1.5rem 1rem 1rem;
+    }
+    .pro-hero-icon {
+      font-size: 3rem;
+      background: linear-gradient(135deg,#2e7d32,#66bb6a);
+      width: 80px; height: 80px;
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      margin: 0 auto 1rem;
+      box-shadow: 0 8px 24px rgba(76,175,80,0.4);
+    }
+    .pro-hero-title {
+      font-size: 2rem; font-weight: 800;
+    }
+    .pro-hero-title span { color: #66bb6a; }
+    .pro-hero-sub { color: var(--text-muted); font-size: 0.9rem; margin-top: 0.3rem; }
+
+    .pro-price-card {
+      background: linear-gradient(135deg,#1b5e20,#2e7d32);
+      border: 2px solid #66bb6a;
+      border-radius: 16px;
+      padding: 1.4rem;
+      text-align: center;
+      margin: 1.2rem 0;
+      box-shadow: 0 8px 28px rgba(76,175,80,0.3);
+    }
+    .pro-price-label { font-size: 0.82rem; text-transform:uppercase; letter-spacing:1px; opacity:0.8; }
+    .pro-price-value { font-size: 2.8rem; font-weight:900; color:#a5d6a7; margin:0.3rem 0; }
+    .pro-price-value span { font-size:1.1rem; font-weight:400; }
+    .pro-price-or { font-size:0.82rem; color:rgba(255,255,255,0.65); }
+
+    .pro-features-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.8rem;
+      margin: 1.2rem 0;
+    }
+    @media(max-width:480px){ .pro-features-grid { grid-template-columns: 1fr; } }
+    .pro-feat {
+      background: rgba(76,175,80,0.1);
+      border: 1px solid rgba(76,175,80,0.3);
+      border-radius: 12px;
+      padding: 0.9rem;
+      display: flex; gap: 0.7rem; align-items: flex-start;
+    }
+    .pro-feat span { font-size:1.2rem; flex-shrink:0; }
+    .pro-feat strong { display:block; font-size:0.88rem; }
+    .pro-feat small  { font-size:0.75rem; color:var(--text-muted); }
+
+    .btn-pro-confirm {
+      background: linear-gradient(135deg,#2e7d32,#66bb6a) !important;
+      box-shadow: 0 6px 20px rgba(76,175,80,0.4) !important;
+    }
+    .btn-pro-confirm:hover { box-shadow: 0 10px 32px rgba(76,175,80,0.6) !important; }
+
+    .pro-como-vender {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: var(--radius);
+      padding: 1.4rem;
+      margin-top: 1.4rem;
+    }
+    .pro-como-vender h3 {
+      color: var(--yellow-soft);
+      font-size:1rem;
+      margin-bottom: 1rem;
+    }
+    .pro-vender-item {
+      display: flex; gap: 1rem; align-items: flex-start;
+      margin-bottom: 1rem;
+      padding-bottom: 1rem;
+      border-bottom: 1px solid var(--card-border);
+    }
+    .pro-vender-item:last-child { border-bottom: none; margin-bottom:0; padding-bottom:0; }
+    .pro-vender-num {
+      width: 32px; height: 32px; flex-shrink:0;
+      background: linear-gradient(135deg,#1565c0,#2196f3);
+      border-radius: 50%;
+      display: flex; align-items:center; justify-content:center;
+      font-weight:700; font-size:0.9rem;
+    }
+    .pro-vender-item strong { display:block; font-size:0.92rem; margin-bottom:0.2rem; }
+    .pro-vender-item p { font-size:0.82rem; color:var(--text-muted); line-height:1.6; margin:0; }
   </style>
 </head>
 <body>
@@ -476,6 +598,18 @@
         <div class="tile-icon">📋</div>
         <div class="tile-label">Normas</div>
       </div>
+    </div>
+
+    <!-- ========== BOTÃO PRO ========== -->
+    <div style="margin-top:1.5rem;">
+      <button class="btn-pro-upgrade" onclick="openScreen('proScreen','Versao PRO')">
+        <span class="pro-badge">PRO</span>
+        <span class="pro-btn-text">
+          <strong>Ativar Versão PRO</strong>
+          <small>Acesso completo + PDF ilimitado</small>
+        </span>
+        <span class="pro-arrow">→</span>
+      </button>
     </div>
   </div>
 
@@ -1105,6 +1239,77 @@
     </div>
   </div>
 
+<!-- ========== TELA PRO ========== -->
+  <div id="proScreen" class="screen">
+    <div class="screen-title"><div class="dot"></div>Versao PRO</div>
+
+    <div class="pro-hero">
+      <div class="pro-hero-icon">⚡</div>
+      <h2 class="pro-hero-title">Elétrica<span>Pro</span></h2>
+      <p class="pro-hero-sub">Desbloqueie todo o potencial profissional</p>
+    </div>
+
+    <div class="pro-price-card">
+      <div class="pro-price-label">Plano Profissional</div>
+      <div class="pro-price-value">R$ 29<span>/mês</span></div>
+      <div class="pro-price-or">ou R$ 197/ano (economize 43%)</div>
+    </div>
+
+    <div class="pro-features-grid">
+      <div class="pro-feat"><span>✅</span><div><strong>PDFs ilimitados</strong><small>Relatórios e orçamentos profissionais</small></div></div>
+      <div class="pro-feat"><span>✅</span><div><strong>Sem restrições de trial</strong><small>Use sempre, sem expirar</small></div></div>
+      <div class="pro-feat"><span>✅</span><div><strong>Todas as calculadoras</strong><small>8 calculadoras especializadas</small></div></div>
+      <div class="pro-feat"><span>✅</span><div><strong>Orçamentos ilimitados</strong><small>Crie e salve quantos quiser</small></div></div>
+      <div class="pro-feat"><span>✅</span><div><strong>Tabelas técnicas completas</strong><small>NBR 5410, AWG, disjuntores</small></div></div>
+      <div class="pro-feat"><span>✅</span><div><strong>Suporte prioritário</strong><small>Atendimento em até 24h</small></div></div>
+    </div>
+
+    <div style="margin-top:1.5rem;">
+      <button class="btn btn-pro-confirm" onclick="ativarPro()" style="width:100%;justify-content:center;font-size:1.05rem;padding:1rem;">
+        🌟 Ativar PRO Agora
+      </button>
+    </div>
+
+    <div class="pro-como-vender">
+      <h3>📣 Como vender o Elétrica PRO</h3>
+      <div class="pro-vender-item">
+        <div class="pro-vender-num">1</div>
+        <div>
+          <strong>Hotmart / Kiwify</strong>
+          <p>Cadastre o produto como assinatura mensal. Configure pagamento recorrente e envie o link de ativação por e-mail.</p>
+        </div>
+      </div>
+      <div class="pro-vender-item">
+        <div class="pro-vender-num">2</div>
+        <div>
+          <strong>Mercado Pago / PagSeguro</strong>
+          <p>Crie um link de pagamento e envie via WhatsApp. Após confirmação, ative o PRO manualmente no app.</p>
+        </div>
+      </div>
+      <div class="pro-vender-item">
+        <div class="pro-vender-num">3</div>
+        <div>
+          <strong>Instagram / TikTok</strong>
+          <p>Publique vídeos demonstrando os cálculos. Mostre geração de PDF profissional. Inclua link da loja na bio.</p>
+        </div>
+      </div>
+      <div class="pro-vender-item">
+        <div class="pro-vender-num">4</div>
+        <div>
+          <strong>Grupos de WhatsApp e Telegram</strong>
+          <p>Entre em grupos de eletricistas. Ofereça 7 dias grátis para testar. Converta para PRO após o trial.</p>
+        </div>
+      </div>
+      <div class="pro-vender-item">
+        <div class="pro-vender-num">5</div>
+        <div>
+          <strong>Google Ads / Meta Ads</strong>
+          <p>Anuncie para eletricistas e engenheiros. Público-alvo: técnicos, autônomos, instaladores. CPC médio baixo no nicho.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
 </div>
   <!-- /container -->
 <!-- jsPDF -->
@@ -1279,6 +1484,7 @@ function calcularConsumo(){
   html+=`<div class="result-item"><span>💸 Custo estimado (R$ 0,75/kWh)</span><strong>R$ ${custo}</strong></div>`;
   items.forEach(it=>{ html+=`<div class="result-item"><span>${it.nome} (${it.W}W × ${it.h}h/dia)</span><strong>${it.kwh} kWh</strong></div>`; });
   html+=`</div>`;
+  lastCalcResults.consumo = {totalW, custo};
   document.getElementById('resultConsumo').innerHTML=html;
 }
 
@@ -1313,56 +1519,94 @@ function toggleInstall(id){
 }
 
 /* ======================== PDF ======================== */
+/* ===================== PDF SAFE ===================== */
+function pdfSafe(str) {
+  if (typeof str !== 'string') str = String(str);
+  return str
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .replace(/[^\x00-\x7F]/g, '');
+}
 function pdfHeader(doc, subtitle){
   doc.setFillColor(10,22,40); doc.rect(0,0,210,45,'F');
   doc.setFillColor(21,101,192); doc.rect(0,40,210,5,'F');
   doc.setTextColor(255,214,0); doc.setFontSize(22); doc.setFont(undefined,'bold');
-  doc.text('⚡ Elétrica Pro',20,22);
+  doc.text(pdfSafe('Eletrica Pro'),20,22);
   doc.setTextColor(255,255,255); doc.setFontSize(11); doc.setFont(undefined,'normal');
-  doc.text(subtitle,20,34);
+  doc.text(pdfSafe(subtitle),20,34);
   doc.setTextColor(0,0,0);
 }
 function pdfFooter(doc){
+  const now = new Date();
+  const dateStr = now.toLocaleDateString('pt-BR') + ' ' + now.toLocaleTimeString('pt-BR');
   doc.setFontSize(8); doc.setTextColor(128,128,128);
-  doc.text(`Gerado em ${new Date().toLocaleString('pt-BR')} — Elétrica Pro`,105,285,{align:'center'});
+  doc.text(pdfSafe('Gerado em ' + dateStr + ' - Eletrica Pro'),105,285,{align:'center'});
 }
 
 function gerarPDFCalc(tipo){
   if(checkTrialExpired()) return;
   const {jsPDF}=window.jspdf;
   const doc=new jsPDF();
-  pdfHeader(doc,`Relatório: ${tipo}`);
-  doc.setFontSize(14); doc.setFont(undefined,'bold'); doc.text(`Cálculo: ${tipo}`,20,58);
+  pdfHeader(doc,'Relatorio: '+pdfSafe(tipo));
+  doc.setFontSize(14); doc.setFont(undefined,'bold');
+  doc.text(pdfSafe('Calculo: '+tipo),20,58);
   doc.setFontSize(10); doc.setFont(undefined,'normal');
   let y=70;
-  const line=(l,v)=>{ doc.text(`${l}: ${v}`,20,y); y+=8; };
+  const line=(l,v)=>{ doc.text(pdfSafe(l+': '+v),20,y); y+=8; };
   if(tipo==='Lei de Ohm'&&lastCalcResults.leiOhm){
     const r=lastCalcResults.leiOhm;
-    line('Tensão (V)',r.v+' V'); line('Corrente (I)',r.i+' A'); line('Resistência (R)',r.r+' Ω');
+    line('Tensao (V)',r.v+' V'); line('Corrente (I)',r.i+' A'); line('Resistencia (R)',r.r+' ohm');
   } else if(tipo==='Potência'&&lastCalcResults.potencia){
     const r=lastCalcResults.potencia;
-    line('Tipo',r.tipo==='monofasico'?'Monofásico':'Trifásico'); line('Tensão',r.V+' V'); line('Corrente',r.I+' A');
-    line('Fator de Potência',r.fp); line('Potência Ativa',r.P+' W'); line('Potência Aparente',r.S+' VA'); line('Potência Reativa',r.Q+' VAr');
+    line('Tipo',r.tipo==='monofasico'?'Monofasico':'Trifasico'); line('Tensao',r.V+' V'); line('Corrente',r.I+' A');
+    line('Fator de Potencia',r.fp); line('Potencia Ativa',r.P+' W'); line('Potencia Aparente',r.S+' VA'); line('Potencia Reativa',r.Q+' VAr');
   } else if(tipo==='Queda de Tensão'&&lastCalcResults.quedaTensao){
     const r=lastCalcResults.quedaTensao;
-    line('Corrente',r.I+' A'); line('Distância',r.L+' m'); line('Seção',r.s+' mm²');
-    line('Tensão',r.V+' V'); line('Queda de Tensão',r.dV+' V'); line('Percentual',r.pct+'%');
-    line('Status',r.ok?'✅ Dentro do limite':'❌ Acima do limite');
+    line('Corrente',r.I+' A'); line('Distancia',r.L+' m'); line('Secao',r.s+' mm2');
+    line('Tensao',r.V+' V'); line('Queda de Tensao',r.dV+' V'); line('Percentual',r.pct+'%');
+    line('Status',r.ok?'OK - Dentro do limite':'ATENCAO - Acima do limite');
   } else if(tipo==='Dimensionamento'&&lastCalcResults.condutor){
     const r=lastCalcResults.condutor;
-    line('Potência',r.P+' W'); line('Tensão',r.V+' V'); line('Corrente calculada',r.I+' A');
-    line('Seção recomendada',r.sec+' mm²'); line('Disjuntor recomendado',r.disj+' A');
-    line('Queda de tensão',r.pct+'%');
+    line('Potencia',r.P+' W'); line('Tensao',r.V+' V'); line('Corrente calculada',r.I+' A');
+    line('Secao recomendada',r.sec+' mm2'); line('Disjuntor recomendado',r.disj+' A');
+    line('Queda de tensao',r.pct+'%');
+  } else if(tipo==='Iluminação'&&lastCalcResults.iluminacao){
+    const r=lastCalcResults.iluminacao;
+    line('Ambiente',r.nome); line('Area',r.area+' m2'); line('Iluminancia',r.E+' lux');
+    line('Num. lampadas',r.nLampadas+' lampadas'); line('Num. luminarias',r.nLuminarias+' luminarias');
+    line('Iluminancia real',r.iluminanciaReal+' lux');
+  } else if(tipo==='Curto-Circuito'&&lastCalcResults.curtoCircuito){
+    const r=lastCalcResults.curtoCircuito;
+    line('Tipo',r.nomeCC); line('Icc',r.resultado.toFixed(0)+' A');
+    line('Icc (kA)',( r.resultado/1000).toFixed(2)+' kA');
+    line('Poder de corte min.',r.podInterr+' kA');
+  } else if(tipo==='Consumo'&&lastCalcResults.consumo){
+    const r=lastCalcResults.consumo;
+    line('Consumo total mensal',r.totalW.toFixed(1)+' kWh/mes');
+    line('Custo estimado','R$ '+r.custo);
+  } else if((tipo==='fator de demanda'||tipo==='Fator de Demanda')&&lastCalcResults.fatorDemanda){
+    const r=lastCalcResults.fatorDemanda;
+    line('Potencia instalada',(r.potenciaInstalada/1000).toFixed(2)+' kW');
+    line('Demanda maxima',(r.demandaMaxima/1000).toFixed(2)+' kW');
+    line('Fator de demanda global',r.fdGlobal.toFixed(1)+'%');
+    line('Secao recomendada',r.secaoRec+' mm2');
+    line('Disjuntor recomendado',r.disjRec+' A');
+  } else if(tipo==='conversão'&&lastCalcResults.conversao){
+    const r=lastCalcResults.conversao;
+    line('Valor original',r.valor+' '+r.unidade);
+    r.resultados.forEach(([u,v])=>line(u,v));
+  } else {
+    doc.text(pdfSafe('Realize o calculo primeiro para gerar o PDF.'),20,y);
   }
   pdfFooter(doc);
-  doc.save(`calculo_${tipo.replace(/ /g,'_')}_${Date.now()}.pdf`);
+  doc.save('calculo_'+tipo.replace(/ /g,'_')+'_'+Date.now()+'.pdf');
 }
 
 function gerarPDFTabela(tipo){
   if(checkTrialExpired()) return;
   const {jsPDF}=window.jspdf; const doc=new jsPDF();
-  pdfHeader(doc,`Tabela: ${tipo}`);
-  doc.setFontSize(14); doc.setFont(undefined,'bold'); doc.text(`Tabela Técnica: ${tipo}`,20,58);
+  pdfHeader(doc,'Tabela: '+pdfSafe(tipo));
+  doc.setFontSize(14); doc.setFont(undefined,'bold'); doc.text(pdfSafe('Tabela Tecnica: '+tipo),20,58);
   const hs={fillColor:[21,101,192]};
   if(tipo==='Condutores'){
     doc.autoTable({startY:68,head:[['Seção (mm²)','Diâmetro (mm)','Peso (kg/km)','Resistência (Ω/km)']],body:[['1,5','1,38','13,3','12,1'],['2,5','1,78','22,2','7,41'],['4','2,25','35,5','4,61'],['6','2,76','53,3','3,08'],['10','3,57','88,8','1,83'],['16','4,51','142','1,15'],['25','5,64','222','0,727'],['35','6,68','311','0,524'],['50','7,98','444','0,387']],headStyles:hs});
@@ -1380,21 +1624,28 @@ function gerarPDFOrcamento(){
   const nome=document.getElementById('nomeCliente').value;
   if(!nome||!itensOrcamento.length){ alert('Preencha o nome do cliente e adicione itens!'); return; }
   const {jsPDF}=window.jspdf; const doc=new jsPDF();
-  pdfHeader(doc,'Orçamento Profissional');
+  pdfHeader(doc,'Orcamento Profissional');
   doc.setFontSize(12); let y=58;
-  doc.setFont(undefined,'bold'); doc.text('Dados do Cliente:',20,y); y+=9;
+  doc.setFont(undefined,'bold'); doc.text(pdfSafe('Dados do Cliente:'),20,y); y+=9;
   doc.setFont(undefined,'normal'); doc.setFontSize(10);
-  doc.text(`Nome: ${nome}`,20,y); y+=7;
-  doc.text(`Telefone: ${document.getElementById('telefoneCliente').value}`,20,y); y+=7;
-  doc.text(`Endereço: ${document.getElementById('enderecoCliente').value}`,20,y); y+=7;
-  doc.text(`Data: ${new Date().toLocaleDateString('pt-BR')}`,20,y); y+=4;
+  doc.text(pdfSafe('Nome: '+nome),20,y); y+=7;
+  doc.text(pdfSafe('Telefone: '+document.getElementById('telefoneCliente').value),20,y); y+=7;
+  doc.text(pdfSafe('Endereco: '+document.getElementById('enderecoCliente').value),20,y); y+=7;
+  doc.text(pdfSafe('Data: '+new Date().toLocaleDateString('pt-BR')),20,y); y+=4;
   const total=itensOrcamento.reduce((s,i)=>s+i.total,0);
-  doc.autoTable({startY:y+6,head:[['Descrição','Qtd','Valor Unit.','Valor Total']],body:itensOrcamento.map(i=>[i.d,i.q,`R$ ${i.v.toFixed(2)}`,`R$ ${i.total.toFixed(2)}`]),foot:[['','','TOTAL:',`R$ ${total.toFixed(2)}`]],headStyles:{fillColor:[21,101,192]},footStyles:{fillColor:[30,120,60],fontStyle:'bold',fontSize:12}});
+  doc.autoTable({
+    startY:y+6,
+    head:[[pdfSafe('Descricao'),'Qtd','Valor Unit.','Valor Total']],
+    body:itensOrcamento.map(i=>[pdfSafe(i.d),i.q,'R$ '+i.v.toFixed(2),'R$ '+i.total.toFixed(2)]),
+    foot:[['','','TOTAL:','R$ '+total.toFixed(2)]],
+    headStyles:{fillColor:[21,101,192]},
+    footStyles:{fillColor:[30,120,60],fontStyle:'bold',fontSize:12}
+  });
   const fy=doc.lastAutoTable.finalY+14;
   doc.setFontSize(10);
-  doc.text('Obs: Validade do orçamento: 30 dias | Condições: A combinar',20,fy);
+  doc.text(pdfSafe('Obs: Validade do orcamento: 30 dias | Condicoes: A combinar'),20,fy);
   pdfFooter(doc);
-  doc.save(`orcamento_${nome.replace(/ /g,'_')}_${Date.now()}.pdf`);
+  doc.save('orcamento_'+pdfSafe(nome).replace(/ /g,'_')+'_'+Date.now()+'.pdf');
 }
 
 /* ======================== INIT ======================== */
@@ -1590,6 +1841,7 @@ function calcularIluminacao() {
       <div class="result-item"><span>Status</span><strong style="color:${iluminanciaReal>=E?'#4caf50':'#ff9800'}">${iluminanciaReal>=E?'✅ Dentro da norma':'⚠️ Abaixo do recomendado'}</strong></div>
     </div>`;
   
+  lastCalcResults.iluminacao = {nome, area, E, nLampadas, nLuminarias, iluminanciaReal: iluminanciaReal.toFixed(0)};
   document.getElementById('resultIluminacao').innerHTML = html;
 }
 
@@ -1648,6 +1900,7 @@ function calcularCurtoCircuito() {
       <div class="result-item"><span>🔒 Poder de corte mínimo do disjuntor</span><strong style="color:var(--yellow)">${podInterr} kA</strong></div>
     </div>`;
   
+  lastCalcResults.curtoCircuito = {nomeCC, resultado, podInterr};
   document.getElementById('resultCurtoCircuito').innerHTML = html;
 }
 
@@ -1721,6 +1974,7 @@ function calcularFatorDemanda() {
   });
   html += `</div>`;
   
+  lastCalcResults.fatorDemanda = {potenciaInstalada, demandaMaxima, fdGlobal, secaoRec, disjRec};
   document.getElementById('resultFatorDemanda').innerHTML = html;
 }
 
