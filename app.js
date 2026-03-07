@@ -701,3 +701,38 @@ window.openScreen = openScreen;
 window.addEventListener('load', () => {
     initTrial();
 });
+// Verificar usuário logado
+firebase.auth().onAuthStateChanged((user) => {
+
+  if (user) {
+
+    const email = user.email;
+
+    firebase.firestore()
+      .collection("usuarios")
+      .where("email", "==", email)
+      .get()
+      .then((snapshot) => {
+
+        snapshot.forEach((doc) => {
+
+          const data = doc.data();
+
+          if (data.pro === true) {
+
+            localStorage.setItem("eletricapro_pro", "true");
+            console.log("Usuário PRO liberado");
+
+          } else {
+
+            localStorage.setItem("eletricapro_pro", "false");
+
+          }
+
+        });
+
+      });
+
+  }
+
+});
