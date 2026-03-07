@@ -1325,7 +1325,7 @@ function goHome() {
 
 /* ======================== TRIAL / PRO ======================== */
 const TRIAL_KEY = 'eletricapro_trial';
-const PRO_PAYMENT_URL = 'https://link.picpay.com/p/177263482169a842c555851';
+const PRO_PAYMENT_URL = 'https://link.picpay.com/p/177288422869ac110473dde;
 function initTrial(){
   if(!localStorage.getItem(TRIAL_KEY)){
     localStorage.setItem(TRIAL_KEY, JSON.stringify({startDate:new Date().toISOString(), isPro:false}));
@@ -1357,7 +1357,7 @@ function ativarPro(){
   const ok = confirm(
     '✅ Pagamento aberto no PicPay.\n\n' +
     'Após concluir o pagamento, clique em OK para liberar a versão PRO neste dispositivo.\n\n' +
-    'Obs.: por ser um app estático, não há confirmação automática do pagamento.'
+    
   );
 
   if(ok){
