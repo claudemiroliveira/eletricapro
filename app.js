@@ -701,37 +701,25 @@ window.openScreen = openScreen;
 window.addEventListener('load', () => {
     initTrial();
 });
-// Verificar usuário logado
-firebase.auth().onAuthStateChanged((user) => {
+fb.onAuthStateChanged(auth, async (user) => {
 
   if (user) {
 
-    const email = user.email;
+    const userRef = fb.doc(db, "usuarios", user.uid);
+    const snap = await fb.getDoc(userRef);
 
-    firebase.firestore()
-      .collection("usuarios")
-      .where("email", "==", email)
-      .get()
-      .then((snapshot) => {
+    if (snap.exists()) {
 
-        snapshot.forEach((doc) => {
+      const data = snap.data();
 
-          const data = doc.data();
+      if (data.pro === true) {
 
-          if (data.pro === true) {
+        localStorage.setItem("eletricapro_pro", "true");
+        console.log("Usuário PRO liberado");
 
-            localStorage.setItem("eletricapro_pro", "true");
-            console.log("Usuário PRO liberado");
+      }
 
-          } else {
-
-            localStorage.setItem("eletricapro_pro", "false");
-
-          }
-
-        });
-
-      });
+    }
 
   }
 
