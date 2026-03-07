@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#0a1628" />
+  <title>Ética, Privacidade e Termos — ElétricaPro</title>
+  <style>
+    *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+    :root {
+      --blue-deep:#0a1628; --blue-mid:#0d2347; --blue-glow:#2196f3; --yellow:#ffd600;
+      --white:#fff; --card-bg:rgba(13,35,71,0.85); --card-border:rgba(33,150,243,0.35);
+      --text-muted:rgba(255,255,255,0.70); --radius:14px;
+    }
+    body{ font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif; background:var(--blue-deep); color:var(--white); min-height:100vh; }
+    header{ position:sticky; top:0; z-index:10; background:linear-gradient(135deg,var(--blue-mid),var(--blue-deep));
+      border-bottom:1px solid var(--card-border); padding:0.9rem 1.2rem; display:flex; align-items:center; gap:0.8rem; }
+    .btn-back{ background:rgba(255,255,255,0.08); border:1px solid rgba(255,255,255,0.15); color:white; padding:0.5rem 1rem;
+      border-radius:8px; cursor:pointer; font-size:0.9rem; }
+    .title{ font-weight:800; letter-spacing:0.4px; }
+    .title span{ color:var(--yellow); }
+    main{ max-width:900px; margin:0 auto; padding:1.2rem 1rem 3rem; }
+    .card{ background:var(--card-bg); border:1px solid var(--card-border); border-radius:var(--radius); padding:1.2rem 1.2rem; margin-top:1rem; }
+    h1{ font-size:1.35rem; margin-top:0.4rem; }
+    h2{ font-size:1.05rem; margin-bottom:0.6rem; color:var(--yellow); }
+    p, li{ color:var(--text-muted); line-height:1.65; font-size:0.95rem; }
+    ul{ padding-left:1.1rem; margin-top:0.6rem; }
+    a{ color:#fff; text-decoration:underline; }
+    code{ background:rgba(255,255,255,0.08); padding:0.1rem 0.35rem; border-radius:6px; }
+  </style>
+</head>
+<body>
+  <header>
+    <button class="btn-back" onclick="location.href='index.html'">← Voltar</button>
+    <div class="title">Elétrica<span>Pro</span></div>
+  </header>
+
+  <main>
+    <h1>Ética, Privacidade e Termos</h1>
+
+    <div class="card">
+      <h2>1) Ética e uso responsável</h2>
+      <p>
+        O ElétricaPro é uma ferramenta de apoio para cálculos e estimativas. O usuário é responsável por validar resultados,
+        considerar as condições reais de instalação e seguir as normas aplicáveis (ex.: ABNT NBR 5410, NR-10).
+      </p>
+      <ul>
+        <li>Não utilize este app como substituto de projeto/ART quando exigido.</li>
+        <li>Em caso de dúvida, consulte um profissional habilitado.</li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <h2>2) Privacidade</h2>
+      <p>
+        Este app roda no seu navegador e armazena dados localmente no dispositivo usando <code>localStorage</code>
+        (por exemplo, status de teste/PRO e itens de orçamento enquanto estiverem no app).
+        Não há envio automático de dados para servidor.
+      </p>
+    </div>
+
+    <div class="card">
+      <h2>3) Versão PRO e pagamento (PicPay)</h2>
+      <p>
+        O botão PRO abre o link de pagamento do PicPay. Por ser um app estático (GitHub Pages),
+        não existe confirmação automática do pagamento dentro do app.
+      </p>
+      <ul>
+        <li>Após pagar, você pode liberar o PRO no mesmo dispositivo (se o app pedir confirmação/código).</li>
+        <li>Recomendação: se desejar validação automática/segura, é necessário um back-end (ex.: API + Webhook do gateway).</li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <h2>4) Suporte</h2>
+      <p>
+        Para dúvidas, melhorias e suporte, mantenha um canal de atendimento (WhatsApp/Instagram) e inclua o contato aqui.
+      </p>
+    </div>
+  </main>
+</body>
+</html>
