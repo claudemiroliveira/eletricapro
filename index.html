@@ -1,4 +1,4 @@
- <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8">
@@ -1251,8 +1251,8 @@
 
     <div class="pro-price-card">
       <div class="pro-price-label">Plano Profissional</div>
-      <div class="pro-price-value">R$ 29<span>/mês</span></div>
-      <div class="pro-price-or">ou R$ 197/ano (economize 43%)</div>
+      <div class="pro-price-value">R$ 19.90<span>/mês</span></div>
+      <div class="pro-price-or">ou R$ 139.90/ano (economize 43%)</div>
     </div>
 
     <div class="pro-features-grid">
@@ -1271,41 +1271,8 @@
       <a href="etica.html" style="display:block;margin-top:0.9rem;text-align:center;color:rgba(255,255,255,0.85);text-decoration:underline;font-size:0.9rem;">Ética, privacidade e termos</a>
     </div>
 
-    <div class="pro-como-vender">
-      <h3>📣 Como vender o Elétrica PRO</h3>
-      <div class="pro-vender-item">
-        <div class="pro-vender-num">1</div>
-        <div>
-          <strong>Hotmart / Kiwify</strong>
-          <p>Cadastre o produto como assinatura mensal. Configure pagamento recorrente e envie o link de ativação por e-mail.</p>
-        </div>
-      </div>
-      <div class="pro-vender-item">
-        <div class="pro-vender-num">2</div>
-        <div>
-          <strong>Mercado Pago / PagSeguro</strong>
-          <p>Crie um link de pagamento e envie via WhatsApp. Após confirmação, ative o PRO manualmente no app.</p>
-        </div>
-      </div>
-      <div class="pro-vender-item">
-        <div class="pro-vender-num">3</div>
-        <div>
-          <strong>Instagram / TikTok</strong>
-          <p>Publique vídeos demonstrando os cálculos. Mostre geração de PDF profissional. Inclua link da loja na bio.</p>
-        </div>
-      </div>
-      <div class="pro-vender-item">
-        <div class="pro-vender-num">4</div>
-        <div>
-          <strong>Grupos de WhatsApp e Telegram</strong>
-          <p>Entre em grupos de eletricistas. Ofereça 7 dias grátis para testar. Converta para PRO após o trial.</p>
-        </div>
-      </div>
-      <div class="pro-vender-item">
-        <div class="pro-vender-num">5</div>
-        <div>
-          <strong>Google Ads / Meta Ads</strong>
-          <p>Anuncie para eletricistas e engenheiros. Público-alvo: técnicos, autônomos, instaladores. CPC médio baixo no nicho.</p>
+          
+          
         </div>
       </div>
     </div>
@@ -2042,65 +2009,7 @@ function initTheme() {
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.31/jspdf.plugin.autotable.min.js"></script>
-<!-- Firebase (backend) -->
-<script type="module">
 
-import { initializeApp } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-app.js";
-
-import { 
-  getAuth,
-  onAuthStateChanged,
-  signInWithEmailAndPassword,
-  createUserWithEmailAndPassword,
-  signOut
-} from "https://www.gstatic.com/firebasejs/12.10.0/firebase-auth.js";
-
-import {
-  getFirestore,
-  doc,
-  setDoc,
-  getDoc,
-  collection,
-  addDoc,
-  enableIndexedDbPersistence
-} from "https://www.gstatic.com/firebasejs/12.10.0/firebase-firestore.js";
-
-
-const firebaseConfig = {
-  apiKey: "AIzaSyCibrDhAmeTg-2W9TiXhomotfLEM5EqwgE",
-  authDomain: "eletrica-pro.firebaseapp.com",
-  projectId: "eletrica-pro",
-  storageBucket: "eletrica-pro.firebasestorage.app",
-  messagingSenderId: "318733768519",
-  appId: "1:318733768519:web:93e0bdcdecd49b9570de62"
-};
-
-const app = initializeApp(firebaseConfig);
-
-const auth = getAuth(app);
-const db = getFirestore(app);
-
-// 🔥 ATIVAR MODO OFFLINE
-enableIndexedDbPersistence(db).catch(() => {
-  console.log("Offline já ativo ou múltiplas abas abertas");
-});
-
-// deixar disponível no app.js
-window.auth = auth;
-window.db = db;
-window.fb = {
-  onAuthStateChanged,
-  signInWithEmailAndPassword,
-  createUserWithEmailAndPassword,
-  signOut,
-  doc,
-  setDoc,
-  getDoc,
-  collection,
-  addDoc
-};
-
-</script>
 <!-- SEU SCRIPT PRINCIPAL (muito importante) -->
 <script src="app.js"></script>
 
