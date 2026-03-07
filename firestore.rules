@@ -1,0 +1,44 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // ─────────────────────────────────────────────────────────
+    //  USERS
+    //  Cada usuário lê apenas o próprio perfil.
+    //  Escrita bloqueada pelo cliente — só Cloud Functions e Admin SDK
+    // ─────────────────────────────────────────────────────────
+    match /users/{uid} {
+      allow read: if request.auth != null && request.auth.uid == uid;
+      allow write: if false;   // somente Cloud Functions / Admin SDK
+    }
+
+    // ─────────────────────────────────────────────────────────
+    //  PRO_REQUESTS
+    //  - Usuário logado cria solicitação vinculada ao próprio uid
+    //  - Usuário pode ler as próprias solicitações
+    //  - Nenhum cliente pode atualizar ou deletar
+    // ─────────────────────────────────────────────────────────
+    match /pro_requests/{docId} {
+      allow create: if request.auth != null
+        && request.resource.data.uid   == request.auth.uid
+        && request.resource.data.email == request.auth.token.email
+        && request.resource.data.status == "pending"
+        && request.resource.data.plan in ["monthly", "annual", "lifetime"];
+
+      allow read: if request.auth != null
+        && resource.data.uid == request.auth.uid;
+
+      allow update, delete: if false;
+    }
+
+    // ─────────────────────────────────────────────────────────
+    //  ADMIN_NOTIFICATIONS
+    //  Somente criadas por Cloud Functions (Admin SDK).
+    //  Leitura bloqueada no cliente — admin usa Admin SDK.
+    // ─────────────────────────────────────────────────────────
+    match /admin_notifications/{docId} {
+      allow read, write: if false;
+    }
+
+  }
+}
