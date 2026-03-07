@@ -1,0 +1,743 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>EletricaPRO — Painel Admin</title>
+  <style>
+    :root {
+      --bg:        #0f1117;
+      --surface:   #1a1d2e;
+      --surface2:  #22263a;
+      --border:    #2e3350;
+      --accent:    #f5c518;
+      --accent2:   #ff9f00;
+      --green:     #22c55e;
+      --red:       #ef4444;
+      --blue:      #3b82f6;
+      --text:      #e2e8f0;
+      --muted:     #7c8db0;
+      --radius:    12px;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Segoe UI', system-ui, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+    }
+
+    /* ── TOP BAR ── */
+    .topbar {
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      padding: 14px 24px;
+      display: flex; align-items: center; justify-content: space-between;
+      position: sticky; top: 0; z-index: 100;
+    }
+    .topbar .logo { display: flex; align-items: center; gap: 10px; }
+    .topbar .logo span.bolt {
+      font-size: 22px;
+      background: var(--accent);
+      color: #000;
+      padding: 4px 8px;
+      border-radius: 8px;
+      font-weight: 900;
+    }
+    .topbar .logo h1 { font-size: 17px; font-weight: 700; }
+    .topbar .logo small { font-size: 11px; color: var(--muted); }
+    .admin-badge {
+      background: #7c3aed22;
+      color: #a78bfa;
+      border: 1px solid #7c3aed55;
+      padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: 700;
+    }
+    .user-info { display: flex; align-items: center; gap: 10px; font-size: 13px; }
+    .user-info img { width: 32px; height: 32px; border-radius: 50%; border: 2px solid var(--accent); }
+    #btnLogout {
+      background: none; border: 1px solid var(--border);
+      color: var(--muted); padding: 5px 12px; border-radius: 8px;
+      cursor: pointer; font-size: 12px; transition: all .2s;
+    }
+    #btnLogout:hover { border-color: var(--red); color: var(--red); }
+
+    /* ── LAYOUT ── */
+    .main { max-width: 1100px; margin: 0 auto; padding: 28px 20px; }
+
+    /* ── STATS ── */
+    .stats-grid {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 16px; margin-bottom: 28px;
+    }
+    .stat-card {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: var(--radius); padding: 18px 20px;
+    }
+    .stat-card .label { font-size: 12px; color: var(--muted); text-transform: uppercase; letter-spacing: .6px; }
+    .stat-card .value { font-size: 32px; font-weight: 800; margin-top: 4px; }
+    .stat-card.pending  .value { color: var(--accent2); }
+    .stat-card.approved .value { color: var(--green); }
+    .stat-card.total    .value { color: var(--blue); }
+    .stat-card.active   .value { color: var(--accent); }
+
+    /* ── SECTION TITLE ── */
+    .section-header {
+      display: flex; align-items: center; justify-content: space-between;
+      margin-bottom: 14px;
+    }
+    .section-header h2 { font-size: 16px; font-weight: 700; }
+    .section-header .badge {
+      background: var(--accent2); color: #000;
+      font-size: 11px; font-weight: 800;
+      padding: 3px 9px; border-radius: 20px;
+    }
+
+    /* ── FILTER BAR ── */
+    .filter-bar {
+      display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 16px;
+    }
+    .filter-btn {
+      background: var(--surface2); border: 1px solid var(--border);
+      color: var(--muted); padding: 6px 14px; border-radius: 20px;
+      cursor: pointer; font-size: 13px; transition: all .2s;
+    }
+    .filter-btn.active, .filter-btn:hover {
+      background: var(--accent); color: #000; border-color: var(--accent); font-weight: 700;
+    }
+
+    /* ── REQUESTS TABLE ── */
+    .requests-wrap { overflow-x: auto; }
+    table {
+      width: 100%; border-collapse: collapse; font-size: 13px;
+    }
+    th {
+      background: var(--surface2); color: var(--muted);
+      text-align: left; padding: 10px 14px;
+      font-size: 11px; text-transform: uppercase; letter-spacing: .6px;
+      border-bottom: 1px solid var(--border);
+    }
+    td {
+      padding: 13px 14px; border-bottom: 1px solid var(--border);
+      vertical-align: middle;
+    }
+    tr:hover td { background: #ffffff06; }
+
+    .plan-badge {
+      display: inline-block; padding: 3px 9px; border-radius: 20px;
+      font-size: 11px; font-weight: 700;
+    }
+    .plan-monthly  { background: #3b82f622; color: #93c5fd; border: 1px solid #3b82f644; }
+    .plan-annual   { background: #f5c51822; color: #fde68a; border: 1px solid #f5c51844; }
+    .plan-lifetime { background: #a855f722; color: #d8b4fe; border: 1px solid #a855f744; }
+
+    .status-badge {
+      display: inline-block; padding: 3px 10px; border-radius: 20px;
+      font-size: 11px; font-weight: 700;
+    }
+    .status-pending  { background: #f59e0b22; color: #fbbf24; border: 1px solid #f59e0b44; }
+    .status-approved { background: #22c55e22; color: #86efac; border: 1px solid #22c55e44; }
+    .status-rejected { background: #ef444422; color: #fca5a5; border: 1px solid #ef444444; }
+
+    .uid-cell {
+      font-family: monospace; font-size: 11px; color: var(--muted);
+      max-width: 120px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+    }
+
+    /* ── ACTION BUTTONS ── */
+    .btn-approve, .btn-reject, .btn-revoke, .btn-renew {
+      padding: 6px 14px; border-radius: 8px; border: none;
+      cursor: pointer; font-size: 12px; font-weight: 700; transition: all .15s;
+      margin-right: 4px;
+    }
+    .btn-approve { background: var(--green); color: #000; }
+    .btn-approve:hover { filter: brightness(1.15); }
+    .btn-reject  { background: var(--red); color: #fff; }
+    .btn-reject:hover { filter: brightness(1.2); }
+    .btn-revoke  { background: #7c3aed; color: #fff; }
+    .btn-revoke:hover { filter: brightness(1.2); }
+    .btn-renew   { background: var(--blue); color: #fff; }
+    .btn-renew:hover { filter: brightness(1.2); }
+    .btn-disabled { background: var(--border); color: var(--muted); cursor: default; }
+
+    /* ── PRO USERS TABLE ── */
+    .expiry-ok   { color: var(--green); }
+    .expiry-soon { color: var(--accent2); font-weight: 700; }
+    .expiry-exp  { color: var(--red); text-decoration: line-through; }
+    .expiry-life { color: #d8b4fe; }
+
+    /* ── MODAL ── */
+    .modal-overlay {
+      display: none; position: fixed; inset: 0;
+      background: #000000cc; z-index: 200;
+      align-items: center; justify-content: center;
+    }
+    .modal-overlay.open { display: flex; }
+    .modal {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 16px; padding: 28px; max-width: 420px; width: 90%;
+    }
+    .modal h3 { font-size: 18px; font-weight: 700; margin-bottom: 6px; }
+    .modal p  { color: var(--muted); font-size: 14px; margin-bottom: 20px; line-height: 1.5; }
+    .modal .actions { display: flex; gap: 10px; justify-content: flex-end; }
+    .modal .btn-cancel {
+      background: none; border: 1px solid var(--border);
+      color: var(--muted); padding: 8px 18px; border-radius: 8px;
+      cursor: pointer; font-size: 14px;
+    }
+    .modal .btn-confirm {
+      background: var(--green); color: #000;
+      border: none; padding: 8px 20px; border-radius: 8px;
+      cursor: pointer; font-size: 14px; font-weight: 700;
+    }
+    .modal .btn-confirm.danger { background: var(--red); color: #fff; }
+
+    /* ── TOAST ── */
+    #toast {
+      position: fixed; bottom: 24px; right: 24px; z-index: 999;
+      background: var(--surface); border: 1px solid var(--green);
+      color: var(--green); padding: 12px 20px; border-radius: 12px;
+      font-size: 14px; font-weight: 600;
+      transform: translateY(60px); opacity: 0;
+      transition: all .3s; pointer-events: none;
+    }
+    #toast.show { transform: translateY(0); opacity: 1; }
+    #toast.error { border-color: var(--red); color: var(--red); }
+
+    /* ── AUTH SCREEN ── */
+    #authScreen {
+      min-height: 100vh; display: flex; align-items: center; justify-content: center;
+    }
+    .auth-card {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 20px; padding: 40px; text-align: center; max-width: 360px;
+    }
+    .auth-card .bolt-big {
+      font-size: 48px; background: var(--accent); color: #000;
+      padding: 10px 18px; border-radius: 14px; display: inline-block; margin-bottom: 20px;
+    }
+    .auth-card h2 { font-size: 22px; margin-bottom: 6px; }
+    .auth-card p  { color: var(--muted); font-size: 14px; margin-bottom: 28px; }
+    #btnAdminLogin {
+      display: flex; align-items: center; gap: 10px; justify-content: center;
+      background: #fff; color: #000;
+      border: none; padding: 12px 24px; border-radius: 10px;
+      font-size: 15px; font-weight: 700; cursor: pointer; width: 100%;
+      transition: filter .2s;
+    }
+    #btnAdminLogin:hover { filter: brightness(.92); }
+
+    /* ── LOADING ── */
+    .spinner {
+      width: 20px; height: 20px;
+      border: 3px solid var(--border); border-top-color: var(--accent);
+      border-radius: 50%; animation: spin .7s linear infinite; display: inline-block;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* ── EMPTY STATE ── */
+    .empty { text-align: center; padding: 40px; color: var(--muted); font-size: 14px; }
+
+    /* ── REJECT REASON INPUT ── */
+    .reason-input {
+      width: 100%; background: var(--surface2); border: 1px solid var(--border);
+      color: var(--text); border-radius: 8px; padding: 10px 14px; font-size: 13px;
+      margin-bottom: 16px;
+    }
+    .reason-input:focus { outline: none; border-color: var(--accent); }
+
+    /* ── RENEW PLAN SELECT ── */
+    .plan-select {
+      width: 100%; background: var(--surface2); border: 1px solid var(--border);
+      color: var(--text); border-radius: 8px; padding: 10px 14px; font-size: 13px;
+      margin-bottom: 16px;
+    }
+
+    /* ── NOTIFICATION BELL ── */
+    .notif-btn {
+      position: relative; background: none; border: 1px solid var(--border);
+      color: var(--muted); padding: 6px 10px; border-radius: 8px; cursor: pointer; font-size: 16px;
+    }
+    .notif-count {
+      position: absolute; top: -6px; right: -6px;
+      background: var(--red); color: #fff;
+      font-size: 10px; font-weight: 800;
+      padding: 1px 5px; border-radius: 10px; min-width: 18px; text-align: center;
+    }
+
+    @media (max-width: 600px) {
+      .topbar { flex-wrap: wrap; gap: 10px; }
+      .stats-grid { grid-template-columns: 1fr 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ═══════════════ AUTH SCREEN ═══════════════ -->
+<div id="authScreen">
+  <div class="auth-card">
+    <div class="bolt-big">⚡</div>
+    <h2>Painel Admin</h2>
+    <p>Acesso exclusivo para administradores do EletricaPRO.</p>
+    <button id="btnAdminLogin">
+      <svg width="20" height="20" viewBox="0 0 48 48">
+        <path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/>
+        <path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/>
+        <path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/>
+        <path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.18 1.48-4.97 2.36-8.16 2.36-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/>
+      </svg>
+      Entrar com Google
+    </button>
+  </div>
+</div>
+
+<!-- ═══════════════ ADMIN PANEL ═══════════════ -->
+<div id="adminPanel" style="display:none;">
+
+  <!-- TOP BAR -->
+  <div class="topbar">
+    <div class="logo">
+      <span class="bolt">⚡</span>
+      <div>
+        <h1>EletricaPRO</h1>
+        <small>Painel de Administração</small>
+      </div>
+    </div>
+    <div style="display:flex;align-items:center;gap:12px;">
+      <span class="admin-badge">🛡 ADMIN</span>
+      <button class="notif-btn" id="btnNotif" title="Notificações">
+        🔔<span class="notif-count" id="notifCount" style="display:none">0</span>
+      </button>
+      <div class="user-info">
+        <img id="adminAvatar" src="" alt=""/>
+        <span id="adminName"></span>
+      </div>
+      <button id="btnLogout">Sair</button>
+    </div>
+  </div>
+
+  <div class="main">
+
+    <!-- STATS -->
+    <div class="stats-grid" id="statsGrid">
+      <div class="stat-card pending">
+        <div class="label">⏳ Pendentes</div>
+        <div class="value" id="statPending">—</div>
+      </div>
+      <div class="stat-card approved">
+        <div class="label">✅ Aprovados hoje</div>
+        <div class="value" id="statApproved">—</div>
+      </div>
+      <div class="stat-card active">
+        <div class="label">⚡ PRO Ativos</div>
+        <div class="value" id="statActive">—</div>
+      </div>
+      <div class="stat-card total">
+        <div class="label">📋 Total Usuários</div>
+        <div class="value" id="statTotal">—</div>
+      </div>
+    </div>
+
+    <!-- PENDING REQUESTS -->
+    <div style="margin-bottom: 36px;">
+      <div class="section-header">
+        <h2>📥 Solicitações PRO</h2>
+        <span class="badge" id="pendingBadge">0 pendentes</span>
+      </div>
+      <div class="filter-bar">
+        <button class="filter-btn active" data-filter="pending">⏳ Pendentes</button>
+        <button class="filter-btn" data-filter="approved">✅ Aprovados</button>
+        <button class="filter-btn" data-filter="rejected">❌ Rejeitados</button>
+        <button class="filter-btn" data-filter="all">📋 Todos</button>
+      </div>
+      <div class="requests-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Usuário</th>
+              <th>UID</th>
+              <th>Plano</th>
+              <th>Solicitado em</th>
+              <th>Status</th>
+              <th>Ações</th>
+            </tr>
+          </thead>
+          <tbody id="requestsBody">
+            <tr><td colspan="6" class="empty"><div class="spinner"></div> Carregando...</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- PRO USERS -->
+    <div>
+      <div class="section-header">
+        <h2>👑 Usuários PRO Ativos</h2>
+        <span id="proUsersCount" style="color:var(--muted);font-size:13px;"></span>
+      </div>
+      <div class="requests-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>E-mail</th>
+              <th>UID</th>
+              <th>Plano</th>
+              <th>PRO até</th>
+              <th>Ativo desde</th>
+              <th>Ações</th>
+            </tr>
+          </thead>
+          <tbody id="proUsersBody">
+            <tr><td colspan="6" class="empty"><div class="spinner"></div> Carregando...</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════ MODAL ═══════════════ -->
+<div class="modal-overlay" id="modal">
+  <div class="modal">
+    <h3 id="modalTitle">Confirmar ação</h3>
+    <p id="modalDesc">Tem certeza?</p>
+    <div id="modalExtra"></div>
+    <div class="actions">
+      <button class="btn-cancel" id="modalCancel">Cancelar</button>
+      <button class="btn-confirm" id="modalConfirm">Confirmar</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════ TOAST ═══════════════ -->
+<div id="toast"></div>
+
+<!-- ═══════════════ FIREBASE + APP ═══════════════ -->
+<script type="module">
+import { initializeApp }                from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged }
+                                        from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+import { getFirestore, collection, query, where, orderBy, limit,
+         onSnapshot, doc, getDoc, getDocs, Timestamp }
+                                        from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+import { getFunctions, httpsCallable }  from "https://www.gstatic.com/firebasejs/10.12.2/firebase-functions.js";
+
+// ── CONFIG — substitua pelos seus valores ──────────────────────
+const firebaseConfig = {
+  apiKey:            "COLE_SEU_apiKey",
+  authDomain:        "COLE_SEU_authDomain",
+  projectId:         "COLE_SEU_projectId",
+  storageBucket:     "COLE_SEU_storageBucket",
+  messagingSenderId: "COLE_SEU_messagingSenderId",
+  appId:             "COLE_SEU_appId"
+};
+// ── UIDs admin (deve bater com functions/index.js) ─────────────
+const ADMIN_UIDS = ["SEU_UID_ADMIN_AQUI"];
+// ───────────────────────────────────────────────────────────────
+
+const app       = initializeApp(firebaseConfig);
+const auth      = getAuth(app);
+const db        = getFirestore(app);
+const functions = getFunctions(app, "southamerica-east1"); // região BR
+
+// Callables
+const approvePro    = httpsCallable(functions, "approvePro");
+const rejectPro     = httpsCallable(functions, "rejectPro");
+const revokeProFn   = httpsCallable(functions, "revokeProManual");
+const renewProFn    = httpsCallable(functions, "renewPro");
+
+// ── STATE ──────────────────────────────────────────────────────
+let currentFilter  = "pending";
+let allRequests    = [];
+let unsubRequests  = null;
+let unsubProUsers  = null;
+let unsubNotifs    = null;
+let pendingAction  = null;
+
+// ── HELPERS ───────────────────────────────────────────────────
+const $ = id => document.getElementById(id);
+
+function toast(msg, isError = false) {
+  const el = $("toast");
+  el.textContent = msg;
+  el.className   = "show" + (isError ? " error" : "");
+  setTimeout(() => { el.className = ""; }, 3500);
+}
+
+function fmtDate(ts) {
+  if (!ts) return "—";
+  const d = ts.toDate ? ts.toDate() : new Date(ts);
+  return d.toLocaleDateString("pt-BR", { day:"2-digit", month:"2-digit", year:"2-digit",
+                                         hour:"2-digit", minute:"2-digit" });
+}
+
+function planBadge(plan) {
+  const map = { monthly:"Mensal", annual:"Anual", lifetime:"Vitalício" };
+  return `<span class="plan-badge plan-${plan}">${map[plan] || plan}</span>`;
+}
+
+function statusBadge(status) {
+  const map = { pending:"⏳ Pendente", approved:"✅ Aprovado", rejected:"❌ Rejeitado" };
+  return `<span class="status-badge status-${status}">${map[status] || status}</span>`;
+}
+
+function expiryCell(proUntil, proType) {
+  if (proType === "lifetime" || !proUntil) return `<span class="expiry-life">♾ Vitalício</span>`;
+  const d    = proUntil.toDate();
+  const diff = Math.ceil((d - Date.now()) / 86400000);
+  if (diff < 0)  return `<span class="expiry-exp">Expirado (${fmtDate(proUntil)})</span>`;
+  if (diff <= 7) return `<span class="expiry-soon">⚠ ${diff}d (${fmtDate(proUntil)})</span>`;
+  return `<span class="expiry-ok">${fmtDate(proUntil)}</span>`;
+}
+
+// ── MODAL ─────────────────────────────────────────────────────
+function openModal(title, desc, extraHtml, confirmClass, onConfirm) {
+  $("modalTitle").textContent   = title;
+  $("modalDesc").textContent    = desc;
+  $("modalExtra").innerHTML     = extraHtml || "";
+  $("modalConfirm").className   = "btn-confirm " + (confirmClass || "");
+  $("modal").classList.add("open");
+  pendingAction = onConfirm;
+}
+$("modalCancel").onclick  = () => $("modal").classList.remove("open");
+$("modalConfirm").onclick = async () => {
+  $("modal").classList.remove("open");
+  if (pendingAction) await pendingAction();
+  pendingAction = null;
+};
+
+// ── REQUESTS TABLE ────────────────────────────────────────────
+function renderRequests() {
+  const filtered = currentFilter === "all"
+    ? allRequests
+    : allRequests.filter(r => r.status === currentFilter);
+
+  const tbody = $("requestsBody");
+  if (!filtered.length) {
+    tbody.innerHTML = `<tr><td colspan="6" class="empty">Nenhuma solicitação encontrada.</td></tr>`;
+    return;
+  }
+
+  tbody.innerHTML = filtered.map(r => {
+    const isPending  = r.status === "pending";
+    const actionBtns = isPending
+      ? `<button class="btn-approve" onclick="doApprove('${r.id}','${r.email||""}','${r.plan}')">✅ Aprovar</button>
+         <button class="btn-reject"  onclick="doReject('${r.id}','${r.email||""}')">❌ Rejeitar</button>`
+      : `<span style="color:var(--muted);font-size:12px;">${r.status === "approved" ? "Aprovado" : "Rejeitado"}</span>`;
+
+    return `<tr>
+      <td>${r.email || "—"}</td>
+      <td><div class="uid-cell" title="${r.uid}">${r.uid}</div></td>
+      <td>${planBadge(r.plan || "lifetime")}</td>
+      <td>${fmtDate(r.createdAt)}</td>
+      <td>${statusBadge(r.status)}</td>
+      <td>${actionBtns}</td>
+    </tr>`;
+  }).join("");
+}
+
+// ── PRO USERS TABLE ───────────────────────────────────────────
+function renderProUsers(docs) {
+  const tbody = $("proUsersBody");
+  if (!docs.length) {
+    tbody.innerHTML = `<tr><td colspan="6" class="empty">Nenhum usuário PRO ativo.</td></tr>`;
+    $("proUsersCount").textContent = "0 usuários";
+    return;
+  }
+  $("proUsersCount").textContent = `${docs.length} usuário(s)`;
+
+  tbody.innerHTML = docs.map(d => {
+    const u = d.data();
+    return `<tr>
+      <td>${u.email || "—"}</td>
+      <td><div class="uid-cell" title="${d.id}">${d.id}</div></td>
+      <td>${planBadge(u.proType || "lifetime")}</td>
+      <td>${expiryCell(u.proUntil, u.proType)}</td>
+      <td>${fmtDate(u.proSince)}</td>
+      <td>
+        <button class="btn-renew"  onclick="doRenew('${d.id}','${u.email||""}')">🔄 Renovar</button>
+        <button class="btn-revoke" onclick="doRevoke('${d.id}','${u.email||""}')">🚫 Revogar</button>
+      </td>
+    </tr>`;
+  }).join("");
+}
+
+// ── APPROVE ───────────────────────────────────────────────────
+window.doApprove = (requestId, email, plan) => {
+  openModal(
+    "✅ Aprovar PRO",
+    `Aprovar plano ${plan} para ${email || requestId}?`,
+    "",
+    "",
+    async () => {
+      try {
+        const res = await approvePro({ requestId });
+        toast(`PRO ${plan} ativado para ${email}!`);
+      } catch (e) { toast("Erro: " + e.message, true); }
+    }
+  );
+};
+
+// ── REJECT ────────────────────────────────────────────────────
+window.doReject = (requestId, email) => {
+  openModal(
+    "❌ Rejeitar solicitação",
+    `Rejeitar PRO de ${email || requestId}? Informe o motivo (opcional):`,
+    `<input id="rejectReason" class="reason-input" placeholder="Ex: Pagamento não identificado"/>`,
+    "danger",
+    async () => {
+      const reason = ($("rejectReason") || {}).value || "Pagamento não confirmado.";
+      try {
+        await rejectPro({ requestId, reason });
+        toast("Solicitação rejeitada.");
+      } catch (e) { toast("Erro: " + e.message, true); }
+    }
+  );
+};
+
+// ── REVOKE ────────────────────────────────────────────────────
+window.doRevoke = (uid, email) => {
+  openModal(
+    "🚫 Revogar PRO",
+    `Revogar acesso PRO de ${email || uid}?`,
+    `<input id="revokeReason" class="reason-input" placeholder="Motivo (opcional)"/>`,
+    "danger",
+    async () => {
+      const reason = ($("revokeReason") || {}).value || "Revogado pelo administrador.";
+      try {
+        await revokeProFn({ uid, reason });
+        toast(`PRO revogado para ${email}.`);
+      } catch (e) { toast("Erro: " + e.message, true); }
+    }
+  );
+};
+
+// ── RENEW ─────────────────────────────────────────────────────
+window.doRenew = (uid, email) => {
+  openModal(
+    "🔄 Renovar PRO",
+    `Renovar PRO de ${email || uid}. Escolha o novo plano:`,
+    `<select id="renewPlan" class="plan-select">
+       <option value="monthly">Mensal (+30 dias)</option>
+       <option value="annual">Anual (+365 dias)</option>
+       <option value="lifetime">Vitalício</option>
+     </select>`,
+    "",
+    async () => {
+      const plan = ($("renewPlan") || {}).value || "monthly";
+      try {
+        const res = await renewProFn({ uid, plan });
+        toast(`PRO renovado (${plan}) para ${email}!`);
+      } catch (e) { toast("Erro: " + e.message, true); }
+    }
+  );
+};
+
+// ── FILTERS ───────────────────────────────────────────────────
+document.querySelectorAll(".filter-btn").forEach(btn => {
+  btn.onclick = () => {
+    document.querySelectorAll(".filter-btn").forEach(b => b.classList.remove("active"));
+    btn.classList.add("active");
+    currentFilter = btn.dataset.filter;
+    renderRequests();
+  };
+});
+
+// ── LOAD STATS ────────────────────────────────────────────────
+async function loadStats() {
+  try {
+    // Total usuários
+    const usersSnap = await getDocs(collection(db, "users"));
+    $("statTotal").textContent = usersSnap.size;
+
+    // PRO ativos
+    const proSnap = await getDocs(query(collection(db, "users"), where("pro","==",true)));
+    $("statActive").textContent = proSnap.size;
+
+    // Aprovados hoje
+    const today = new Date(); today.setHours(0,0,0,0);
+    const todayTs = Timestamp.fromDate(today);
+    const approvedSnap = await getDocs(
+      query(collection(db, "pro_requests"),
+            where("status","==","approved"),
+            where("approvedAt",">=",todayTs))
+    );
+    $("statApproved").textContent = approvedSnap.size;
+  } catch(e) { console.warn("loadStats:", e); }
+}
+
+// ── REALTIME: REQUESTS ────────────────────────────────────────
+function subscribeRequests() {
+  if (unsubRequests) unsubRequests();
+  const q = query(collection(db, "pro_requests"), orderBy("createdAt", "desc"), limit(100));
+  unsubRequests = onSnapshot(q, snap => {
+    allRequests = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+    const pending = allRequests.filter(r => r.status === "pending").length;
+    $("statPending").textContent = pending;
+    $("pendingBadge").textContent = `${pending} pendente${pending !== 1 ? "s" : ""}`;
+    renderRequests();
+  });
+}
+
+// ── REALTIME: PRO USERS ───────────────────────────────────────
+function subscribeProUsers() {
+  if (unsubProUsers) unsubProUsers();
+  const q = query(collection(db, "users"), where("pro","==",true));
+  unsubProUsers = onSnapshot(q, snap => {
+    $("statActive").textContent = snap.size;
+    renderProUsers(snap.docs);
+  });
+}
+
+// ── REALTIME: NOTIFICAÇÕES ────────────────────────────────────
+function subscribeNotifications() {
+  if (unsubNotifs) unsubNotifs();
+  const q = query(collection(db, "admin_notifications"), where("read","==",false), limit(50));
+  unsubNotifs = onSnapshot(q, snap => {
+    const count = snap.size;
+    const el    = $("notifCount");
+    if (count > 0) { el.textContent = count; el.style.display = "block"; }
+    else           { el.style.display = "none"; }
+  });
+}
+
+// ── AUTH ──────────────────────────────────────────────────────
+$("btnAdminLogin").onclick = async () => {
+  try {
+    const provider = new GoogleAuthProvider();
+    await signInWithPopup(auth, provider);
+  } catch(e) { toast("Erro de login: " + e.message, true); }
+};
+
+$("btnLogout").onclick = () => {
+  if (unsubRequests) unsubRequests();
+  if (unsubProUsers) unsubProUsers();
+  if (unsubNotifs)   unsubNotifs();
+  signOut(auth);
+};
+
+onAuthStateChanged(auth, async user => {
+  if (user && ADMIN_UIDS.includes(user.uid)) {
+    $("authScreen").style.display  = "none";
+    $("adminPanel").style.display  = "block";
+    $("adminName").textContent     = user.displayName || user.email;
+    $("adminAvatar").src           = user.photoURL || "";
+    subscribeRequests();
+    subscribeProUsers();
+    subscribeNotifications();
+    loadStats();
+  } else if (user) {
+    await signOut(auth);
+    toast("⛔ Acesso negado: não é administrador.", true);
+    $("authScreen").style.display  = "flex";
+    $("adminPanel").style.display  = "none";
+  } else {
+    $("authScreen").style.display  = "flex";
+    $("adminPanel").style.display  = "none";
+  }
+});
+
+// Atualiza stats a cada 60s
+setInterval(loadStats, 60000);
+</script>
+</body>
+</html>
