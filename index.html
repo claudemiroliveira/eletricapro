@@ -2009,7 +2009,65 @@ function initTheme() {
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.31/jspdf.plugin.autotable.min.js"></script>
+<!-- Firebase (backend) -->
+<script type="module">
 
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-app.js";
+
+import { 
+  getAuth,
+  onAuthStateChanged,
+  signInWithEmailAndPassword,
+  createUserWithEmailAndPassword,
+  signOut
+} from "https://www.gstatic.com/firebasejs/12.10.0/firebase-auth.js";
+
+import {
+  getFirestore,
+  doc,
+  setDoc,
+  getDoc,
+  collection,
+  addDoc,
+  enableIndexedDbPersistence
+} from "https://www.gstatic.com/firebasejs/12.10.0/firebase-firestore.js";
+
+
+const firebaseConfig = {
+  apiKey: "AIzaSyCibrDhAmeTg-2W9TiXhomotfLEM5EqwgE",
+  authDomain: "eletrica-pro.firebaseapp.com",
+  projectId: "eletrica-pro",
+  storageBucket: "eletrica-pro.firebasestorage.app",
+  messagingSenderId: "318733768519",
+  appId: "1:318733768519:web:93e0bdcdecd49b9570de62"
+};
+
+const app = initializeApp(firebaseConfig);
+
+const auth = getAuth(app);
+const db = getFirestore(app);
+
+// 🔥 ATIVAR MODO OFFLINE
+enableIndexedDbPersistence(db).catch(() => {
+  console.log("Offline já ativo ou múltiplas abas abertas");
+});
+
+// deixar disponível no app.js
+window.auth = auth;
+window.db = db;
+window.fb = {
+  onAuthStateChanged,
+  signInWithEmailAndPassword,
+  createUserWithEmailAndPassword,
+  signOut,
+  doc,
+  setDoc,
+  getDoc,
+  collection,
+  addDoc
+};
+
+</script>
 <!-- SEU SCRIPT PRINCIPAL (muito importante) -->
 <script src="app.js"></script>
 
