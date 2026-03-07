@@ -1,0 +1,679 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>EletricaPRO — Planos PRO</title>
+  <style>
+    :root {
+      --bg:       #0f1117;
+      --surface:  #1a1d2e;
+      --surface2: #22263a;
+      --border:   #2e3350;
+      --accent:   #f5c518;
+      --green:    #22c55e;
+      --red:      #ef4444;
+      --blue:     #3b82f6;
+      --purple:   #a855f7;
+      --text:     #e2e8f0;
+      --muted:    #7c8db0;
+      --radius:   14px;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Segoe UI', system-ui, sans-serif;
+      background: var(--bg); color: var(--text);
+      min-height: 100vh; padding-bottom: 40px;
+    }
+
+    /* ── HEADER ── */
+    .pro-header {
+      background: linear-gradient(135deg, #1a1d2e 0%, #0f1117 100%);
+      border-bottom: 1px solid var(--border);
+      padding: 32px 20px; text-align: center;
+    }
+    .pro-header .logo {
+      font-size: 42px; background: var(--accent);
+      color: #000; padding: 10px 18px; border-radius: 14px;
+      display: inline-block; margin-bottom: 16px;
+    }
+    .pro-header h1 { font-size: 28px; font-weight: 800; }
+    .pro-header h1 span { color: var(--accent); }
+    .pro-header p  { color: var(--muted); font-size: 15px; margin-top: 6px; }
+
+    /* ── STATUS BAR ── */
+    .status-bar {
+      max-width: 700px; margin: 24px auto 0; padding: 0 20px;
+    }
+    .status-box {
+      border-radius: 12px; padding: 14px 18px;
+      display: flex; align-items: center; gap: 12px; font-size: 14px;
+    }
+    .status-box.not-logged   { background: #1e2336; border: 1px solid var(--border); }
+    .status-box.not-pro      { background: #1e2336; border: 1px solid var(--border); }
+    .status-box.is-pro       { background: #052e16; border: 1px solid var(--green); }
+    .status-box.pending      { background: #2e1b07; border: 1px solid #f59e0b; }
+    .status-box .icon        { font-size: 22px; }
+    .status-box strong       { display: block; font-size: 15px; }
+    .status-box span         { color: var(--muted); font-size: 13px; }
+    .user-uid {
+      font-family: monospace; font-size: 10px;
+      background: var(--surface2); padding: 2px 8px; border-radius: 6px;
+      color: var(--muted); margin-left: auto; cursor: pointer;
+    }
+    .user-uid:hover { color: var(--accent); }
+
+    /* ── PLANS GRID ── */
+    .plans-section { max-width: 860px; margin: 36px auto 0; padding: 0 20px; }
+    .plans-section h2 {
+      text-align: center; font-size: 20px; font-weight: 700; margin-bottom: 24px;
+    }
+    .plans-grid {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 18px;
+    }
+
+    /* ── PLAN CARD ── */
+    .plan-card {
+      background: var(--surface); border: 2px solid var(--border);
+      border-radius: 18px; padding: 26px 22px; position: relative;
+      transition: transform .2s, border-color .2s;
+      display: flex; flex-direction: column;
+    }
+    .plan-card:hover { transform: translateY(-3px); }
+    .plan-card.selected { border-color: var(--accent); }
+    .plan-card.best-value { border-color: var(--accent); }
+
+    .best-label {
+      position: absolute; top: -13px; left: 50%; transform: translateX(-50%);
+      background: var(--accent); color: #000;
+      font-size: 11px; font-weight: 800; padding: 4px 14px; border-radius: 20px;
+      white-space: nowrap;
+    }
+
+    .plan-icon { font-size: 32px; margin-bottom: 10px; }
+    .plan-name { font-size: 18px; font-weight: 800; }
+    .plan-desc { color: var(--muted); font-size: 13px; margin-top: 4px; }
+    .plan-price {
+      margin: 16px 0; padding: 12px 0; border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+    }
+    .plan-price .amount {
+      font-size: 34px; font-weight: 900; line-height: 1;
+    }
+    .plan-price .amount span { font-size: 18px; font-weight: 600; }
+    .plan-price .period { color: var(--muted); font-size: 13px; margin-top: 4px; }
+    .plan-price .economy {
+      display: inline-block; margin-top: 6px;
+      background: #052e1688; color: var(--green);
+      border: 1px solid #22c55e44;
+      font-size: 12px; font-weight: 700; padding: 3px 10px; border-radius: 20px;
+    }
+
+    .plan-features { list-style: none; margin: 14px 0; flex: 1; }
+    .plan-features li {
+      font-size: 13px; padding: 5px 0; display: flex; align-items: flex-start; gap: 8px;
+    }
+    .plan-features li .check { color: var(--green); font-size: 14px; margin-top: 1px; }
+
+    .plan-btn {
+      margin-top: auto; width: 100%; padding: 13px;
+      border: none; border-radius: 10px;
+      font-size: 15px; font-weight: 700; cursor: pointer;
+      transition: filter .2s, transform .1s;
+    }
+    .plan-btn:hover:not(:disabled) { filter: brightness(1.1); transform: scale(1.02); }
+    .plan-btn:disabled { opacity: .5; cursor: not-allowed; }
+
+    .plan-btn.monthly  { background: var(--blue);   color: #fff; }
+    .plan-btn.annual   { background: var(--accent);  color: #000; }
+    .plan-btn.lifetime { background: var(--purple);  color: #fff; }
+
+    /* ── LOGIN / LOGOUT BTNS ── */
+    .login-section { max-width: 500px; margin: 28px auto 0; padding: 0 20px; text-align: center; }
+    #btnGoogleLogin {
+      display: inline-flex; align-items: center; gap: 10px;
+      background: #fff; color: #000; border: none;
+      padding: 13px 26px; border-radius: 12px; font-size: 15px; font-weight: 700;
+      cursor: pointer; transition: filter .2s;
+    }
+    #btnGoogleLogin:hover { filter: brightness(.92); }
+    #btnLogout {
+      background: none; border: 1px solid var(--border); color: var(--muted);
+      padding: 8px 18px; border-radius: 8px; font-size: 13px; cursor: pointer;
+      transition: all .2s;
+    }
+    #btnLogout:hover { border-color: var(--red); color: var(--red); }
+
+    /* ── PRO ACTIVE CARD ── */
+    .pro-active-card {
+      max-width: 500px; margin: 28px auto 0; padding: 0 20px;
+    }
+    .pro-active-box {
+      background: linear-gradient(135deg, #052e16, #0a3d20);
+      border: 2px solid var(--green);
+      border-radius: 18px; padding: 28px; text-align: center;
+    }
+    .pro-active-box .crown { font-size: 48px; margin-bottom: 12px; }
+    .pro-active-box h3 { font-size: 22px; font-weight: 800; color: var(--green); }
+    .pro-active-box p  { color: #86efac; font-size: 14px; margin-top: 6px; }
+    .plan-chip {
+      display: inline-block; margin: 12px 0;
+      padding: 6px 16px; border-radius: 20px; font-weight: 700; font-size: 13px;
+    }
+    .chip-monthly  { background: #3b82f622; color: #93c5fd; border: 1px solid #3b82f644; }
+    .chip-annual   { background: #f5c51822; color: #fde68a; border: 1px solid #f5c51844; }
+    .chip-lifetime { background: #a855f722; color: #d8b4fe; border: 1px solid #a855f744; }
+    .expiry-info   { font-size: 13px; color: #86efac; margin-top: 4px; }
+
+    /* ── FAQ ── */
+    .faq-section {
+      max-width: 700px; margin: 40px auto 0; padding: 0 20px;
+    }
+    .faq-section h2 { font-size: 18px; font-weight: 700; margin-bottom: 16px; }
+    .faq-item {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: var(--radius); margin-bottom: 10px; overflow: hidden;
+    }
+    .faq-q {
+      padding: 14px 18px; cursor: pointer; font-size: 14px; font-weight: 600;
+      display: flex; justify-content: space-between; align-items: center;
+      user-select: none;
+    }
+    .faq-q:hover { background: var(--surface2); }
+    .faq-a {
+      max-height: 0; overflow: hidden; transition: max-height .3s ease;
+    }
+    .faq-a.open { max-height: 200px; }
+    .faq-a p   { padding: 0 18px 14px; color: var(--muted); font-size: 13px; line-height: 1.6; }
+
+    /* ── TOAST ── */
+    #toast {
+      position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%) translateY(60px);
+      background: var(--surface); border: 1px solid var(--green);
+      color: var(--green); padding: 12px 22px; border-radius: 12px;
+      font-size: 14px; font-weight: 600; opacity: 0; transition: all .3s;
+      pointer-events: none; white-space: nowrap; z-index: 999;
+    }
+    #toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
+    #toast.error { border-color: var(--red); color: var(--red); }
+
+    /* ── SPINNER ── */
+    .spinner {
+      width: 18px; height: 18px;
+      border: 3px solid var(--border); border-top-color: var(--accent);
+      border-radius: 50%; animation: spin .7s linear infinite; display: inline-block;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    @media (max-width: 560px) {
+      .plans-grid { grid-template-columns: 1fr; }
+      .pro-header h1 { font-size: 22px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ── HEADER ── -->
+<div class="pro-header">
+  <div class="logo">⚡</div>
+  <h1>Eletrica<span>PRO</span></h1>
+  <p>Desbloqueie todos os recursos premium</p>
+</div>
+
+<!-- ── STATUS BAR ── -->
+<div class="status-bar">
+  <div id="statusBox" class="status-box not-logged">
+    <div class="icon">👤</div>
+    <div>
+      <strong>Faça login para continuar</strong>
+      <span>Entre com sua conta Google para acessar o PRO</span>
+    </div>
+  </div>
+</div>
+
+<!-- ── LOGIN ── -->
+<div class="login-section" id="loginSection">
+  <button id="btnGoogleLogin">
+    <svg width="18" height="18" viewBox="0 0 48 48">
+      <path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/>
+      <path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/>
+      <path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/>
+      <path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.18 1.48-4.97 2.36-8.16 2.36-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/>
+    </svg>
+    Entrar com Google
+  </button>
+  <p style="margin-top:12px;font-size:12px;color:var(--muted);">
+    Faça login para ver os planos e assinar
+  </p>
+</div>
+
+<!-- ── PRO ACTIVE ── -->
+<div class="pro-active-card" id="proActiveSection" style="display:none;">
+  <div class="pro-active-box">
+    <div class="crown">👑</div>
+    <h3>PRO ATIVO ✓</h3>
+    <p>Você tem acesso completo ao EletricaPRO!</p>
+    <div id="proChip" class="plan-chip chip-lifetime">♾ Vitalício</div>
+    <div class="expiry-info" id="proExpiry"></div>
+  </div>
+  <div style="text-align:center;margin-top:16px;">
+    <button id="btnLogout" style="display:inline-flex;">Sair da conta</button>
+  </div>
+</div>
+
+<!-- ── PLANS ── -->
+<div class="plans-section" id="plansSection" style="display:none;">
+  <h2>Escolha seu plano</h2>
+  <div class="plans-grid">
+
+    <!-- MENSAL -->
+    <div class="plan-card" id="card-monthly">
+      <div class="plan-icon">📅</div>
+      <div class="plan-name">Mensal</div>
+      <div class="plan-desc">Acesso por 30 dias, renovável</div>
+      <div class="plan-price">
+        <div class="amount"><span>R$</span> 19<span>,90</span></div>
+        <div class="period">por mês</div>
+      </div>
+      <ul class="plan-features">
+        <li><span class="check">✓</span> Todos os recursos PRO</li>
+        <li><span class="check">✓</span> Calculadoras avançadas</li>
+        <li><span class="check">✓</span> Sem anúncios</li>
+        <li><span class="check">✓</span> Suporte prioritário</li>
+      </ul>
+      <button class="plan-btn monthly" id="btnMonthly">
+        💳 Pagar R$ 19,90 no PicPay
+      </button>
+    </div>
+
+    <!-- ANUAL -->
+    <div class="plan-card best-value" id="card-annual">
+      <div class="best-label">⭐ MELHOR CUSTO-BENEFÍCIO</div>
+      <div class="plan-icon">📆</div>
+      <div class="plan-name">Anual</div>
+      <div class="plan-desc">12 meses de acesso completo</div>
+      <div class="plan-price">
+        <div class="amount"><span>R$</span> 149<span>,90</span></div>
+        <div class="period">por ano</div>
+        <div class="economy">💰 Economize R$ 88,90 vs. mensal</div>
+      </div>
+      <ul class="plan-features">
+        <li><span class="check">✓</span> Todos os recursos PRO</li>
+        <li><span class="check">✓</span> Calculadoras avançadas</li>
+        <li><span class="check">✓</span> Sem anúncios</li>
+        <li><span class="check">✓</span> Suporte prioritário</li>
+        <li><span class="check">✓</span> Novos recursos em primeira mão</li>
+      </ul>
+      <button class="plan-btn annual" id="btnAnnual">
+        ⭐ Pagar R$ 149,90 no PicPay
+      </button>
+    </div>
+
+    <!-- VITALÍCIO -->
+    <div class="plan-card" id="card-lifetime">
+      <div class="plan-icon">♾️</div>
+      <div class="plan-name">Vitalício</div>
+      <div class="plan-desc">Pague uma vez, use para sempre</div>
+      <div class="plan-price">
+        <div class="amount"><span>R$</span> 299<span>,90</span></div>
+        <div class="period">pagamento único</div>
+        <div class="economy" style="background:#a855f722;color:#d8b4fe;border-color:#a855f744;">
+          ♾ Nunca expira
+        </div>
+      </div>
+      <ul class="plan-features">
+        <li><span class="check">✓</span> Todos os recursos PRO</li>
+        <li><span class="check">✓</span> Calculadoras avançadas</li>
+        <li><span class="check">✓</span> Sem anúncios para sempre</li>
+        <li><span class="check">✓</span> Suporte VIP permanente</li>
+        <li><span class="check">✓</span> Todas as atualizações futuras</li>
+        <li><span class="check">✓</span> Acesso em múltiplos dispositivos</li>
+      </ul>
+      <button class="plan-btn lifetime" id="btnLifetime">
+        ♾ Pagar R$ 299,90 no PicPay
+      </button>
+    </div>
+
+  </div>
+
+  <!-- PENDING STATE -->
+  <div id="pendingSection" style="display:none;text-align:center;margin-top:28px;">
+    <div style="background:#2e1b07;border:1px solid #f59e0b;border-radius:14px;padding:24px;max-width:460px;margin:0 auto;">
+      <div style="font-size:32px;margin-bottom:10px;">⏳</div>
+      <strong style="font-size:16px;color:#fbbf24;">Solicitação enviada!</strong>
+      <p style="color:#fde68a;font-size:13px;margin-top:8px;line-height:1.5;">
+        Seu pagamento está aguardando confirmação.<br/>
+        Assim que validado, o PRO será liberado automaticamente.
+      </p>
+      <div id="pendingPlan" style="margin-top:10px;font-size:12px;color:#f59e0b;"></div>
+      <button id="btnCancelPending"
+        style="margin-top:16px;background:none;border:1px solid #f59e0b;
+               color:#fbbf24;padding:8px 18px;border-radius:8px;cursor:pointer;font-size:13px;">
+        Enviar outro comprovante
+      </button>
+    </div>
+  </div>
+
+  <!-- LOGOUT LOGGED -->
+  <div style="text-align:center;margin-top:24px;">
+    <button id="btnLogout2" style="background:none;border:1px solid var(--border);
+      color:var(--muted);padding:8px 18px;border-radius:8px;font-size:13px;cursor:pointer;">
+      Sair da conta
+    </button>
+  </div>
+</div>
+
+<!-- ── FAQ ── -->
+<div class="faq-section">
+  <h2>❓ Perguntas frequentes</h2>
+
+  <div class="faq-item">
+    <div class="faq-q" onclick="toggleFaq(this)">Como funciona o pagamento? <span>▾</span></div>
+    <div class="faq-a"><p>Clique no botão do plano desejado → você será redirecionado ao PicPay → após o pagamento, clique em "Já paguei" para enviar a solicitação → aguarde a confirmação (geralmente em poucos minutos).</p></div>
+  </div>
+
+  <div class="faq-item">
+    <div class="faq-q" onclick="toggleFaq(this)">Meu PRO funciona em outros dispositivos? <span>▾</span></div>
+    <div class="faq-a"><p>Sim! O PRO fica vinculado à sua conta Google, não ao dispositivo. Basta fazer login com a mesma conta em qualquer aparelho.</p></div>
+  </div>
+
+  <div class="faq-item">
+    <div class="faq-q" onclick="toggleFaq(this)">Qual a diferença entre Mensal e Anual? <span>▾</span></div>
+    <div class="faq-a"><p>No plano Mensal você paga R$ 19,90 e tem 30 dias de acesso, renováveis. No Anual, paga R$ 149,90 e tem 365 dias — economia de R$ 88,90 comparado a 12 meses mensais.</p></div>
+  </div>
+
+  <div class="faq-item">
+    <div class="faq-q" onclick="toggleFaq(this)">O plano Vitalício realmente é para sempre? <span>▾</span></div>
+    <div class="faq-a"><p>Sim! Pagamento único de R$ 299,90 e você nunca mais precisa renovar. Inclui todas as atualizações futuras do aplicativo.</p></div>
+  </div>
+
+  <div class="faq-item">
+    <div class="faq-q" onclick="toggleFaq(this)">Quanto tempo leva para liberar o PRO? <span>▾</span></div>
+    <div class="faq-a"><p>Após enviar o comprovante de pagamento, a liberação costuma ocorrer em até 30 minutos durante o horário comercial. Assim que aprovado, o PRO é ativado automaticamente no app.</p></div>
+  </div>
+</div>
+
+<!-- ── TOAST ── -->
+<div id="toast"></div>
+
+<!-- ── FIREBASE SDK ── -->
+<script type="module">
+import { initializeApp }         from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged }
+                                  from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+import { getFirestore, doc, setDoc, getDoc, collection, addDoc, query,
+         where, orderBy, limit, onSnapshot, serverTimestamp, Timestamp }
+                                  from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+// ── COLE SUA CONFIGURAÇÃO FIREBASE AQUI ──────────────────────
+const firebaseConfig = {
+  apiKey:            "COLE_SEU_apiKey",
+  authDomain:        "COLE_SEU_authDomain",
+  projectId:         "COLE_SEU_projectId",
+  storageBucket:     "COLE_SEU_storageBucket",
+  messagingSenderId: "COLE_SEU_messagingSenderId",
+  appId:             "COLE_SEU_appId"
+};
+
+// ── LINK DO SEU PICPAY ────────────────────────────────────────
+// Exemplo: "https://picpay.me/seunome" ou link de cobrança gerado pelo PicPay
+const PICPAY_LINKS = {
+  monthly:  "https://picpay.me/seunome/19.90",
+  annual:   "https://picpay.me/seunome/149.90",
+  lifetime: "https://picpay.me/seunome/299.90"
+};
+// ─────────────────────────────────────────────────────────────
+
+const app  = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db   = getFirestore(app);
+
+let currentUser    = null;
+let unsubUser      = null;
+let unsubReqs      = null;
+
+// ── HELPERS ──────────────────────────────────────────────────
+const $ = id => document.getElementById(id);
+
+function toast(msg, isError = false) {
+  const el = $("toast");
+  el.textContent = msg;
+  el.className   = "show" + (isError ? " error" : "");
+  setTimeout(() => { el.className = ""; }, 3500);
+}
+
+function fmtDateLong(ts) {
+  if (!ts) return "";
+  const d = ts.toDate ? ts.toDate() : new Date(ts);
+  return d.toLocaleDateString("pt-BR", { day:"2-digit", month:"long", year:"numeric" });
+}
+
+function daysLeft(ts) {
+  if (!ts) return null;
+  const d = ts.toDate ? ts.toDate() : new Date(ts);
+  return Math.ceil((d - Date.now()) / 86400000);
+}
+
+// ── RENDER STATUS ─────────────────────────────────────────────
+function renderProStatus(userData) {
+  const { pro, proType, proUntil, email } = userData;
+  const box = $("statusBox");
+
+  if (pro) {
+    // PRO ATIVO
+    box.className    = "status-box is-pro";
+    const until      = proUntil ? fmtDateLong(proUntil) : null;
+    const days       = proUntil ? daysLeft(proUntil)     : null;
+    const typeLabel  = { monthly:"Mensal", annual:"Anual", lifetime:"Vitalício" }[proType] || proType;
+
+    box.innerHTML = `
+      <div class="icon">👑</div>
+      <div>
+        <strong style="color:var(--green)">PRO ATIVO — ${typeLabel}</strong>
+        <span>${until ? `Válido até ${until} (${days} dias)` : "Acesso vitalício"}</span>
+      </div>`;
+
+    // PRO active section
+    $("proActiveSection").style.display = "block";
+    $("plansSection").style.display     = "none";
+    $("loginSection").style.display     = "none";
+
+    const chipClass = `plan-chip chip-${proType}`;
+    const chipLabel = { monthly:"📅 Mensal", annual:"📆 Anual", lifetime:"♾ Vitalício" }[proType] || proType;
+    $("proChip").className   = chipClass;
+    $("proChip").textContent = chipLabel;
+    $("proExpiry").textContent = until ? `Válido até ${until}` : "Sem expiração — vitalício";
+
+    // Destravar restante do app
+    try {
+      const trial = JSON.parse(localStorage.getItem("eletricapro_trial") || "{}");
+      trial.isPro = true;
+      trial.proType  = proType;
+      trial.proUntil = proUntil ? proUntil.toMillis() : null;
+      localStorage.setItem("eletricapro_trial", JSON.stringify(trial));
+    } catch(e) {}
+
+  } else {
+    // Não é PRO
+    box.className = "status-box not-pro";
+    box.innerHTML = `
+      <div class="icon">🔒</div>
+      <div>
+        <strong>Sem plano PRO</strong>
+        <span>Escolha um plano abaixo para desbloquear</span>
+      </div>
+      <span class="user-uid" id="uidCopy" title="Clique para copiar UID">${currentUser.uid.slice(0,12)}…</span>`;
+
+    $("loginSection").style.display     = "none";
+    $("plansSection").style.display     = "block";
+    $("proActiveSection").style.display = "none";
+
+    // Checar solicitação pendente
+    checkPendingRequest();
+
+    // Clica para copiar UID
+    setTimeout(() => {
+      const uidEl = $("uidCopy");
+      if (uidEl) uidEl.onclick = () => {
+        navigator.clipboard.writeText(currentUser.uid).then(() => toast("UID copiado!"));
+      };
+    }, 100);
+
+    try {
+      const trial = JSON.parse(localStorage.getItem("eletricapro_trial") || "{}");
+      trial.isPro = false;
+      localStorage.setItem("eletricapro_trial", JSON.stringify(trial));
+    } catch(e) {}
+  }
+}
+
+// ── CHECK PENDING REQUEST ────────────────────────────────────
+async function checkPendingRequest() {
+  if (!currentUser) return;
+  const q = query(
+    collection(db, "pro_requests"),
+    where("uid",    "==", currentUser.uid),
+    where("status", "==", "pending"),
+    orderBy("createdAt", "desc"),
+    limit(1)
+  );
+  const snap = await getDocs_safe(q);
+  if (!snap || snap.empty) {
+    $("pendingSection").style.display = "none";
+    return;
+  }
+  const req = snap.docs[0].data();
+  $("pendingSection").style.display = "block";
+  const labels = { monthly:"Mensal (R$ 19,90)", annual:"Anual (R$ 149,90)", lifetime:"Vitalício (R$ 299,90)" };
+  $("pendingPlan").textContent = `Plano solicitado: ${labels[req.plan] || req.plan}`;
+}
+
+// Helper safe getDocs
+async function getDocs_safe(q) {
+  try {
+    const { getDocs } = await import("https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js");
+    return await getDocs(q);
+  } catch(e) { return null; }
+}
+
+// ── SOLICITAR PRO ─────────────────────────────────────────────
+async function requestPro(plan) {
+  if (!currentUser) { toast("Faça login primeiro.", true); return; }
+
+  const btnId   = { monthly:"btnMonthly", annual:"btnAnnual", lifetime:"btnLifetime" }[plan];
+  const btn     = $(btnId);
+  const origTxt = btn.innerHTML;
+  btn.innerHTML = `<div class="spinner"></div> Abrindo PicPay...`;
+  btn.disabled  = true;
+
+  // Abre PicPay
+  window.open(PICPAY_LINKS[plan], "_blank");
+
+  // Aguarda um segundo antes de criar a solicitação
+  await new Promise(r => setTimeout(r, 1200));
+
+  try {
+    // Cria pro_request
+    await addDoc(collection(db, "pro_requests"), {
+      uid:       currentUser.uid,
+      email:     currentUser.email,
+      plan:      plan,
+      status:    "pending",
+      createdAt: serverTimestamp()
+    });
+
+    btn.innerHTML = origTxt;
+    btn.disabled  = false;
+    $("pendingSection").style.display = "block";
+    const labels = { monthly:"Mensal (R$ 19,90)", annual:"Anual (R$ 149,90)", lifetime:"Vitalício (R$ 299,90)" };
+    $("pendingPlan").textContent = `Plano solicitado: ${labels[plan]}`;
+    toast("✅ Solicitação enviada! Aguarde a confirmação.");
+  } catch(e) {
+    btn.innerHTML = origTxt;
+    btn.disabled  = false;
+    toast("Erro ao criar solicitação: " + e.message, true);
+  }
+}
+
+// ── SUBSCRIBE USER REALTIME ────────────────────────────────────
+function subscribeUser(uid) {
+  if (unsubUser) unsubUser();
+  unsubUser = onSnapshot(doc(db, "users", uid), snap => {
+    if (snap.exists()) renderProStatus(snap.data());
+  });
+}
+
+// ── AUTH STATE ────────────────────────────────────────────────
+onAuthStateChanged(auth, async user => {
+  currentUser = user;
+
+  if (user) {
+    $("loginSection").style.display = "none";
+
+    // Cria/atualiza documento do usuário
+    const userRef = doc(db, "users", user.uid);
+    const snap    = await getDoc(userRef);
+    if (!snap.exists()) {
+      await setDoc(userRef, {
+        email:     user.email,
+        photo:     user.photoURL || "",
+        pro:       false,
+        proType:   null,
+        proUntil:  null,
+        createdAt: serverTimestamp()
+      });
+    }
+
+    // Status atualizado em tempo real
+    subscribeUser(user.uid);
+
+    const statusBox = $("statusBox");
+    statusBox.innerHTML = `<div class="icon"><div class="spinner"></div></div>
+      <div><strong>Verificando status PRO...</strong></div>`;
+
+  } else {
+    currentUser = null;
+    if (unsubUser) unsubUser();
+
+    $("loginSection").style.display     = "flex";
+    $("plansSection").style.display     = "none";
+    $("proActiveSection").style.display = "none";
+
+    const box = $("statusBox");
+    box.className = "status-box not-logged";
+    box.innerHTML = `<div class="icon">👤</div>
+      <div><strong>Faça login para continuar</strong>
+      <span>Entre com sua conta Google para acessar o PRO</span></div>`;
+  }
+});
+
+// ── BUTTON EVENTS ────────────────────────────────────────────
+$("btnGoogleLogin").onclick = async () => {
+  try {
+    await signInWithPopup(auth, new GoogleAuthProvider());
+  } catch(e) { toast("Erro no login: " + e.message, true); }
+};
+
+const logout = async () => {
+  if (unsubUser) unsubUser();
+  await signOut(auth);
+};
+$("btnLogout")  && ($("btnLogout").onclick  = logout);
+$("btnLogout2") && ($("btnLogout2").onclick = logout);
+
+$("btnMonthly").onclick  = () => requestPro("monthly");
+$("btnAnnual").onclick   = () => requestPro("annual");
+$("btnLifetime").onclick = () => requestPro("lifetime");
+
+$("btnCancelPending").onclick = () => { $("pendingSection").style.display = "none"; };
+
+// ── FAQ TOGGLE ───────────────────────────────────────────────
+window.toggleFaq = function(el) {
+  const answer = el.nextElementSibling;
+  const icon   = el.querySelector("span");
+  answer.classList.toggle("open");
+  icon.textContent = answer.classList.contains("open") ? "▴" : "▾";
+};
+</script>
+</body>
+</html>
