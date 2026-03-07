@@ -1325,7 +1325,7 @@ function goHome() {
 
 /* ======================== TRIAL / PRO ======================== */
 const TRIAL_KEY = 'eletricapro_trial';
-const PRO_PAYMENT_URL = 'https://link.picpay.com/p/177288422869ac110473dde;
+const PRO_PAYMENT_URL = 'https://link.picpay.com/p/177288422869ac110473dde';
 function initTrial(){
   if(!localStorage.getItem(TRIAL_KEY)){
     localStorage.setItem(TRIAL_KEY, JSON.stringify({startDate:new Date().toISOString(), isPro:false}));
