@@ -663,10 +663,9 @@ const PAYMENT_LINKS = {
 };
 
 // BOTÕES PLANOS
-$("btnMonthly").onclick  = () => window.location.href = PAYMENT_LINKS.monthly;
-$("btnAnnual").onclick   = () => window.location.href = PAYMENT_LINKS.annual;
-$("btnLifetime").onclick = () => window.location.href = PAYMENT_LINKS.lifetime;
-
+$("btnMonthly").onclick  = () => window.open(PAYMENT_LINKS.monthly, "_blank");
+$("btnAnnual").onclick   = () => window.open(PAYMENT_LINKS.annual, "_blank");
+$("btnLifetime").onclick = () => window.open(PAYMENT_LINKS.lifetime, "_blank");
 $("btnCancelPending").onclick = () => {
   $("pendingSection").style.display = "none";
 };
