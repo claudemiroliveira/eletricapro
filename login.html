@@ -577,7 +577,7 @@ async function requestPro(plan) {
     btn.innerHTML = origTxt;
     btn.disabled  = false;
     $("pendingSection").style.display = "block";
-    const labels = { monthly:"Mensal (R$ 19,90)", annual:"Anual (R$ 149,90)", lifetime:"Vitalício (R$ 299,90)" };
+    const labels = { monthly:"Mensal (R$ 19,90)", annual:"Anual (R$ 59,90)", lifetime:"Vitalício (R$ 89,90)" };
     $("pendingPlan").textContent = `Plano solicitado: ${labels[plan]}`;
     toast("✅ Solicitação enviada! Aguarde a confirmação.");
   } catch(e) {
@@ -658,7 +658,7 @@ $("btnLogout2") && ($("btnLogout2").onclick = logout);
 // LINKS DE PAGAMENTO
 const PAYMENT_LINKS = {
   monthly: "https://link.picpay.com/p/177297317169ad6c739b28d",
-  annual: "https://pagamento.com/anual",
+  annual: "https://link.picpay.com/p/177299315669adba84ca6db",
   lifetime: "https://pagamento.com/vitalicio"
 };
 
