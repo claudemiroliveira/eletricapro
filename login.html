@@ -648,6 +648,7 @@ onAuthStateChanged(auth, async user => {
 });
 
 // ── BUTTON EVENTS ────────────────────────────────────────────
+// ── BUTTON EVENTS ────────────────────────────────────────────
 $("btnGoogleLogin").onclick = async () => {
   try {
     await signInWithPopup(auth, new GoogleAuthProvider());
@@ -658,15 +659,25 @@ const logout = async () => {
   if (unsubUser) unsubUser();
   await signOut(auth);
 };
+
 $("btnLogout")  && ($("btnLogout").onclick  = logout);
 $("btnLogout2") && ($("btnLogout2").onclick = logout);
 
-$("btnMonthly").onclick  = () => requestPro("monthly");
-$("btnAnnual").onclick   = () => requestPro("annual");
-$("btnLifetime").onclick = () => requestPro("lifetime");
+// LINKS DE PAGAMENTO
+const PAYMENT_LINKS = {
+  monthly: "https://pagamento.com/mensal",
+  annual: "https://pagamento.com/anual",
+  lifetime: "https://pagamento.com/vitalicio"
+};
 
-$("btnCancelPending").onclick = () => { $("pendingSection").style.display = "none"; };
+// BOTÕES PLANOS
+$("btnMonthly").onclick  = () => window.location.href = PAYMENT_LINKS.monthly;
+$("btnAnnual").onclick   = () => window.location.href = PAYMENT_LINKS.annual;
+$("btnLifetime").onclick = () => window.location.href = PAYMENT_LINKS.lifetime;
 
+$("btnCancelPending").onclick = () => {
+  $("pendingSection").style.display = "none";
+};
 // ── FAQ TOGGLE ───────────────────────────────────────────────
 window.toggleFaq = function(el) {
   const answer = el.nextElementSibling;
