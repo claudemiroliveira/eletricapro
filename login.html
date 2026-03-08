@@ -414,13 +414,7 @@ const firebaseConfig = {
   messagingSenderId: "318733768519",
   appId: "1:318733768519:web:93e0bdcdecd49b9570de62"
 };
-// ── LINK DO SEU PICPAY ────────────────────────────────────────
-// Exemplo: "https://picpay.me/seunome" ou link de cobrança gerado pelo PicPay
-const PAYMENT_LINKS = {
-  monthly:  "https://link.picpay.com/p/177297317169ad6c739b28d",
-  annual:   "https://picpay.me/seunome/149.90",
-  lifetime: "https://picpay.me/seunome/299.90"
-};
+
 // ─────────────────────────────────────────────────────────────
 
 const app  = initializeApp(firebaseConfig);
@@ -566,9 +560,7 @@ async function requestPro(plan) {
   btn.innerHTML = `<div class="spinner"></div> Abrindo PicPay...`;
   btn.disabled  = true;
 
-  // Abre PicPay
-  window.open(PAYMENT_LINKS[plan], "_blank");
-
+  
   // Aguarda um segundo antes de criar a solicitação
   await new Promise(r => setTimeout(r, 1200));
 
