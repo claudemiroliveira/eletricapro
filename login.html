@@ -567,7 +567,7 @@ async function requestPro(plan) {
   btn.disabled  = true;
 
   // Abre PicPay
-  window.open(PICPAY_LINKS[plan], "_blank");
+  window.open(PAYMENT-LINKS[plan], "_blank");
 
   // Aguarda um segundo antes de criar a solicitação
   await new Promise(r => setTimeout(r, 1200));
