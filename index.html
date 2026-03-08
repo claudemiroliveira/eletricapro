@@ -5,9 +5,17 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="theme-color" content="#0a1628">
   <meta name="description" content="App profissional para cálculos elétricos, tabelas técnicas, instalações e orçamentos">
+  <!-- PWA: instalação como app -->
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="ElétricaPro">
+  <meta name="application-name" content="ElétricaPro">
   <link rel="manifest" href="manifest.json">
-    <link rel="icon" type="image/png" href="icons/icon-192.png">
-    <link rel="apple-touch-icon" href="icons/icon-192.png">
+  <link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png">
+  <link rel="icon" type="image/png" sizes="512x512" href="icons/icon-512.png">
+  <link rel="apple-touch-icon" sizes="192x192" href="icons/icon-192.png">
+  <link rel="apple-touch-icon" sizes="512x512" href="icons/icon-512.png">
   
   <title>Elétrica Pro</title>
   <style>
@@ -1349,24 +1357,8 @@ function checkTrialExpired(){
   return false;
 }
 function ativarPro(){
-  // Abre o link de pagamento
-  try { window.open(PRO_PAYMENT_URL,'_blank','noopener'); }
-  catch(e){ window.location.href = PRO_PAYMENT_URL; }
-
-  // Liberação local (app estático / GitHub Pages)
-  const ok = confirm(
-    '✅ Pagamento aberto no PicPay.\n\n' +
-    'Após concluir o pagamento, clique em OK para liberar a versão PRO neste dispositivo.' 
-    
-  );
-
-  if(ok){
-    const d = JSON.parse(localStorage.getItem(TRIAL_KEY)) || {startDate:new Date().toISOString(), isPro:false};
-    d.isPro = true;
-    localStorage.setItem(TRIAL_KEY, JSON.stringify(d));
-    updateTrialBanner();
-    alert('🎉 Versão PRO liberada neste dispositivo!');
-  }
+  // Redireciona direto para login/pagamento
+  window.location.href = 'login.html';
 }
 
 /* ======================== CALCULADORAS ======================== */
@@ -2075,9 +2067,20 @@ window.fb = {
 <script>
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
-    navigator.serviceWorker.register('./sw.js')
-      .then(() => console.log('✅ Service Worker ativo'))
-      .catch(err => console.log('Erro SW:', err));
+    navigator.serviceWorker.register('./sw.js', { scope: './' })
+      .then(reg => {
+        console.log('✅ Service Worker ativo, scope:', reg.scope);
+        // Detectar atualização disponível
+        reg.addEventListener('updatefound', () => {
+          const newWorker = reg.installing;
+          newWorker.addEventListener('statechange', () => {
+            if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+              console.log('🔄 Nova versão disponível!');
+            }
+          });
+        });
+      })
+      .catch(err => console.warn('⚠️ Erro ao registrar SW:', err));
   });
 }
 </script>
