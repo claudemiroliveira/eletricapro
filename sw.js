@@ -1,4 +1,4 @@
-const CACHE_NAME = "eletricapro-v26";
+const CACHE_NAME = "eletricapro-v27";
 
 const FILES_TO_CACHE = [
   "./",
