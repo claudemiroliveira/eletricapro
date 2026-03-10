@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>EletricaPRO — Planos PRO</title>
+  <title>EletricaPRO — Login & Planos PRO</title>
   <style>
     :root {
       --bg:       #0f1117;
@@ -26,10 +26,73 @@
       min-height: 100vh; padding-bottom: 40px;
     }
 
+    /* ── TOP NAV ── */
+    .top-nav {
+      background: linear-gradient(135deg, #1a1d2e 0%, #0f1117 100%);
+      border-bottom: 1px solid var(--border);
+      padding: 12px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    .top-nav .brand {
+      font-size: 20px;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      text-decoration: none;
+      color: var(--text);
+    }
+    .top-nav .brand .logo-mini {
+      background: var(--accent);
+      color: #000;
+      padding: 4px 8px;
+      border-radius: 8px;
+      font-size: 16px;
+    }
+    .top-nav .nav-btns {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .nav-btn {
+      padding: 8px 18px;
+      border-radius: 9px;
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+      border: none;
+      transition: all .2s;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .nav-btn.login {
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      color: var(--text);
+    }
+    .nav-btn.login:hover { border-color: var(--blue); color: var(--blue); }
+    .nav-btn.pro {
+      background: linear-gradient(135deg, #2e7d32, #22c55e);
+      color: #fff;
+      box-shadow: 0 4px 14px rgba(34,197,94,.35);
+    }
+    .nav-btn.pro:hover { filter: brightness(1.1); transform: translateY(-1px); }
+    .nav-btn.planos {
+      background: var(--accent);
+      color: #000;
+    }
+    .nav-btn.planos:hover { filter: brightness(1.1); transform: translateY(-1px); }
+
     /* ── HEADER ── */
     .pro-header {
       background: linear-gradient(135deg, #1a1d2e 0%, #0f1117 100%);
-      border-bottom: 1px solid var(--border);
       padding: 32px 20px; text-align: center;
     }
     .pro-header .logo {
@@ -63,80 +126,122 @@
     }
     .user-uid:hover { color: var(--accent); }
 
-    /* ── PLANS GRID ── */
-    .plans-section { max-width: 860px; margin: 36px auto 0; padding: 0 20px; }
-    .plans-section h2 {
-      text-align: center; font-size: 20px; font-weight: 700; margin-bottom: 24px;
+    /* ── LOGIN SECTION ── */
+    .login-section {
+      max-width: 440px; margin: 28px auto 0; padding: 0 20px;
     }
-    .plans-grid {
-      display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 18px;
+    .login-box {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      padding: 28px 24px;
     }
-
-    /* ── PLAN CARD ── */
-    .plan-card {
-      background: var(--surface); border: 2px solid var(--border);
-      border-radius: 18px; padding: 26px 22px; position: relative;
-      transition: transform .2s, border-color .2s;
-      display: flex; flex-direction: column;
+    .login-box h2 {
+      font-size: 20px; font-weight: 800; text-align: center; margin-bottom: 6px;
     }
-    .plan-card:hover { transform: translateY(-3px); }
-    .plan-card.selected { border-color: var(--accent); }
-    .plan-card.best-value { border-color: var(--accent); }
-
-    .best-label {
-      position: absolute; top: -13px; left: 50%; transform: translateX(-50%);
-      background: var(--accent); color: #000;
-      font-size: 11px; font-weight: 800; padding: 4px 14px; border-radius: 20px;
-      white-space: nowrap;
+    .login-box .subtitle {
+      color: var(--muted); font-size: 13px; text-align: center; margin-bottom: 22px;
     }
 
-    .plan-icon { font-size: 32px; margin-bottom: 10px; }
-    .plan-name { font-size: 18px; font-weight: 800; }
-    .plan-desc { color: var(--muted); font-size: 13px; margin-top: 4px; }
-    .plan-price {
-      margin: 16px 0; padding: 12px 0; border-top: 1px solid var(--border);
-      border-bottom: 1px solid var(--border);
+    /* Tabs */
+    .auth-tabs {
+      display: flex; gap: 6px; margin-bottom: 20px;
     }
-    .plan-price .amount {
-      font-size: 34px; font-weight: 900; line-height: 1;
+    .auth-tab {
+      flex: 1; padding: 9px; text-align: center;
+      background: var(--surface2);
+      border: 1.5px solid var(--border);
+      border-radius: 9px; cursor: pointer;
+      font-size: 13px; font-weight: 600;
+      transition: all .2s; color: var(--muted);
     }
-    .plan-price .amount span { font-size: 18px; font-weight: 600; }
-    .plan-price .period { color: var(--muted); font-size: 13px; margin-top: 4px; }
-    .plan-price .economy {
-      display: inline-block; margin-top: 6px;
-      background: #052e1688; color: var(--green);
-      border: 1px solid #22c55e44;
-      font-size: 12px; font-weight: 700; padding: 3px 10px; border-radius: 20px;
+    .auth-tab.active {
+      background: linear-gradient(135deg, #1565c0, #3b82f6);
+      border-color: var(--blue);
+      color: #fff;
     }
+    .auth-form { display: none; }
+    .auth-form.active { display: block; }
 
-    .plan-features { list-style: none; margin: 14px 0; flex: 1; }
-    .plan-features li {
-      font-size: 13px; padding: 5px 0; display: flex; align-items: flex-start; gap: 8px;
+    /* Inputs */
+    .field { margin-bottom: 14px; }
+    .field label {
+      display: block; margin-bottom: 5px;
+      font-size: 13px; color: var(--muted); font-weight: 500;
     }
-    .plan-features li .check { color: var(--green); font-size: 14px; margin-top: 1px; }
+    .field input {
+      width: 100%; padding: 11px 14px;
+      background: var(--surface2);
+      border: 1.5px solid var(--border);
+      border-radius: 9px;
+      color: var(--text); font-size: 14px;
+      transition: all .2s;
+    }
+    .field input:focus {
+      outline: none;
+      border-color: var(--blue);
+      background: rgba(59,130,246,.08);
+      box-shadow: 0 0 0 3px rgba(59,130,246,.15);
+    }
+    .field input::placeholder { color: var(--muted); }
 
-    .plan-btn {
-      margin-top: auto; width: 100%; padding: 13px;
+    /* Password wrapper */
+    .pwd-wrapper { position: relative; }
+    .pwd-wrapper input { padding-right: 42px; }
+    .pwd-toggle {
+      position: absolute; right: 12px; top: 50%;
+      transform: translateY(-50%);
+      background: none; border: none;
+      color: var(--muted); cursor: pointer; font-size: 16px;
+      padding: 0;
+    }
+    .pwd-toggle:hover { color: var(--text); }
+
+    .auth-msg {
+      padding: 10px 14px; border-radius: 9px;
+      font-size: 13px; margin-bottom: 14px; display: none;
+    }
+    .auth-msg.error   { background: rgba(239,68,68,.12);  border: 1px solid var(--red);   color: #fca5a5; }
+    .auth-msg.success { background: rgba(34,197,94,.12);  border: 1px solid var(--green); color: #86efac; }
+
+    .btn-email-login {
+      width: 100%; padding: 13px;
       border: none; border-radius: 10px;
       font-size: 15px; font-weight: 700; cursor: pointer;
+      background: linear-gradient(135deg, #1565c0, #3b82f6);
+      color: #fff;
       transition: filter .2s, transform .1s;
+      margin-bottom: 10px;
     }
-    .plan-btn:hover:not(:disabled) { filter: brightness(1.1); transform: scale(1.02); }
-    .plan-btn:disabled { opacity: .5; cursor: not-allowed; }
+    .btn-email-login:hover:not(:disabled) { filter: brightness(1.1); transform: scale(1.01); }
+    .btn-email-login:disabled { opacity: .5; cursor: not-allowed; }
 
-    .plan-btn.monthly  { background: var(--blue);   color: #fff; }
-    .plan-btn.annual   { background: var(--accent);  color: #000; }
-    .plan-btn.lifetime { background: var(--purple);  color: #fff; }
+    .forgot-link {
+      text-align: right; margin-top: -6px; margin-bottom: 10px;
+    }
+    .forgot-link a {
+      font-size: 12px; color: var(--muted); cursor: pointer;
+      text-decoration: none;
+    }
+    .forgot-link a:hover { color: var(--blue); }
 
-    /* ── LOGIN / LOGOUT BTNS ── */
-    .login-section { max-width: 500px; margin: 28px auto 0; padding: 0 20px; text-align: center; }
+    .divider {
+      display: flex; align-items: center; gap: 10px;
+      margin: 16px 0; color: var(--muted); font-size: 12px;
+    }
+    .divider::before, .divider::after {
+      content: ''; flex: 1; height: 1px; background: var(--border);
+    }
+
     #btnGoogleLogin {
-      display: inline-flex; align-items: center; gap: 10px;
+      display: inline-flex; align-items: center; justify-content: center; gap: 10px;
+      width: 100%;
       background: #fff; color: #000; border: none;
       padding: 13px 26px; border-radius: 12px; font-size: 15px; font-weight: 700;
       cursor: pointer; transition: filter .2s;
     }
     #btnGoogleLogin:hover { filter: brightness(.92); }
+
     #btnLogout {
       background: none; border: 1px solid var(--border); color: var(--muted);
       padding: 8px 18px; border-radius: 8px; font-size: 13px; cursor: pointer;
@@ -165,10 +270,63 @@
     .chip-lifetime { background: #a855f722; color: #d8b4fe; border: 1px solid #a855f744; }
     .expiry-info   { font-size: 13px; color: #86efac; margin-top: 4px; }
 
-    /* ── FAQ ── */
-    .faq-section {
-      max-width: 700px; margin: 40px auto 0; padding: 0 20px;
+    /* ── PLANS GRID ── */
+    .plans-section { max-width: 860px; margin: 36px auto 0; padding: 0 20px; }
+    .plans-section h2 {
+      text-align: center; font-size: 20px; font-weight: 700; margin-bottom: 24px;
     }
+    .plans-grid {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 18px;
+    }
+    .plan-card {
+      background: var(--surface); border: 2px solid var(--border);
+      border-radius: 18px; padding: 26px 22px; position: relative;
+      transition: transform .2s, border-color .2s;
+      display: flex; flex-direction: column;
+    }
+    .plan-card:hover { transform: translateY(-3px); }
+    .plan-card.best-value { border-color: var(--accent); }
+    .best-label {
+      position: absolute; top: -13px; left: 50%; transform: translateX(-50%);
+      background: var(--accent); color: #000;
+      font-size: 11px; font-weight: 800; padding: 4px 14px; border-radius: 20px;
+      white-space: nowrap;
+    }
+    .plan-icon { font-size: 32px; margin-bottom: 10px; }
+    .plan-name { font-size: 18px; font-weight: 800; }
+    .plan-desc { color: var(--muted); font-size: 13px; margin-top: 4px; }
+    .plan-price {
+      margin: 16px 0; padding: 12px 0; border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+    }
+    .plan-price .amount { font-size: 34px; font-weight: 900; line-height: 1; }
+    .plan-price .amount span { font-size: 18px; font-weight: 600; }
+    .plan-price .period { color: var(--muted); font-size: 13px; margin-top: 4px; }
+    .plan-price .economy {
+      display: inline-block; margin-top: 6px;
+      background: #052e1688; color: var(--green);
+      border: 1px solid #22c55e44;
+      font-size: 12px; font-weight: 700; padding: 3px 10px; border-radius: 20px;
+    }
+    .plan-features { list-style: none; margin: 14px 0; flex: 1; }
+    .plan-features li {
+      font-size: 13px; padding: 5px 0; display: flex; align-items: flex-start; gap: 8px;
+    }
+    .plan-features li .check { color: var(--green); font-size: 14px; margin-top: 1px; }
+    .plan-btn {
+      margin-top: auto; width: 100%; padding: 13px;
+      border: none; border-radius: 10px;
+      font-size: 15px; font-weight: 700; cursor: pointer;
+      transition: filter .2s, transform .1s;
+    }
+    .plan-btn:hover:not(:disabled) { filter: brightness(1.1); transform: scale(1.02); }
+    .plan-btn:disabled { opacity: .5; cursor: not-allowed; }
+    .plan-btn.monthly  { background: var(--blue);   color: #fff; }
+    .plan-btn.annual   { background: var(--accent);  color: #000; }
+    .plan-btn.lifetime { background: var(--purple);  color: #fff; }
+
+    /* ── FAQ ── */
+    .faq-section { max-width: 700px; margin: 40px auto 0; padding: 0 20px; }
     .faq-section h2 { font-size: 18px; font-weight: 700; margin-bottom: 16px; }
     .faq-item {
       background: var(--surface); border: 1px solid var(--border);
@@ -180,11 +338,9 @@
       user-select: none;
     }
     .faq-q:hover { background: var(--surface2); }
-    .faq-a {
-      max-height: 0; overflow: hidden; transition: max-height .3s ease;
-    }
+    .faq-a { max-height: 0; overflow: hidden; transition: max-height .3s ease; }
     .faq-a.open { max-height: 200px; }
-    .faq-a p   { padding: 0 18px 14px; color: var(--muted); font-size: 13px; line-height: 1.6; }
+    .faq-a p { padding: 0 18px 14px; color: var(--muted); font-size: 13px; line-height: 1.6; }
 
     /* ── TOAST ── */
     #toast {
@@ -208,10 +364,33 @@
     @media (max-width: 560px) {
       .plans-grid { grid-template-columns: 1fr; }
       .pro-header h1 { font-size: 22px; }
+      .top-nav .nav-btns .nav-btn span.label { display: none; }
+    }
+    @media (max-width: 420px) {
+      .top-nav { flex-wrap: wrap; gap: 8px; }
     }
   </style>
 </head>
 <body>
+
+<!-- ── TOP NAVIGATION BAR ── -->
+<nav class="top-nav">
+  <a href="login.html" class="brand">
+    <span class="logo-mini">⚡</span>
+    Elétrica<span style="color:var(--accent)">Pro</span>
+  </a>
+  <div class="nav-btns">
+    <a href="login.html" class="nav-btn login" id="navLoginBtn">
+      👤 <span class="label">Login</span>
+    </a>
+    <a href="login.html" class="nav-btn pro" id="navProBtn">
+      ⚡ <span class="label">PRO</span>
+    </a>
+    <a href="login.html" class="nav-btn planos" id="navPlanosBtn">
+      📋 <span class="label">Planos</span>
+    </a>
+  </div>
+</nav>
 
 <!-- ── HEADER ── -->
 <div class="pro-header">
@@ -226,24 +405,106 @@
     <div class="icon">👤</div>
     <div>
       <strong>Faça login para continuar</strong>
-      <span>Entre com sua conta Google para acessar o PRO</span>
+      <span>Entre com sua conta para acessar o PRO</span>
     </div>
   </div>
 </div>
 
-<!-- ── LOGIN ── -->
+<!-- ── LOGIN / CADASTRO ── -->
 <div class="login-section" id="loginSection">
-  <button id="btnGoogleLogin">
-    <svg width="18" height="18" viewBox="0 0 48 48">
-      <path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/>
-      <path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/>
-      <path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/>
-      <path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.18 1.48-4.97 2.36-8.16 2.36-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/>
-    </svg>
-    Entrar com Google
-  </button>
-  <p style="margin-top:12px;font-size:12px;color:var(--muted);">
-    Faça login para ver os planos e assinar
+  <div class="login-box">
+    <h2>🔐 Entrar</h2>
+    <p class="subtitle">Acesse sua conta EletricaPRO</p>
+
+    <!-- Tabs -->
+    <div class="auth-tabs">
+      <div class="auth-tab active" id="tabLogin" onclick="switchTab('login')">Entrar</div>
+      <div class="auth-tab" id="tabRegister" onclick="switchTab('register')">Criar conta</div>
+    </div>
+
+    <!-- ── FORMULÁRIO LOGIN ── -->
+    <div class="auth-form active" id="formLogin">
+      <div id="loginMsg" class="auth-msg"></div>
+
+      <div class="field">
+        <label>📧 E-mail</label>
+        <input type="email" id="loginEmail" placeholder="seu@email.com" autocomplete="email"/>
+      </div>
+      <div class="field">
+        <label>🔒 Senha</label>
+        <div class="pwd-wrapper">
+          <input type="password" id="loginPassword" placeholder="Sua senha" autocomplete="current-password"/>
+          <button type="button" class="pwd-toggle" onclick="togglePwd('loginPassword',this)">👁</button>
+        </div>
+      </div>
+      <div class="forgot-link">
+        <a onclick="sendPasswordReset()">Esqueceu a senha?</a>
+      </div>
+
+      <button class="btn-email-login" id="btnEmailLogin" onclick="loginWithEmail()">
+        Entrar
+      </button>
+
+      <div class="divider">ou</div>
+
+      <button id="btnGoogleLogin">
+        <svg width="18" height="18" viewBox="0 0 48 48">
+          <path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/>
+          <path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/>
+          <path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/>
+          <path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.18 1.48-4.97 2.36-8.16 2.36-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/>
+        </svg>
+        Entrar com Google
+      </button>
+    </div>
+
+    <!-- ── FORMULÁRIO CADASTRO ── -->
+    <div class="auth-form" id="formRegister">
+      <div id="registerMsg" class="auth-msg"></div>
+
+      <div class="field">
+        <label>👤 Nome completo</label>
+        <input type="text" id="registerName" placeholder="Seu nome" autocomplete="name"/>
+      </div>
+      <div class="field">
+        <label>📧 E-mail</label>
+        <input type="email" id="registerEmail" placeholder="seu@email.com" autocomplete="email"/>
+      </div>
+      <div class="field">
+        <label>🔒 Senha</label>
+        <div class="pwd-wrapper">
+          <input type="password" id="registerPassword" placeholder="Mínimo 6 caracteres" autocomplete="new-password"/>
+          <button type="button" class="pwd-toggle" onclick="togglePwd('registerPassword',this)">👁</button>
+        </div>
+      </div>
+      <div class="field">
+        <label>🔒 Confirmar senha</label>
+        <div class="pwd-wrapper">
+          <input type="password" id="registerConfirm" placeholder="Repita a senha" autocomplete="new-password"/>
+          <button type="button" class="pwd-toggle" onclick="togglePwd('registerConfirm',this)">👁</button>
+        </div>
+      </div>
+
+      <button class="btn-email-login" id="btnEmailRegister" onclick="registerWithEmail()">
+        Criar conta
+      </button>
+
+      <div class="divider">ou cadastre com</div>
+
+      <button id="btnGoogleLoginReg">
+        <svg width="18" height="18" viewBox="0 0 48 48">
+          <path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/>
+          <path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/>
+          <path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/>
+          <path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.18 1.48-4.97 2.36-8.16 2.36-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/>
+        </svg>
+        Cadastrar com Google
+      </button>
+    </div>
+
+  </div>
+  <p style="margin-top:12px;font-size:12px;color:var(--muted);text-align:center;">
+    Após o login, escolha seu plano PRO abaixo
   </p>
 </div>
 
@@ -265,7 +526,6 @@
 <div class="plans-section" id="plansSection" style="display:none;">
   <h2>Escolha seu plano</h2>
   <div class="plans-grid">
-
     <!-- MENSAL -->
     <div class="plan-card" id="card-monthly">
       <div class="plan-icon">📅</div>
@@ -281,11 +541,8 @@
         <li><span class="check">✓</span> Sem anúncios</li>
         <li><span class="check">✓</span> Suporte prioritário</li>
       </ul>
-      <button class="plan-btn monthly" id="btnMonthly">
-        💳 Pagar R$ 19,90 
-      </button>
+      <button class="plan-btn monthly" id="btnMonthly">💳 Pagar R$ 19,90</button>
     </div>
-
     <!-- ANUAL -->
     <div class="plan-card best-value" id="card-annual">
       <div class="best-label">⭐ MELHOR CUSTO-BENEFÍCIO</div>
@@ -304,11 +561,8 @@
         <li><span class="check">✓</span> Suporte prioritário</li>
         <li><span class="check">✓</span> Novos recursos em primeira mão</li>
       </ul>
-      <button class="plan-btn annual" id="btnAnnual">
-        ⭐ Pagar R$ 59,90 
-      </button>
+      <button class="plan-btn annual" id="btnAnnual">⭐ Pagar R$ 59,90</button>
     </div>
-
     <!-- VITALÍCIO -->
     <div class="plan-card" id="card-lifetime">
       <div class="plan-icon">♾️</div>
@@ -317,9 +571,7 @@
       <div class="plan-price">
         <div class="amount"><span>R$</span> 89<span>,90</span></div>
         <div class="period">pagamento único</div>
-        <div class="economy" style="background:#a855f722;color:#d8b4fe;border-color:#a855f744;">
-          ♾ Nunca expira
-        </div>
+        <div class="economy" style="background:#a855f722;color:#d8b4fe;border-color:#a855f744;">♾ Nunca expira</div>
       </div>
       <ul class="plan-features">
         <li><span class="check">✓</span> Todos os recursos PRO</li>
@@ -329,11 +581,8 @@
         <li><span class="check">✓</span> Todas as atualizações futuras</li>
         <li><span class="check">✓</span> Acesso em múltiplos dispositivos</li>
       </ul>
-      <button class="plan-btn lifetime" id="btnLifetime">
-        ♾ Pagar R$ 89,90 
-      </button>
+      <button class="plan-btn lifetime" id="btnLifetime">♾ Pagar R$ 89,90</button>
     </div>
-
   </div>
 
   <!-- PENDING STATE -->
@@ -354,7 +603,6 @@
     </div>
   </div>
 
-  <!-- LOGOUT LOGGED -->
   <div style="text-align:center;margin-top:24px;">
     <button id="btnLogout2" style="background:none;border:1px solid var(--border);
       color:var(--muted);padding:8px 18px;border-radius:8px;font-size:13px;cursor:pointer;">
@@ -366,27 +614,22 @@
 <!-- ── FAQ ── -->
 <div class="faq-section">
   <h2>❓ Perguntas frequentes</h2>
-
   <div class="faq-item">
     <div class="faq-q" onclick="toggleFaq(this)">Como funciona o pagamento? <span>▾</span></div>
     <div class="faq-a"><p>Clique no botão do plano desejado → você será redirecionado ao PicPay → após o pagamento, clique em "Já paguei" para enviar a solicitação → aguarde a confirmação (geralmente em poucos minutos).</p></div>
   </div>
-
   <div class="faq-item">
     <div class="faq-q" onclick="toggleFaq(this)">Meu PRO funciona em outros dispositivos? <span>▾</span></div>
-    <div class="faq-a"><p>Sim! O PRO fica vinculado à sua conta Google, não ao dispositivo. Basta fazer login com a mesma conta em qualquer aparelho.</p></div>
+    <div class="faq-a"><p>Sim! O PRO fica vinculado à sua conta, não ao dispositivo. Basta fazer login com o mesmo e-mail em qualquer aparelho.</p></div>
   </div>
-
   <div class="faq-item">
     <div class="faq-q" onclick="toggleFaq(this)">Qual a diferença entre Mensal e Anual? <span>▾</span></div>
     <div class="faq-a"><p>No plano Mensal você paga R$ 19,90 e tem 30 dias de acesso, renováveis. No Anual, paga R$ 59,90 e tem 365 dias — economia de R$ 178,90 comparado a 12 meses mensais.</p></div>
   </div>
-
   <div class="faq-item">
     <div class="faq-q" onclick="toggleFaq(this)">O plano Vitalício realmente é para sempre? <span>▾</span></div>
     <div class="faq-a"><p>Sim! Pagamento único de R$89,90 e você nunca mais precisa renovar. Inclui todas as atualizações futuras do aplicativo.</p></div>
   </div>
-
   <div class="faq-item">
     <div class="faq-q" onclick="toggleFaq(this)">Quanto tempo leva para liberar o PRO? <span>▾</span></div>
     <div class="faq-a"><p>Após enviar o comprovante de pagamento, a liberação costuma ocorrer em até 30 minutos durante o horário comercial. Assim que aprovado, o PRO é ativado automaticamente no app.</p></div>
@@ -396,16 +639,69 @@
 <!-- ── TOAST ── -->
 <div id="toast"></div>
 
+<!-- ── UI HELPERS ── -->
+<script>
+  function switchTab(tab) {
+    document.getElementById('tabLogin').classList.toggle('active', tab === 'login');
+    document.getElementById('tabRegister').classList.toggle('active', tab === 'register');
+    document.getElementById('formLogin').classList.toggle('active', tab === 'login');
+    document.getElementById('formRegister').classList.toggle('active', tab === 'register');
+    clearMsgs();
+  }
+  function togglePwd(inputId, btn) {
+    const inp = document.getElementById(inputId);
+    const show = inp.type === 'password';
+    inp.type = show ? 'text' : 'password';
+    btn.textContent = show ? '🙈' : '👁';
+  }
+  function clearMsgs() {
+    ['loginMsg','registerMsg'].forEach(id => {
+      const el = document.getElementById(id);
+      el.style.display = 'none'; el.className = 'auth-msg';
+    });
+  }
+  function showMsg(id, text, type) {
+    const el = document.getElementById(id);
+    el.textContent = text;
+    el.className = 'auth-msg ' + type;
+    el.style.display = 'block';
+  }
+  window.toggleFaq = function(el) {
+    const answer = el.nextElementSibling;
+    const icon   = el.querySelector('span');
+    answer.classList.toggle('open');
+    icon.textContent = answer.classList.contains('open') ? '▴' : '▾';
+  };
+  // Atualiza nav ao logar/deslogar
+  function updateNavButtons(isLoggedIn, isPro) {
+    const loginBtn = document.getElementById('navLoginBtn');
+    const proBtn   = document.getElementById('navProBtn');
+    if (isLoggedIn) {
+      loginBtn.textContent = '✅ Conta';
+      loginBtn.href = 'login.html';
+    }
+    if (isPro) {
+      proBtn.style.background = 'linear-gradient(135deg,#f5c518,#f59e0b)';
+      proBtn.style.color = '#000';
+      proBtn.innerHTML = '👑 PRO';
+    }
+  }
+</script>
+
 <!-- ── FIREBASE SDK ── -->
 <script type="module">
-import { initializeApp }         from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged }
-                                  from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-import { getFirestore, doc, setDoc, getDoc, collection, addDoc, query,
-         where, orderBy, limit, onSnapshot, serverTimestamp, Timestamp }
-                                  from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import {
+  getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged,
+  signInWithEmailAndPassword, createUserWithEmailAndPassword,
+  sendPasswordResetEmail, updateProfile
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+import {
+  getFirestore, doc, setDoc, getDoc, collection, addDoc, query,
+  where, orderBy, limit, onSnapshot, serverTimestamp, getDocs
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
-// ── COLE SUA CONFIGURAÇÃO FIREBASE AQUI ──────────────────────
+// ── CONFIGURAÇÃO FIREBASE ──────────────────────────────────────
 const firebaseConfig = {
   apiKey: "AIzaSyCibrDhAmeTg-2W9TiXhomotfLEM5EqwgE",
   authDomain: "eletrica-pro.firebaseapp.com",
@@ -414,18 +710,15 @@ const firebaseConfig = {
   messagingSenderId: "318733768519",
   appId: "1:318733768519:web:93e0bdcdecd49b9570de62"
 };
-
-// ─────────────────────────────────────────────────────────────
+// ──────────────────────────────────────────────────────────────
 
 const app  = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db   = getFirestore(app);
 
-let currentUser    = null;
-let unsubUser      = null;
-let unsubReqs      = null;
+let currentUser = null;
+let unsubUser   = null;
 
-  
 // ── HELPERS ──────────────────────────────────────────────────
 const $ = id => document.getElementById(id);
 
@@ -435,13 +728,11 @@ function toast(msg, isError = false) {
   el.className   = "show" + (isError ? " error" : "");
   setTimeout(() => { el.className = ""; }, 3500);
 }
-
 function fmtDateLong(ts) {
   if (!ts) return "";
   const d = ts.toDate ? ts.toDate() : new Date(ts);
   return d.toLocaleDateString("pt-BR", { day:"2-digit", month:"long", year:"numeric" });
 }
-
 function daysLeft(ts) {
   if (!ts) return null;
   const d = ts.toDate ? ts.toDate() : new Date(ts);
@@ -450,15 +741,14 @@ function daysLeft(ts) {
 
 // ── RENDER STATUS ─────────────────────────────────────────────
 function renderProStatus(userData) {
-  const { pro, proType, proUntil, email } = userData;
+  const { pro, proType, proUntil } = userData;
   const box = $("statusBox");
 
   if (pro) {
-    // PRO ATIVO
-    box.className    = "status-box is-pro";
-    const until      = proUntil ? fmtDateLong(proUntil) : null;
-    const days       = proUntil ? daysLeft(proUntil)     : null;
-    const typeLabel  = { monthly:"Mensal", annual:"Anual", lifetime:"Vitalício" }[proType] || proType;
+    box.className = "status-box is-pro";
+    const until     = proUntil ? fmtDateLong(proUntil) : null;
+    const days      = proUntil ? daysLeft(proUntil) : null;
+    const typeLabel = { monthly:"Mensal", annual:"Anual", lifetime:"Vitalício" }[proType] || proType;
 
     box.innerHTML = `
       <div class="icon">👑</div>
@@ -467,7 +757,6 @@ function renderProStatus(userData) {
         <span>${until ? `Válido até ${until} (${days} dias)` : "Acesso vitalício"}</span>
       </div>`;
 
-    // PRO active section
     $("proActiveSection").style.display = "block";
     $("plansSection").style.display     = "none";
     $("loginSection").style.display     = "none";
@@ -478,17 +767,16 @@ function renderProStatus(userData) {
     $("proChip").textContent = chipLabel;
     $("proExpiry").textContent = until ? `Válido até ${until}` : "Sem expiração — vitalício";
 
-    // Destravar restante do app
+    updateNavButtons(true, true);
+
     try {
       const trial = JSON.parse(localStorage.getItem("eletricapro_trial") || "{}");
-      trial.isPro = true;
-      trial.proType  = proType;
+      trial.isPro = true; trial.proType = proType;
       trial.proUntil = proUntil ? proUntil.toMillis() : null;
       localStorage.setItem("eletricapro_trial", JSON.stringify(trial));
     } catch(e) {}
 
   } else {
-    // Não é PRO
     box.className = "status-box not-pro";
     box.innerHTML = `
       <div class="icon">🔒</div>
@@ -502,10 +790,9 @@ function renderProStatus(userData) {
     $("plansSection").style.display     = "block";
     $("proActiveSection").style.display = "none";
 
-    // Checar solicitação pendente
+    updateNavButtons(true, false);
     checkPendingRequest();
 
-    // Clica para copiar UID
     setTimeout(() => {
       const uidEl = $("uidCopy");
       if (uidEl) uidEl.onclick = () => {
@@ -521,73 +808,52 @@ function renderProStatus(userData) {
   }
 }
 
-// ── CHECK PENDING REQUEST ────────────────────────────────────
+// ── CHECK PENDING ────────────────────────────────────────────
 async function checkPendingRequest() {
   if (!currentUser) return;
-  const q = query(
-    collection(db, "pro_requests"),
-    where("uid",    "==", currentUser.uid),
-    where("status", "==", "pending"),
-    orderBy("createdAt", "desc"),
-    limit(1)
-  );
-  const snap = await getDocs_safe(q);
-  if (!snap || snap.empty) {
-    $("pendingSection").style.display = "none";
-    return;
-  }
-  const req = snap.docs[0].data();
-  $("pendingSection").style.display = "block";
-  const labels = { monthly:"Mensal (R$ 19,90)", annual:"Anual (R$ 149,90)", lifetime:"Vitalício (R$ 299,90)" };
-  $("pendingPlan").textContent = `Plano solicitado: ${labels[req.plan] || req.plan}`;
-}
-
-// Helper safe getDocs
-async function getDocs_safe(q) {
   try {
-    const { getDocs } = await import("https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js");
-    return await getDocs(q);
-  } catch(e) { return null; }
+    const q = query(
+      collection(db, "pro_requests"),
+      where("uid", "==", currentUser.uid),
+      where("status", "==", "pending"),
+      orderBy("createdAt", "desc"),
+      limit(1)
+    );
+    const snap = await getDocs(q);
+    if (!snap || snap.empty) { $("pendingSection").style.display = "none"; return; }
+    const req = snap.docs[0].data();
+    $("pendingSection").style.display = "block";
+    const labels = { monthly:"Mensal (R$ 19,90)", annual:"Anual (R$ 59,90)", lifetime:"Vitalício (R$ 89,90)" };
+    $("pendingPlan").textContent = `Plano solicitado: ${labels[req.plan] || req.plan}`;
+  } catch(e) { console.log("Pending check:", e.message); }
 }
 
 // ── SOLICITAR PRO ─────────────────────────────────────────────
 async function requestPro(plan) {
   if (!currentUser) { toast("Faça login primeiro.", true); return; }
-
-  const btnId   = { monthly:"btnMonthly", annual:"btnAnnual", lifetime:"btnLifetime" }[plan];
-  const btn     = $(btnId);
-  const origTxt = btn.innerHTML;
-  btn.innerHTML = `<div class="spinner"></div> Abrindo PicPay...`;
+  const btnId = { monthly:"btnMonthly", annual:"btnAnnual", lifetime:"btnLifetime" }[plan];
+  const btn   = $(btnId);
+  const orig  = btn.innerHTML;
+  btn.innerHTML = `<div class="spinner"></div> Registrando...`;
   btn.disabled  = true;
-
-  
-  // Aguarda um segundo antes de criar a solicitação
-  await new Promise(r => setTimeout(r, 1200));
-
+  await new Promise(r => setTimeout(r, 1000));
   try {
-    // Cria pro_request
     await addDoc(collection(db, "pro_requests"), {
-      uid:       currentUser.uid,
-      email:     currentUser.email,
-      plan:      plan,
-      status:    "pending",
-      createdAt: serverTimestamp()
+      uid: currentUser.uid, email: currentUser.email,
+      plan, status: "pending", createdAt: serverTimestamp()
     });
-
-    btn.innerHTML = origTxt;
-    btn.disabled  = false;
+    btn.innerHTML = orig; btn.disabled = false;
     $("pendingSection").style.display = "block";
     const labels = { monthly:"Mensal (R$ 19,90)", annual:"Anual (R$ 59,90)", lifetime:"Vitalício (R$ 89,90)" };
     $("pendingPlan").textContent = `Plano solicitado: ${labels[plan]}`;
     toast("✅ Solicitação enviada! Aguarde a confirmação.");
   } catch(e) {
-    btn.innerHTML = origTxt;
-    btn.disabled  = false;
+    btn.innerHTML = orig; btn.disabled = false;
     toast("Erro ao criar solicitação: " + e.message, true);
   }
 }
 
-// ── SUBSCRIBE USER REALTIME ────────────────────────────────────
+// ── SUBSCRIBE USER ────────────────────────────────────────────
 function subscribeUser(uid) {
   if (unsubUser) unsubUser();
   unsubUser = onSnapshot(doc(db, "users", uid), snap => {
@@ -598,84 +864,128 @@ function subscribeUser(uid) {
 // ── AUTH STATE ────────────────────────────────────────────────
 onAuthStateChanged(auth, async user => {
   currentUser = user;
-
   if (user) {
     $("loginSection").style.display = "none";
-
-    // Cria/atualiza documento do usuário
     const userRef = doc(db, "users", user.uid);
     const snap    = await getDoc(userRef);
     if (!snap.exists()) {
       await setDoc(userRef, {
-        email:     user.email,
-        photo:     user.photoURL || "",
-        pro:       false,
-        proType:   null,
-        proUntil:  null,
+        email: user.email, photo: user.photoURL || "",
+        name: user.displayName || "",
+        pro: false, proType: null, proUntil: null,
         createdAt: serverTimestamp()
       });
     }
-
-    // Status atualizado em tempo real
     subscribeUser(user.uid);
-
-    const statusBox = $("statusBox");
-    statusBox.innerHTML = `<div class="icon"><div class="spinner"></div></div>
+    $("statusBox").innerHTML = `<div class="icon"><div class="spinner"></div></div>
       <div><strong>Verificando status PRO...</strong></div>`;
-
   } else {
     currentUser = null;
     if (unsubUser) unsubUser();
-
-    $("loginSection").style.display     = "flex";
+    $("loginSection").style.display     = "block";
     $("plansSection").style.display     = "none";
     $("proActiveSection").style.display = "none";
-
     const box = $("statusBox");
     box.className = "status-box not-logged";
     box.innerHTML = `<div class="icon">👤</div>
       <div><strong>Faça login para continuar</strong>
-      <span>Entre com sua conta Google para acessar o PRO</span></div>`;
+      <span>Entre com sua conta para acessar o PRO</span></div>`;
   }
 });
 
-// ── BUTTON EVENTS ────────────────────────────────────────────
-// ── BUTTON EVENTS ────────────────────────────────────────────
-$("btnGoogleLogin").onclick = async () => {
+// ── LOGIN COM EMAIL ───────────────────────────────────────────
+window.loginWithEmail = async function() {
+  const email    = $("loginEmail").value.trim();
+  const password = $("loginPassword").value;
+  const btn      = $("btnEmailLogin");
+  if (!email || !password) {
+    showMsg("loginMsg", "⚠️ Preencha e-mail e senha.", "error"); return;
+  }
+  btn.disabled = true; btn.innerHTML = `<div class="spinner" style="margin:0 auto;border-top-color:#fff"></div>`;
   try {
-    await signInWithPopup(auth, new GoogleAuthProvider());
-  } catch(e) { toast("Erro no login: " + e.message, true); }
+    await signInWithEmailAndPassword(auth, email, password);
+    showMsg("loginMsg", "✅ Login realizado com sucesso!", "success");
+  } catch(e) {
+    const msgs = {
+      "auth/user-not-found":     "❌ E-mail não cadastrado.",
+      "auth/wrong-password":     "❌ Senha incorreta.",
+      "auth/invalid-email":      "❌ E-mail inválido.",
+      "auth/invalid-credential": "❌ E-mail ou senha incorretos.",
+      "auth/too-many-requests":  "⚠️ Muitas tentativas. Tente novamente mais tarde.",
+      "auth/user-disabled":      "⚠️ Conta desativada."
+    };
+    showMsg("loginMsg", msgs[e.code] || "❌ Erro: " + e.message, "error");
+    btn.disabled = false; btn.textContent = "Entrar";
+  }
 };
 
+// ── CADASTRO COM EMAIL ────────────────────────────────────────
+window.registerWithEmail = async function() {
+  const name     = $("registerName").value.trim();
+  const email    = $("registerEmail").value.trim();
+  const password = $("registerPassword").value;
+  const confirm  = $("registerConfirm").value;
+  const btn      = $("btnEmailRegister");
+
+  if (!name)              { showMsg("registerMsg", "⚠️ Informe seu nome.", "error"); return; }
+  if (!email)             { showMsg("registerMsg", "⚠️ Informe um e-mail.", "error"); return; }
+  if (password.length < 6){ showMsg("registerMsg", "⚠️ Senha mínima de 6 caracteres.", "error"); return; }
+  if (password !== confirm){ showMsg("registerMsg", "⚠️ As senhas não coincidem.", "error"); return; }
+
+  btn.disabled = true; btn.innerHTML = `<div class="spinner" style="margin:0 auto;border-top-color:#fff"></div>`;
+  try {
+    const cred = await createUserWithEmailAndPassword(auth, email, password);
+    await updateProfile(cred.user, { displayName: name });
+    showMsg("registerMsg", "✅ Conta criada! Bem-vindo ao EletricaPRO.", "success");
+  } catch(e) {
+    const msgs = {
+      "auth/email-already-in-use": "❌ E-mail já cadastrado. Faça login.",
+      "auth/invalid-email":        "❌ E-mail inválido.",
+      "auth/weak-password":        "❌ Senha muito fraca."
+    };
+    showMsg("registerMsg", msgs[e.code] || "❌ Erro: " + e.message, "error");
+    btn.disabled = false; btn.textContent = "Criar conta";
+  }
+};
+
+// ── RECUPERAR SENHA ───────────────────────────────────────────
+window.sendPasswordReset = async function() {
+  const email = $("loginEmail").value.trim();
+  if (!email) { showMsg("loginMsg","⚠️ Digite seu e-mail primeiro.","error"); return; }
+  try {
+    await sendPasswordResetEmail(auth, email);
+    showMsg("loginMsg","📧 E-mail de recuperação enviado! Verifique sua caixa.","success");
+  } catch(e) {
+    showMsg("loginMsg","❌ E-mail não encontrado.","error");
+  }
+};
+
+// ── GOOGLE LOGIN ──────────────────────────────────────────────
+const googleLogin = async () => {
+  try { await signInWithPopup(auth, new GoogleAuthProvider()); }
+  catch(e) { toast("Erro no login: " + e.message, true); }
+};
+$("btnGoogleLogin").onclick    = googleLogin;
+$("btnGoogleLoginReg").onclick = googleLogin;
+
+// ── LOGOUT ────────────────────────────────────────────────────
 const logout = async () => {
   if (unsubUser) unsubUser();
   await signOut(auth);
 };
-
 $("btnLogout")  && ($("btnLogout").onclick  = logout);
 $("btnLogout2") && ($("btnLogout2").onclick = logout);
 
-// LINKS DE PAGAMENTO
+// ── PAYMENT LINKS ─────────────────────────────────────────────
 const PAYMENT_LINKS = {
-  monthly: "https://link.picpay.com/p/177297317169ad6c739b28d",
-  annual: "https://link.picpay.com/p/177299315669adba84ca6db",
+  monthly:  "https://link.picpay.com/p/177297317169ad6c739b28d",
+  annual:   "https://link.picpay.com/p/177299315669adba84ca6db",
   lifetime: "https://link.picpay.com/p/177299344669adbba68cffd"
 };
-
-// BOTÕES PLANOS
-$("btnMonthly").onclick  = () => window.open(PAYMENT_LINKS.monthly, "_blank");
-$("btnAnnual").onclick   = () => window.open(PAYMENT_LINKS.annual, "_blank");
+$("btnMonthly").onclick  = () => window.open(PAYMENT_LINKS.monthly,  "_blank");
+$("btnAnnual").onclick   = () => window.open(PAYMENT_LINKS.annual,   "_blank");
 $("btnLifetime").onclick = () => window.open(PAYMENT_LINKS.lifetime, "_blank");
-$("btnCancelPending").onclick = () => {
-  $("pendingSection").style.display = "none";
-};
-// ── FAQ TOGGLE ───────────────────────────────────────────────
-window.toggleFaq = function(el) {
-  const answer = el.nextElementSibling;
-  const icon   = el.querySelector("span");
-  answer.classList.toggle("open");
-  icon.textContent = answer.classList.contains("open") ? "▴" : "▾";
-};
+$("btnCancelPending").onclick = () => { $("pendingSection").style.display = "none"; };
 </script>
 </body>
 </html>
