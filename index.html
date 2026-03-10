@@ -698,7 +698,7 @@
 <canvas id="stars-canvas"></canvas>
 
 <!-- Trial Banner -->
-<div id="trialBanner">🆓 Modo Free — 2 usos/item por dia | </div>
+<div id="trialBanner">🆓 Modo Free — 2 usos/item por dia  </div>
 
 <!-- Header -->
 <header class="app-header" id="appHeader">
@@ -1703,16 +1703,7 @@ function closeLockOverlay(){
   document.getElementById('lockOverlay').style.display = 'none';
 }
 
-function updateBanner(){
-  const banner = document.getElementById('trialBanner');
-  if(isPro()){
-    banner.innerHTML = '⚡ Versão PRO Ativa — uso ilimitado 🎉';
-    banner.style.background = 'linear-gradient(135deg,#2e7d32,#43a047)';
-  } else {
-    banner.innerHTML = '🆓 Modo Free — 2 usos/item por dia | <a href="#" onclick="showProModal(event)" style="color:#ffd600;font-weight:700;">Ver Planos PRO</a>';
-    banner.style.background = '';
-  }
-}
+
 
 /* backward compat aliases */
 function initTrial(){ initFree(); }
@@ -1747,11 +1738,7 @@ function selecionarEIrPro(plan){
   },300);
 }
 
-function confirmarCompraPro(){
-  const url = PICPAY_LINKS[_selectedPlan] || PICPAY_LINKS.annual;
-  window.open(url, '_blank');
-  alert('✅ Após o pagamento, envie o comprovante para ativação.\nSeu acesso PRO será liberado em até 2 horas úteis.');
-}
+
 
 /* called from PRO screen plan click */
 function openCalcPro(screenId, title){
