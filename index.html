@@ -694,6 +694,16 @@
 </head>
 <body>
 
+<!-- ═══ REDIRECT: Se primeira visita, vai para login.html ═══ -->
+<script>
+  (function() {
+    // Se o usuário ainda não passou pelo login, redireciona para login.html
+    if (!localStorage.getItem('eletricapro_visited')) {
+      window.location.replace('login.html');
+    }
+  })();
+</script>
+
 <!-- Animated stars -->
 <canvas id="stars-canvas"></canvas>
 
