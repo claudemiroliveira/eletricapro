@@ -389,6 +389,9 @@
     <a href="login.html" class="nav-btn planos" id="navPlanosBtn">
       📋 <span class="label">Planos</span>
     </a>
+    <a href="index.html" class="nav-btn" id="navAppBtn" onclick="localStorage.setItem('eletricapro_visited','1')" style="background:linear-gradient(135deg,#1e3a5f,#1565c0);color:#fff;border:1px solid rgba(33,150,243,.4);">
+      ⚡ <span class="label">Ir ao App</span>
+    </a>
   </div>
 </nav>
 
@@ -506,6 +509,13 @@
   <p style="margin-top:12px;font-size:12px;color:var(--muted);text-align:center;">
     Após o login, escolha seu plano PRO abaixo
   </p>
+  <div style="text-align:center;margin-top:10px;">
+    <a onclick="irParaApp()" style="
+      font-size:13px;color:var(--muted);cursor:pointer;
+      text-decoration:underline;display:inline-block;">
+      Pular → Usar versão gratuita
+    </a>
+  </div>
 </div>
 
 <!-- ── PRO ACTIVE ── -->
@@ -518,6 +528,15 @@
     <div class="expiry-info" id="proExpiry"></div>
   </div>
   <div style="text-align:center;margin-top:16px;">
+    <button onclick="irParaApp()" style="
+      display:inline-flex;align-items:center;gap:8px;
+      background:linear-gradient(135deg,#1565c0,#2196f3);
+      color:#fff;border:none;padding:14px 28px;
+      border-radius:12px;font-size:16px;font-weight:700;
+      cursor:pointer;margin-bottom:12px;width:100%;justify-content:center;
+      box-shadow:0 6px 20px rgba(33,150,243,.4);transition:all .2s;">
+      ⚡ Entrar no App
+    </button>
     <button id="btnLogout" style="display:inline-flex;">Sair da conta</button>
   </div>
 </div>
@@ -583,6 +602,23 @@
       </ul>
       <button class="plan-btn lifetime" id="btnLifetime">♾ Pagar R$ 89,90</button>
     </div>
+  </div>
+
+  <!-- BOTÃO CONTINUAR PARA O APP -->
+  <div style="text-align:center;margin-top:28px;padding:0 20px;">
+    <button onclick="irParaApp()" style="
+      display:inline-flex;align-items:center;gap:10px;justify-content:center;
+      width:100%;max-width:460px;
+      background:linear-gradient(135deg,#1565c0,#2196f3);
+      color:#fff;border:none;padding:16px 28px;
+      border-radius:14px;font-size:16px;font-weight:700;
+      cursor:pointer;box-shadow:0 6px 20px rgba(33,150,243,.4);
+      transition:all .2s;">
+      ⚡ Continuar para o App →
+    </button>
+    <p style="margin-top:10px;font-size:12px;color:var(--muted);">
+      Você pode escolher um plano depois, dentro do app
+    </p>
   </div>
 
   <!-- PENDING STATE -->
@@ -672,6 +708,13 @@
     answer.classList.toggle('open');
     icon.textContent = answer.classList.contains('open') ? '▴' : '▾';
   };
+  // ─── NAVEGA PARA O APP MARCANDO VISITA ───────────────────────
+  function irParaApp() {
+    localStorage.setItem('eletricapro_visited', '1');
+    window.location.href = 'index.html';
+  }
+  // ─────────────────────────────────────────────────────────────
+
   // Atualiza nav ao logar/deslogar
   function updateNavButtons(isLoggedIn, isPro) {
     const loginBtn = document.getElementById('navLoginBtn');
@@ -987,5 +1030,6 @@ $("btnAnnual").onclick   = () => window.open(PAYMENT_LINKS.annual,   "_blank");
 $("btnLifetime").onclick = () => window.open(PAYMENT_LINKS.lifetime, "_blank");
 $("btnCancelPending").onclick = () => { $("pendingSection").style.display = "none"; };
 </script>
+<script defer src="https://static.cloudflareinsights.com/beacon.min.js/v8c78df7c7c0f484497ecbca7046644da1771523124516" integrity="sha512-8DS7rgIrAmghBFwoOTujcf6D9rXvH8xm8JQ1Ja01h9QX8EzXldiszufYa4IFfKdLUKTTrnSFXLDkUEOTrZQ8Qg==" data-cf-beacon='{"version":"2024.11.0","token":"4edd5f8ec12a48cfa682ab8261b80a79","server_timing":{"name":{"cfCacheStatus":true,"cfEdge":true,"cfExtPri":true,"cfL4":true,"cfOrigin":true,"cfSpeedBrain":true},"location_startswith":null}}' crossorigin="anonymous"></script>
 </body>
 </html>
