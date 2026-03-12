@@ -2148,44 +2148,40 @@ function calcularQuedaTensaoTrifasica(){
   ]));
 }
 
+// --- ELETRODUTO ---
 function calcularEletroduto(){
-  if(checkTrialExpired()) return;
-  const sec = parseFloat(document.getElementById('eletroSecao').value);
-  const qtd = parseInt(document.getElementById('eletroQtd').value||'0',10);
-  const occ = parseFloat(document.getElementById('eletroOcupacao').value)/100;
-  if(!sec||!qtd||qtd<1){ alert('Preencha os campos!'); return; }
-
-  // diâmetros típicos (mm) — baseados na tabela de condutores já existente no app
-  const diam = {1.5:1.38,2.5:1.78,4:2.25,6:2.76,10:3.57,16:4.51,25:5.64,35:6.68,50:7.98};
-  const d = diam[sec] || 2.25;
-  const areaCabo = Math.PI * Math.pow(d/2,2);
-  const areaTotal = areaCabo * qtd;
-  const areaNec = areaTotal / occ;
-
-  const elet = [
-    {nom:'16 mm', di:13},
-    {nom:'20 mm', di:16},
-    {nom:'25 mm', di:21},
-    {nom:'32 mm', di:27},
-    {nom:'40 mm', di:35},
-    {nom:'50 mm', di:44}
-  ];
-  let rec = elet[elet.length-1];
-  for(const e of elet){
-    const areaInt = Math.PI * Math.pow(e.di/2,2);
-    if(areaInt >= areaNec){ rec=e; break; }
-  }
-
-  lastCalcResults.eletroduto = {sec,qtd,occ:occ*100,d,areaTotal,areaNec,rec:rec.nom};
-  addHistorico('cálculo','Eletroduto', `Seção: ${sec} mm²\nQtd: ${qtd}\nOcupação máx: ${(occ*100).toFixed(0)}%\nDiâmetro condutor (típico): ${d} mm\nEletroduto recomendado: ${rec.nom}`);
-
-  showResult('resultEletroduto', resultBox('Eletroduto (aprox.)',[
-    ['Seção / qtd', `${sec} mm² × ${qtd}`],
-    ['Ocupação máx.', `${(occ*100).toFixed(0)}%`],
-    ['Área total cabos', `${areaTotal.toFixed(1)} mm²`],
-    ['Eletroduto recomendado', rec.nom]
-  ]));
+  if(!checkFreeLimit('eletroduto')) return;
+  const diaEletroduto = parseFloat(document.getElementById('diaEletroduto').value);
+  const secaoCabo     = parseFloat(document.getElementById('secaoEletroduto').value);
+  
+  // diâmetros externos aproximados dos cabos (NBR 5410 tabela)
+  const diamCaboMap = {1.5:5.3, 2.5:5.8, 4:6.5, 6:7.4, 10:8.9, 16:10.2, 25:13.1, 35:15.0, 50:17.5};
+  const dCabo = diamCaboMap[secaoCabo] || (Math.sqrt(secaoCabo)*2.5 + 2);
+  
+  const areaCabo = Math.PI * Math.pow(dCabo/2, 2);
+  const areaEletroduto = Math.PI * Math.pow(diaEletroduto/2, 2);
+  
+  // Taxa de ocupação NBR 5410
+  const taxa1 = 0.53, taxa2 = 0.31, taxa3 = 0.40;
+  
+  const q1 = Math.floor((areaEletroduto * taxa1) / areaCabo);
+  const q2 = Math.floor((areaEletroduto * taxa2) / areaCabo);
+  const q3 = Math.floor((areaEletroduto * taxa3) / areaCabo);
+  
+  const html = resultBox(`Eletroduto Ø${diaEletroduto}mm × cabo ${secaoCabo}mm²`,[
+    ['Área interna do eletroduto', `${areaEletroduto.toFixed(0)} mm²`],
+    ['Área do cabo (ext. Ø${dCabo}mm)', `${areaCabo.toFixed(1)} mm²`],
+    ['Cabos (1 cabo — taxa 53%)', `${q1} condutor(es)`],
+    ['Cabos (2 cabos — taxa 31%)', `${q2} condutores`],
+    ['Cabos (3+ cabos — taxa 40%)', `${q3} condutores`],
+  ]);
+  
+  lastCalcResults.eletroduto = {diaEletroduto, secaoCabo, q1, q2, q3};
+  document.getElementById('resultEletroduto').innerHTML = html;
+  salvarCalculoHistorico('Eletroduto', `Ø${diaEletroduto}mm · ${secaoCabo}mm² · máx ${q3} cabos`);
 }
+
+/
 
 function calcularDRDPS(){
   if(checkTrialExpired()) return;
