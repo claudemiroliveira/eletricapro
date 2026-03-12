@@ -539,185 +539,17 @@
     }
     .pro-vender-item strong { display:block; font-size:0.92rem; margin-bottom:0.2rem; }
     .pro-vender-item p { font-size:0.82rem; color:var(--text-muted); line-height:1.6; margin:0; }
-
-    /* ===== FREE BADGE & LIMIT OVERLAY ===== */
-    .free-badge {
-      display:inline-block;
-      background: linear-gradient(135deg,#e65100,#ff7043);
-      color:#fff; font-size:0.72rem; font-weight:700;
-      padding:0.18rem 0.55rem; border-radius:6px; letter-spacing:.5px;
-      vertical-align:middle; margin-left:6px;
-    }
-    .lock-overlay {
-      position:fixed; inset:0; z-index:9999;
-      background:rgba(0,0,0,0.85);
-      display:flex; flex-direction:column; align-items:center; justify-content:center;
-      padding:2rem; text-align:center;
-      animation:fadeInOverlay .2s ease;
-    }
-    @keyframes fadeInOverlay{ from{opacity:0} to{opacity:1} }
-    .lock-overlay-box {
-      background: var(--card-bg);
-      border:2px solid #66bb6a;
-      border-radius:20px;
-      padding:2rem 1.8rem;
-      max-width:360px; width:100%;
-    }
-    .lock-overlay-icon { font-size:3rem; margin-bottom:0.8rem; }
-    .lock-overlay h2 { font-size:1.3rem; margin-bottom:.5rem; }
-    .lock-overlay p  { font-size:.88rem; color:var(--text-muted); margin-bottom:1.2rem; line-height:1.6; }
-    .lock-overlay .plans { display:flex; flex-direction:column; gap:.7rem; margin-bottom:1.2rem; }
-    .lock-plan {
-      background:rgba(76,175,80,0.12);
-      border:1.5px solid rgba(76,175,80,0.4);
-      border-radius:12px; padding:.9rem 1.2rem;
-      display:flex; justify-content:space-between; align-items:center;
-      cursor:pointer; transition:var(--trans);
-    }
-    .lock-plan:hover { background:rgba(76,175,80,0.25); border-color:#66bb6a; }
-    .lock-plan.highlight { background:rgba(76,175,80,0.22); border-color:#66bb6a; }
-    .lock-plan-name { font-weight:700; font-size:.9rem; }
-    .lock-plan-price { color:#a5d6a7; font-weight:800; font-size:1rem; }
-    .lock-plan-badge {
-      background:#ffd600; color:#0a1628;
-      font-size:.65rem; font-weight:800;
-      padding:.15rem .45rem; border-radius:5px; margin-left:.4rem;
-    }
-    .lock-btn-close {
-      background:none; border:1px solid rgba(255,255,255,.25);
-      color:rgba(255,255,255,.7); padding:.5rem 1.2rem;
-      border-radius:8px; cursor:pointer; font-size:.85rem;
-      transition:var(--trans);
-    }
-    .lock-btn-close:hover { background:rgba(255,255,255,.08); }
-
-    /* ===== USER AREA ===== */
-    .user-area {
-      display:flex; align-items:center; gap:.6rem;
-      padding:.5rem .9rem;
-      background:rgba(255,255,255,.08);
-      border:1px solid rgba(255,255,255,.15);
-      border-radius:10px; cursor:pointer;
-      transition:var(--trans); font-size:.82rem;
-    }
-    .user-area:hover { background:rgba(255,255,255,.15); }
-    .user-avatar {
-      width:28px; height:28px;
-      border-radius:50%;
-      background:linear-gradient(135deg,#1565c0,#2196f3);
-      display:flex; align-items:center; justify-content:center;
-      font-size:.8rem; font-weight:700;
-    }
-
-    /* ===== HISTORIC SCREEN ===== */
-    .hist-item {
-      background:var(--card-bg);
-      border:1px solid var(--card-border);
-      border-radius:12px; padding:1rem;
-      margin-bottom:.8rem;
-      display:flex; justify-content:space-between; align-items:flex-start; gap:.8rem;
-    }
-    .hist-item-info strong { display:block; font-size:.9rem; }
-    .hist-item-info small  { font-size:.78rem; color:var(--text-muted); }
-    .hist-item-actions { display:flex; gap:.4rem; flex-shrink:0; }
-
-    /* ===== MODAL (auth/account) ===== */
-    .modal-overlay {
-      position:fixed; inset:0; z-index:8888;
-      background:rgba(0,0,0,.8);
-      display:flex; align-items:center; justify-content:center;
-      padding:1.5rem;
-      animation:fadeInOverlay .2s ease;
-    }
-    .modal-box {
-      background: linear-gradient(135deg, #0d2347, #0a1628);
-      border:1.5px solid rgba(33,150,243,.4);
-      border-radius:20px; padding:2rem;
-      max-width:380px; width:100%;
-      position:relative;
-    }
-    .modal-close {
-      position:absolute; top:.9rem; right:1rem;
-      background:none; border:none; color:rgba(255,255,255,.5);
-      font-size:1.3rem; cursor:pointer;
-    }
-    .modal-box h3 { font-size:1.2rem; margin-bottom:1rem; }
-    .modal-tabs { display:flex; gap:.5rem; margin-bottom:1.2rem; }
-    .modal-tab {
-      flex:1; padding:.55rem; text-align:center;
-      background:rgba(255,255,255,.06);
-      border:1.5px solid rgba(33,150,243,.25);
-      border-radius:8px; cursor:pointer; font-size:.88rem;
-      transition:var(--trans);
-    }
-    .modal-tab.active {
-      background:linear-gradient(135deg,var(--blue-bright),var(--blue-glow));
-      border-color:var(--blue-glow);
-    }
-    .modal-form { display:none; }
-    .modal-form.active { display:block; }
-    .modal-status {
-      margin-top:.8rem; padding:.7rem; border-radius:8px;
-      font-size:.85rem; text-align:center; display:none;
-    }
-    .modal-status.success { background:rgba(76,175,80,.2); border:1px solid #4caf50; }
-    .modal-status.error   { background:rgba(244,67,54,.2);  border:1px solid #f44336; }
-
-    /* ===== NEW CALCULATORS TILES ===== */
-    .sub-tile .pro-lock { font-size:.65rem; background:#f44336; color:#fff; padding:.1rem .35rem; border-radius:5px; margin-left:.4rem; }
-    
-    /* ===== WHATSAPP BTN ===== */
-    .btn-whatsapp {
-      background:linear-gradient(135deg,#25D366,#128C7E);
-      color:#fff; border:none;
-      display:inline-flex; align-items:center; gap:.5rem;
-      padding:.8rem 1.4rem; border-radius:9px;
-      font-size:.95rem; font-weight:600; cursor:pointer;
-      transition:var(--trans);
-      box-shadow:0 4px 14px rgba(37,211,102,.3);
-      margin-bottom:.5rem;
-    }
-    .btn-whatsapp:hover { transform:translateY(-2px); box-shadow:0 8px 22px rgba(37,211,102,.5); }
-    
-    /* ===== PRO STATUS BANNER ===== */
-    .pro-status-card {
-      background:linear-gradient(135deg,#1b5e20,#2e7d32);
-      border:1.5px solid #66bb6a;
-      border-radius:14px; padding:1.1rem;
-      margin-bottom:1rem;
-      display:flex; align-items:center; gap:1rem;
-    }
-    .pro-status-icon { font-size:2rem; flex-shrink:0; }
-    .pro-status-label { font-size:.78rem; opacity:.8; }
-    .pro-status-plan { font-weight:800; font-size:1.05rem; color:#a5d6a7; }
   </style>
 </head>
 <body>
-
-<!-- ═══ REDIRECT: Se primeira visita, vai para login.html ═══ -->
-<script>
-  (function() {
-    // Se o usuário ainda não passou pelo login, redireciona para login.html
-    if (!localStorage.getItem('eletricapro_visited')) {
-      window.location.replace('login.html');
-    }
-  })();
-</script>
 
 <!-- Animated stars -->
 <canvas id="stars-canvas"></canvas>
 
 <!-- Trial Banner -->
+<div id="trialBanner">🎁 Período de teste: <span id="daysLeft">7</span> dias restantes</div>
 
-<!-<!-- Trial Banner -->
-<div id="trialBanner">
-🆓 Modo Free — 2 usos/item por dia |
-<a href="login.html" style="color:#ffd600;font-weight:700;">
-Ver Planos PRO
-</a>
-</div>
-  
-  <!--Header -->
+<!-- Header -->
 <header class="app-header" id="appHeader">
   <div id="headerBack" style="display:none;">
     <button class="btn-back" onclick="goHome()">← Voltar</button>
@@ -730,10 +562,6 @@ Ver Planos PRO
   <div class="header-text" style="flex:1;">
     <h1>Elétrica<span>Pro</span></h1>
     <p id="headerSubtitle">Calculadoras, Tabelas e Instalações</p>
-  </div>
-    <div id="userAreaBtn" onclick="window.location.href='login.html'" style="display:flex;align-items:center;gap:.5rem;padding:.45rem .8rem;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);border-radius:10px;cursor:pointer;font-size:.8rem;transition:.3s ease;white-space:nowrap;" title="Login / Minha Conta">
-    <span id="userAvatarIcon">👤</span>
-    <span id="userNameShort">Entrar</span>
   </div>
   <button id="darkModeBtn" onclick="toggleDarkMode()" style="background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.2);color:white;padding:0.4rem 0.8rem;border-radius:8px;cursor:pointer;font-size:0.8rem;white-space:nowrap;">☀️ Modo Claro</button>
 </header>
@@ -778,28 +606,18 @@ Ver Planos PRO
         <div class="tile-icon">📋</div>
         <div class="tile-label">Normas</div>
       </div>
-      <div class="icon-tile" onclick="openScreen('historico', 'Histórico')">
-        <div class="tile-icon">📂</div>
-        <div class="tile-label">Histórico</div>
-      </div>
     </div>
 
     <!-- ========== BOTÃO PRO ========== -->
-    <div style="margin-top:1.5rem;" id="proBtnHome">
-      <div id="proStatusHome" style="display:none;" class="pro-status-card">
-        <div class="pro-status-icon">⚡</div>
-        <div><div class="pro-status-label">Plano Ativo</div><div class="pro-status-plan" id="proStatusPlan">PRO Mensal</div></div>
-      </div>
-      <button id="upgradeBtnHome" class="btn-pro-upgrade" onclick="window.location.href ='login.html'"
+    <div style="margin-top:1.5rem;">
+      <button class="btn-pro-upgrade" onclick="window.location.href='login.html'">
         <span class="pro-badge">PRO</span>
         <span class="pro-btn-text">
           <strong>Ativar Versão PRO</strong>
-          <small>Mensal R$19,90 · Anual R$59,90 · Vitalício R$89,90</small>
+          <small>Acesso completo + PDF ilimitado</small>
         </span>
         <span class="pro-arrow">→</span>
       </button>
-      <a href="etica.html" style="display:block;margin-top:0.9rem;text-align:center;color:rgba(255,255,255,0.85);text-decoration:underline;font-size:0.9rem;">Ética, privacidade e termos</a>
-    </div>
     </div>
   </div>
 
@@ -838,26 +656,6 @@ Ver Planos PRO
       <div class="sub-tile" onclick="openScreen('calcFatorDemanda','Fator de Demanda')">
         <div class="s-icon">📊</div>
         <div class="s-text"><strong>Fator de Demanda</strong><span>Demanda Máxima</span></div>
-      </div>
-      <div class="sub-tile" onclick="openCalcPro('calcDrDps','DR/DPS — Dimensionamento')">
-        <div class="s-icon">🔐</div>
-        <div class="s-text"><strong>DR / DPS</strong><span>Dimensionamento<span class="pro-lock">FREE 2×</span></span></div>
-      </div>
-      <div class="sub-tile" onclick="openCalcPro('calcEletroduto','Eletroduto — Condutores')">
-        <div class="s-icon">🪣</div>
-        <div class="s-text"><strong>Eletroduto</strong><span>Qtd condutores<span class="pro-lock">FREE 2×</span></span></div>
-      </div>
-      <div class="sub-tile" onclick="openCalcPro('calcQuedaTri','Queda de Tensão Trifásico')">
-        <div class="s-icon">📉</div>
-        <div class="s-text"><strong>Queda Trifásico</strong><span>3 fases<span class="pro-lock">FREE 2×</span></span></div>
-      </div>
-      <div class="sub-tile" onclick="openCalcPro('calcMotor','Bitola para Motor')">
-        <div class="s-icon">⚙️</div>
-        <div class="s-text"><strong>Bitola Motor</strong><span>Partida direta/Y-Δ<span class="pro-lock">FREE 2×</span></span></div>
-      </div>
-      <div class="sub-tile" onclick="openCalcPro('calcEnergiaMes','Custo de Energia Mensal')">
-        <div class="s-icon">💡</div>
-        <div class="s-text"><strong>Custo Energia</strong><span>Estimativa mensal<span class="pro-lock">FREE 2×</span></span></div>
       </div>
     </div>
   </div>
@@ -1379,11 +1177,7 @@ Ver Planos PRO
       <h3>📋 Itens do Orçamento</h3>
       <div id="listaItens"><p style="color:var(--text-muted);">Nenhum item adicionado</p></div>
       <div class="total-box" id="totalOrcamento">Total: R$ 0,00</div>
-      <div style="display:flex;gap:.5rem;flex-wrap:wrap;margin-top:.8rem;">
-        <button class="btn btn-yellow" onclick="gerarPDFOrcamento()">📄 Gerar PDF</button>
-        <button class="btn-whatsapp" onclick="enviarWhatsApp()">📱 Enviar por WhatsApp</button>
-        <button class="btn btn-green" onclick="salvarOrcamentoHistorico()">💾 Salvar no Histórico</button>
-      </div>
+      <button class="btn btn-yellow" style="margin-top:0.8rem;" onclick="gerarPDFOrcamento()">📄 Gerar PDF do Orçamento</button>
     </div>
   </div>
 
@@ -1455,7 +1249,7 @@ Ver Planos PRO
 
 <!-- ========== TELA PRO ========== -->
   <div id="proScreen" class="screen">
-    <div class="screen-title"><div class="dot"></div>Versão PRO</div>
+    <div class="screen-title"><div class="dot"></div>Versao PRO</div>
 
     <div class="pro-hero">
       <div class="pro-hero-icon">⚡</div>
@@ -1463,214 +1257,34 @@ Ver Planos PRO
       <p class="pro-hero-sub">Desbloqueie todo o potencial profissional</p>
     </div>
 
-    <!-- PLANOS -->
-    <div style="display:flex;flex-direction:column;gap:.8rem;margin:1.2rem 0;">
-      <div class="lock-plan" onclick="selecionarPlano('monthly')" id="planMonthly">
-        <div>
-          <div class="lock-plan-name">Mensal</div>
-          <div style="font-size:.78rem;color:var(--text-muted);">Acesso completo por 30 dias</div>
-        </div>
-        <div class="lock-plan-price">R$ 19,90</div>
-      </div>
-      <div class="lock-plan highlight" onclick="selecionarPlano('annual')" id="planAnnual">
-        <div>
-          <div class="lock-plan-name">Anual <span class="lock-plan-badge">-75%</span></div>
-          <div style="font-size:.78rem;color:var(--text-muted);">Apenas R$ 4,99/mês — pague uma vez</div>
-        </div>
-        <div class="lock-plan-price">R$ 59,90</div>
-      </div>
-      <div class="lock-plan" onclick="selecionarPlano('lifetime')" id="planLifetime">
-        <div>
-          <div class="lock-plan-name">Vitalício <span class="lock-plan-badge">MELHOR</span></div>
-          <div style="font-size:.78rem;color:var(--text-muted);">Pague uma vez, use para sempre</div>
-        </div>
-        <div class="lock-plan-price">R$ 89,99</div>
-      </div>
+    <div class="pro-price-card">
+      <div class="pro-price-label">Plano Profissional</div>
+      <div class="pro-price-value">R$ 19.90<span>/mês</span></div>
+      <div class="pro-price-or">ou R$ 139.90/ano (economize 43%)</div>
     </div>
 
     <div class="pro-features-grid">
-      <div class="pro-feat"><span>✅</span><div><strong>Uso ilimitado</strong><small>Sem limite de 2×/dia</small></div></div>
-      <div class="pro-feat"><span>✅</span><div><strong>PDFs ilimitados</strong><small>Relatórios profissionais</small></div></div>
-      <div class="pro-feat"><span>✅</span><div><strong>13 calculadoras</strong><small>Todas as ferramentas</small></div></div>
-      <div class="pro-feat"><span>✅</span><div><strong>Histórico ilimitado</strong><small>Salvar todos os cálculos</small></div></div>
-      <div class="pro-feat"><span>✅</span><div><strong>WhatsApp & Email</strong><small>Envio de orçamentos</small></div></div>
+      <div class="pro-feat"><span>✅</span><div><strong>PDFs ilimitados</strong><small>Relatórios e orçamentos profissionais</small></div></div>
+      <div class="pro-feat"><span>✅</span><div><strong>Sem restrições de trial</strong><small>Use sempre, sem expirar</small></div></div>
+      <div class="pro-feat"><span>✅</span><div><strong>Todas as calculadoras</strong><small>8 calculadoras especializadas</small></div></div>
+      <div class="pro-feat"><span>✅</span><div><strong>Orçamentos ilimitados</strong><small>Crie e salve quantos quiser</small></div></div>
+      <div class="pro-feat"><span>✅</span><div><strong>Tabelas técnicas completas</strong><small>NBR 5410, AWG, disjuntores</small></div></div>
       <div class="pro-feat"><span>✅</span><div><strong>Suporte prioritário</strong><small>Atendimento em até 24h</small></div></div>
     </div>
 
-    <div style="margin-top:1.5rem;">
-      <button id="btnConfirmarPlano" class="btn btn-pro-confirm" onclick="confirmarCompraPro()" style="width:100%;justify-content:center;font-size:1.05rem;padding:1rem;">
-        💳 Pagar e Ativar PRO
+   <div style="margin-top:1.5rem;">
+      <button class="btn btn-pro-confirm" onclick="window.location.href='login.html'" style="width:100%;justify-content:center;font-size:1.05rem;padding:1rem;">
+        💳 Pagar no PicPay e liberar PRO
       </button>
-      <p style="font-size:.78rem;color:var(--text-muted);text-align:center;margin-top:.8rem;">Após o pagamento, faça login e envie o comprovante para ativação manual em até 2h úteis.</p>
-      <a href="etica.html" style="display:block;margin-top:.9rem;text-align:center;color:rgba(255,255,255,.85);text-decoration:underline;font-size:.9rem;">Ética, privacidade e termos</a>
+      <a href="etica.html" style="display:block;margin-top:0.9rem;text-align:center;color:rgba(255,255,255,0.85);text-decoration:underline;font-size:0.9rem;">Ética, privacidade e termos</a>
     </div>
-  </div>
 
-
-  <!-- ========== CALC: DR/DPS ========== -->
-  <div id="calcDrDps" class="screen">
-    <div class="screen-title"><div class="dot"></div>DR/DPS — Dimensionamento</div>
-    <div class="calc-card">
-      <h3>🔐 Dimensionamento de DR e DPS</h3>
-      <div class="form-group"><label>Corrente do circuito (A):</label><input type="number" id="correnteDR" placeholder="Ex: 25"></div>
-      <div class="form-group"><label>Tipo de DR:</label>
-        <select id="tipoDR">
-          <option value="residual">DR Residencial (30 mA)</option>
-          <option value="industrial">DR Industrial (100 mA)</option>
-          <option value="10ma">DR Alta Sensibilidade (10 mA)</option>
-        </select>
-      </div>
-      <div class="form-group"><label>Tensão do sistema (V):</label>
-        <select id="tensaoDR">
-          <option value="127">127 V (monofásico)</option>
-          <option value="220">220 V (monofásico)</option>
-          <option value="220t">220/380 V (trifásico)</option>
-        </select>
-      </div>
-      <div class="form-group"><label>Nível de sobretensão (kV):</label>
-        <select id="nivelDPS">
-          <option value="6">Categoria IV — 6 kV (entrada geral)</option>
-          <option value="4">Categoria III — 4 kV (quadro)</option>
-          <option value="2.5">Categoria II — 2,5 kV (tomada)</option>
-          <option value="1.5">Categoria I — 1,5 kV (equipamentos)</option>
-        </select>
-      </div>
-      <button class="btn" onclick="calcularDrDps()">⚡ Calcular</button>
-      <button class="btn btn-yellow" onclick="gerarPDFCalc('DR/DPS')">📄 PDF</button>
-      <div id="resultDrDps"></div>
-    </div>
-  </div>
-
-  <!-- ========== CALC: ELETRODUTO ========== -->
-  <div id="calcEletroduto" class="screen">
-    <div class="screen-title"><div class="dot"></div>Eletroduto — Quantos condutores cabem</div>
-    <div class="calc-card">
-      <h3>🪣 Cálculo de Eletroduto</h3>
-      <p style="font-size:.82rem;color:var(--text-muted);margin-bottom:1rem;">NBR 5410 — Taxa de ocupação máx. 53% (1 cabo) / 31% (2 cabos) / 40% (3+ cabos)</p>
-      <div class="form-group"><label>Diâmetro do eletroduto (mm):</label>
-        <select id="diaEletroduto">
-          <option value="16">Ø 16 mm (1/2")</option>
-          <option value="20">Ø 20 mm (3/4")</option>
-          <option value="25">Ø 25 mm (1")</option>
-          <option value="32">Ø 32 mm (1¼")</option>
-          <option value="40">Ø 40 mm (1½")</option>
-          <option value="50">Ø 50 mm (2")</option>
-          <option value="63">Ø 63 mm (2½")</option>
-          <option value="75">Ø 75 mm (3")</option>
-        </select>
-      </div>
-      <div class="form-group"><label>Seção do condutor (mm²):</label>
-        <select id="secaoEletroduto">
-          <option value="1.5">1,5 mm² — diam. ext. ≈ 5,3 mm</option>
-          <option value="2.5">2,5 mm² — diam. ext. ≈ 5,8 mm</option>
-          <option value="4">4 mm² — diam. ext. ≈ 6,5 mm</option>
-          <option value="6">6 mm² — diam. ext. ≈ 7,4 mm</option>
-          <option value="10">10 mm² — diam. ext. ≈ 8,9 mm</option>
-          <option value="16">16 mm² — diam. ext. ≈ 10,2 mm</option>
-          <option value="25">25 mm² — diam. ext. ≈ 13,1 mm</option>
-          <option value="35">35 mm² — diam. ext. ≈ 15,0 mm</option>
-          <option value="50">50 mm² — diam. ext. ≈ 17,5 mm</option>
-        </select>
-      </div>
-      <button class="btn" onclick="calcularEletroduto()">⚡ Calcular</button>
-      <button class="btn btn-yellow" onclick="gerarPDFCalc('Eletroduto')">📄 PDF</button>
-      <div id="resultEletroduto"></div>
-    </div>
-  </div>
-
-  <!-- ========== CALC: QUEDA TRIFÁSICO ========== -->
-  <div id="calcQuedaTri" class="screen">
-    <div class="screen-title"><div class="dot"></div>Queda de Tensão — Trifásico</div>
-    <div class="calc-card">
-      <h3>📉 Queda de Tensão Trifásico</h3>
-      <div class="form-group"><label>Potência total (kW):</label><input type="number" id="potQuedaTri" placeholder="Ex: 30"></div>
-      <div class="form-group"><label>Tensão de linha (V):</label><input type="number" id="tensaoQuedaTri" placeholder="Ex: 380" value="380"></div>
-      <div class="form-group"><label>Fator de potência (cos φ):</label><input type="number" id="fpQuedaTri" placeholder="0.92" value="0.92" step="0.01"></div>
-      <div class="form-group"><label>Comprimento do cabo (m):</label><input type="number" id="compQuedaTri" placeholder="Ex: 100"></div>
-      <div class="form-group"><label>Seção do condutor (mm²):</label>
-        <select id="secaoQuedaTri">
-          <option value="2.5">2,5 mm²</option><option value="4">4 mm²</option>
-          <option value="6">6 mm²</option><option value="10">10 mm²</option>
-          <option value="16">16 mm²</option><option value="25">25 mm²</option>
-          <option value="35">35 mm²</option><option value="50">50 mm²</option>
-          <option value="70">70 mm²</option><option value="95">95 mm²</option>
-          <option value="120">120 mm²</option>
-        </select>
-      </div>
-      <button class="btn" onclick="calcularQuedaTrifasico()">⚡ Calcular</button>
-      <button class="btn btn-yellow" onclick="gerarPDFCalc('Queda Trifásico')">📄 PDF</button>
-      <div id="resultQuedaTri"></div>
-    </div>
-  </div>
-
-  <!-- ========== CALC: BITOLA MOTOR ========== -->
-  <div id="calcMotor" class="screen">
-    <div class="screen-title"><div class="dot"></div>Bitola para Motor</div>
-    <div class="calc-card">
-      <h3>⚙️ Dimensionamento para Motor Elétrico</h3>
-      <div class="form-group"><label>Potência do motor (cv/HP):</label><input type="number" id="potMotor" placeholder="Ex: 10"></div>
-      <div class="form-group"><label>Tensão (V):</label>
-        <select id="tensaoMotor">
-          <option value="220">220 V Trifásico</option>
-          <option value="380">380 V Trifásico</option>
-          <option value="440">440 V Trifásico</option>
-          <option value="220m">220 V Monofásico</option>
-        </select>
-      </div>
-      <div class="form-group"><label>Tipo de partida:</label>
-        <select id="tipoPartidaMotor">
-          <option value="direta">Partida Direta</option>
-          <option value="estrela-triangulo">Estrela-Triângulo (Y-Δ)</option>
-          <option value="soft">Soft-Starter / Inversor</option>
-        </select>
-      </div>
-      <div class="form-group"><label>Fator de serviço / utilização (%):</label><input type="number" id="fsMotor" placeholder="100" value="100"></div>
-      <button class="btn" onclick="calcularBitolaMotor()">⚡ Calcular</button>
-      <button class="btn btn-yellow" onclick="gerarPDFCalc('Bitola Motor')">📄 PDF</button>
-      <div id="resultMotor"></div>
-    </div>
-  </div>
-
-  <!-- ========== CALC: CUSTO ENERGIA MENSAL ========== -->
-  <div id="calcEnergiaMes" class="screen">
-    <div class="screen-title"><div class="dot"></div>Custo de Energia Mensal</div>
-    <div class="calc-card">
-      <h3>💡 Estimativa de Custo de Energia Mensal</h3>
-      <div class="form-group"><label>Tarifa de energia (R$/kWh):</label><input type="number" id="tarifaEnergia" placeholder="Ex: 0.85" value="0.85" step="0.01"></div>
-      <div class="form-group"><label>ICMS incluso na tarifa?</label>
-        <select id="icmsEnergia">
-          <option value="0">Sim, já incluso</option>
-          <option value="0.25">Não — adicionar 25% ICMS</option>
-          <option value="0.18">Não — adicionar 18% ICMS</option>
-        </select>
-      </div>
-      <div id="energiaItens">
-        <div class="consumo-item-row" id="energiaRow0">
-          <div class="form-group"><label>Equipamento</label><input type="text" placeholder="Ex: Ar-condicionado"></div>
-          <div class="form-group"><label>Potência (W)</label><input type="number" placeholder="Ex: 1200"></div>
-          <div class="form-group"><label>Horas/dia</label><input type="number" placeholder="Ex: 8" step="0.5"></div>
-          <div class="form-group"><label>Dias/mês</label><input type="number" placeholder="30" value="30"></div>
+          
+          
         </div>
       </div>
-      <button class="btn" onclick="addEnergiaRow()">➕ Adicionar</button>
-      <button class="btn btn-yellow" onclick="calcularEnergiaMensal()">💰 Calcular Custo</button>
-      <button class="btn btn-yellow" onclick="gerarPDFCalc('Custo Energia')">📄 PDF</button>
-      <div id="resultEnergiaMes"></div>
     </div>
   </div>
-
-  <!-- ========== HISTÓRICO ========== -->
-  <div id="historico" class="screen">
-    <div class="screen-title"><div class="dot"></div>Histórico de Orçamentos e Cálculos</div>
-    <div style="display:flex;gap:.6rem;margin-bottom:1rem;flex-wrap:wrap;">
-      <button class="btn" onclick="filtrarHistorico('todos')">📂 Todos</button>
-      <button class="btn" onclick="filtrarHistorico('orcamento')">💰 Orçamentos</button>
-      <button class="btn" onclick="filtrarHistorico('calculo')">🧮 Cálculos</button>
-      <button class="btn btn-red" onclick="limparHistorico()">🗑️ Limpar</button>
-    </div>
-    <div id="listaHistorico"><p style="color:var(--text-muted);">Nenhum registro salvo.</p></div>
-  </div>
-
 
 </div>
   <!-- /container -->
@@ -1717,118 +1331,34 @@ function goHome() {
   window.scrollTo({top:0,behavior:'smooth'});
 }
 
-/* ======================== FREE / PRO SYSTEM ======================== */
-const FREE_KEY   = 'eletricapro_free_v2';   // daily usage counter
-const PRO_KEY    = 'eletricapro_pro';        // set by Firebase auth
-const FREE_LIMIT = 2;                        // uses per item per day
-
-const PICPAY_LINKS = {
-  monthly:  'https://link.picpay.com/p/177288422869ac110473dde',
-  annual:   'https://link.picpay.com/p/177299315669adba84ca6db',
-  lifetime: 'https://link.picpay.com/p/177299344669adbba68cffd',
-};
-
-let _selectedPlan = 'annual';
-
-function isPro(){
-  return localStorage.getItem(PRO_KEY) === 'true';
-}
-
-function initFree(){
-  const today = new Date().toISOString().slice(0,10);
-  const stored = JSON.parse(localStorage.getItem(FREE_KEY) || '{}');
-  if(stored.date !== today){
-    localStorage.setItem(FREE_KEY, JSON.stringify({date:today, counts:{}}));
+/* ======================== TRIAL / PRO ======================== */
+const TRIAL_KEY = 'eletricapro_trial';
+const PRO_PAYMENT_URL = 'https://link.picpay.com/p/177288422869ac110473dde';
+function initTrial(){
+  if(!localStorage.getItem(TRIAL_KEY)){
+    localStorage.setItem(TRIAL_KEY, JSON.stringify({startDate:new Date().toISOString(), isPro:false}));
   }
-  updateBanner();
+  updateTrialBanner();
 }
-
-function getFreeCount(itemKey){
-  const data = JSON.parse(localStorage.getItem(FREE_KEY) || '{}');
-  return (data.counts && data.counts[itemKey]) || 0;
+function updateTrialBanner(){
+  const d = JSON.parse(localStorage.getItem(TRIAL_KEY));
+  const days = Math.floor((new Date()-new Date(d.startDate))/(864e5));
+  const left = 7-days;
+  const banner = document.getElementById('trialBanner');
+  if(d.isPro){ banner.innerHTML='🌟 Versão PRO Ativada'; banner.style.background='linear-gradient(135deg,#2e7d32,#43a047)'; }
+  else if(left>0){ banner.innerHTML=`🎁 Período de teste: <span id="daysLeft">${left}</span> dias restantes`; }
+  else { banner.innerHTML='⚠️ Teste expirado — <a href="#" onclick="ativarPro()" style="color:white;text-decoration:underline;">Ativar PRO</a>'; banner.style.background='linear-gradient(135deg,#b71c1c,#e53935)'; }
 }
-
-function incrementFreeCount(itemKey){
-  const data = JSON.parse(localStorage.getItem(FREE_KEY) || '{}');
-  if(!data.counts) data.counts = {};
-  data.counts[itemKey] = (data.counts[itemKey] || 0) + 1;
-  localStorage.setItem(FREE_KEY, JSON.stringify(data));
-}
-
-function checkFreeLimit(itemKey){
-  if(isPro()) return true; // PRO: always OK
-  const count = getFreeCount(itemKey);
-  if(count < FREE_LIMIT){
-    incrementFreeCount(itemKey);
-    return true; // allowed
-  }
-  // Limit reached
-  document.getElementById('lockOverlay').style.display = 'flex';
+function checkTrialExpired(){
+  const d = JSON.parse(localStorage.getItem(TRIAL_KEY));
+  if(d.isPro) return false;
+  const days=Math.floor((new Date()-new Date(d.startDate))/(864e5));
+  if(days>=7){ alert('⚠️ Período de teste expirado! Ative a versão PRO.'); return true; }
   return false;
 }
-
-function closeLockOverlay(){
-  document.getElementById('lockOverlay').style.display = 'none';
-}
-
-function updateBanner(){
-  const banner = document.getElementById('trialBanner');
-  if(isPro()){
-    banner.innerHTML = '⚡ Versão PRO Ativa — uso ilimitado 🎉';
-    banner.style.background = 'linear-gradient(135deg,#2e7d32,#43a047)';
-  } else {
-    banner.innerHTML = '🆓 Modo Free — 2 usos/item por dia | <a href="#" onclick="showProModal(event)" style="color:#ffd600;font-weight:700;">Ver Planos PRO</a>';
-    banner.style.background = '';
-  }
-}
-
-/* backward compat aliases */
-function initTrial(){ initFree(); }
-function checkTrialExpired(){ return false; } // now uses checkFreeLimit per action
-
-function ativarPro(){ showProModal(); }
-
-function showProModal(e){
-  if(e) e.preventDefault();
-  document.getElementById('proModal').style.display = 'flex';
-}
-
-function selecionarPlano(plan){
-  _selectedPlan = plan;
-  ['monthly','annual','lifetime'].forEach(p=>{
-    const el = document.getElementById('plan'+p.charAt(0).toUpperCase()+p.slice(1));
-    if(el) el.style.borderColor = p===plan ? '#ffd600' : '';
-  });
-}
-
-function selecionarEIrPro(plan){
-  _selectedPlan = plan;
-  document.getElementById('lockOverlay').style.display = 'none';
-  document.getElementById('proModal').style.display = 'none';
-  openAuthModal();
-  setTimeout(()=>{
-    // scroll to plans
-    if(window.auth && window.auth.currentUser){
-      openScreen('proScreen','Versão PRO');
-      setTimeout(()=>confirmarCompraPro(),200);
-    }
-  },300);
-}
-
-function confirmarCompraPro(){
-  const url = PICPAY_LINKS[_selectedPlan] || PICPAY_LINKS.annual;
-  window.open(url, '_blank');
-  alert('✅ Após o pagamento, envie o comprovante para ativação.\nSeu acesso PRO será liberado em até 2 horas úteis.');
-}
-
-/* called from PRO screen plan click */
-function openCalcPro(screenId, title){
-  openScreen(screenId, title);
-}
-
-/* PRO-gated wrapper used instead of checkTrialExpired */
-function requirePro(itemKey){
-  return checkFreeLimit(itemKey);
+function ativarPro(){
+  // Redireciona direto para login/pagamento
+  window.location.href = 'login.html';
 }
 
 /* ======================== CALCULADORAS ======================== */
@@ -1841,7 +1371,7 @@ function resultBox(title, items){
 }
 
 function calcularLeiOhm(){
-  if(!checkFreeLimit('leiOhm')) return;
+  if(checkTrialExpired()) return;
   const V=parseFloat(document.getElementById('tensaoOhm').value)||0;
   const I=parseFloat(document.getElementById('correnteOhm').value)||0;
   const R=parseFloat(document.getElementById('resistenciaOhm').value)||0;
@@ -1855,7 +1385,7 @@ function calcularLeiOhm(){
 }
 
 function calcularPotencia(){
-  if(!checkFreeLimit('potencia')) return;
+  if(checkTrialExpired()) return;
   const V=parseFloat(document.getElementById('tensaoPot').value);
   const I=parseFloat(document.getElementById('correntePot').value);
   const fp=parseFloat(document.getElementById('fatorPot').value);
@@ -1868,7 +1398,7 @@ function calcularPotencia(){
 }
 
 function calcularQuedaTensao(){
-  if(!checkFreeLimit('quedaTensao')) return;
+  if(checkTrialExpired()) return;
   const I=parseFloat(document.getElementById('correnteQueda').value);
   const L=parseFloat(document.getElementById('distanciaQueda').value);
   const s=parseFloat(document.getElementById('secaoQueda').value);
@@ -1881,7 +1411,7 @@ function calcularQuedaTensao(){
 }
 
 function dimensionarCondutor(){
-  if(!checkFreeLimit('dimensionamento')) return;
+  if(checkTrialExpired()) return;
   const P=parseFloat(document.getElementById('potenciaCondutor').value);
   const V=parseFloat(document.getElementById('tensaoCondutor').value);
   const L=parseFloat(document.getElementById('distanciaCondutor').value);
@@ -1914,7 +1444,7 @@ function addConsumoRow(){
   container.appendChild(div); consumoRowCount++;
 }
 function calcularConsumo(){
-  if(!checkFreeLimit('consumo')) return;
+  if(checkTrialExpired()) return;
   const rows = document.querySelectorAll('.consumo-item-row');
   let totalW=0, items=[];
   rows.forEach(row=>{
@@ -1937,7 +1467,7 @@ function calcularConsumo(){
 /* ======================== ORÇAMENTOS ======================== */
 let itensOrcamento=[];
 function adicionarItem(){
-  if(!checkFreeLimit('orcamento')) return;
+  if(checkTrialExpired()) return;
   const d=document.getElementById('itemDescricao').value;
   const q=parseFloat(document.getElementById('itemQuantidade').value);
   const v=parseFloat(document.getElementById('itemValor').value);
@@ -1988,7 +1518,7 @@ function pdfFooter(doc){
 }
 
 function gerarPDFCalc(tipo){
-  if(!checkFreeLimit('pdfCalc')) return;
+  if(checkTrialExpired()) return;
   const {jsPDF}=window.jspdf;
   const doc=new jsPDF();
   pdfHeader(doc,'Relatorio: '+pdfSafe(tipo));
@@ -2047,7 +1577,7 @@ function gerarPDFCalc(tipo){
 }
 
 function gerarPDFTabela(tipo){
-  if(!checkFreeLimit('pdfTabela')) return;
+  if(checkTrialExpired()) return;
   const {jsPDF}=window.jspdf; const doc=new jsPDF();
   pdfHeader(doc,'Tabela: '+pdfSafe(tipo));
   doc.setFontSize(14); doc.setFont(undefined,'bold'); doc.text(pdfSafe('Tabela Tecnica: '+tipo),20,58);
@@ -2064,7 +1594,7 @@ function gerarPDFTabela(tipo){
 }
 
 function gerarPDFOrcamento(){
-  if(!checkFreeLimit('pdfOrcamento')) return;
+  if(checkTrialExpired()) return;
   const nome=document.getElementById('nomeCliente').value;
   if(!nome||!itensOrcamento.length){ alert('Preencha o nome do cliente e adicione itens!'); return; }
   const {jsPDF}=window.jspdf; const doc=new jsPDF();
@@ -2092,454 +1622,8 @@ function gerarPDFOrcamento(){
   doc.save('orcamento_'+pdfSafe(nome).replace(/ /g,'_')+'_'+Date.now()+'.pdf');
 }
 
-
-/* ======================== AUTH MODAL ======================== */
-function openAuthModal(){
-  const modal = document.getElementById('authModal');
-  modal.style.display = 'flex';
-  const user = window.auth && window.auth.currentUser;
-  document.getElementById('loggedOutArea').style.display = user ? 'none' : 'block';
-  document.getElementById('loggedInArea').style.display  = user ? 'block' : 'none';
-  if(user){
-    document.getElementById('loggedUserEmail').textContent = user.email || user.displayName || 'Usuário';
-    document.getElementById('loggedUserPlan').textContent = isPro() ? '⭐ Plano PRO Ativo' : '🆓 Plano Gratuito';
-  }
-}
-
-function closeAuthModal(){
-  document.getElementById('authModal').style.display = 'none';
-}
-
-function closeAuthModalOutside(e){
-  if(e.target === document.getElementById('authModal')) closeAuthModal();
-}
-
-function switchAuthTab(tab){
-  document.querySelectorAll('.modal-tab').forEach((t,i)=>{
-    t.classList.toggle('active', (i===0&&tab==='login')||(i===1&&tab==='register'));
-  });
-  document.getElementById('formLogin').classList.toggle('active', tab==='login');
-  document.getElementById('formRegister').classList.toggle('active', tab==='register');
-}
-
-function showStatus(elId, msg, type){
-  const el = document.getElementById(elId);
-  el.textContent = msg; el.className = 'modal-status ' + type;
-  el.style.display = 'block';
-}
-
-async function fazerLogin(){
-  const email = document.getElementById('loginEmail').value.trim();
-  const pass  = document.getElementById('loginPass').value;
-  if(!email || !pass){ showStatus('loginStatus','Preencha e-mail e senha.','error'); return; }
-  try {
-    showStatus('loginStatus','⏳ Entrando...','');
-    await window.fb.signInWithEmailAndPassword(window.auth, email, pass);
-    showStatus('loginStatus','✅ Login realizado!','success');
-    setTimeout(()=>closeAuthModal(), 1000);
-  } catch(err){
-    showStatus('loginStatus','❌ ' + (err.code === 'auth/wrong-password' ? 'Senha incorreta' : err.code === 'auth/user-not-found' ? 'Usuário não encontrado' : err.message), 'error');
-  }
-}
-
-async function fazerCadastro(){
-  const nome  = document.getElementById('regNome').value.trim();
-  const email = document.getElementById('regEmail').value.trim();
-  const pass  = document.getElementById('regPass').value;
-  if(!nome || !email || !pass){ showStatus('regStatus','Preencha todos os campos.','error'); return; }
-  if(pass.length < 6){ showStatus('regStatus','Senha deve ter mínimo 6 caracteres.','error'); return; }
-  try {
-    showStatus('regStatus','⏳ Criando conta...','');
-    const cred = await window.fb.createUserWithEmailAndPassword(window.auth, email, pass);
-    // save user doc
-    await window.fb.setDoc(window.fb.doc(window.db, 'usuarios', cred.user.uid), {
-      nome, email, pro: false, criadoEm: new Date().toISOString()
-    });
-    showStatus('regStatus','✅ Conta criada com sucesso!','success');
-    setTimeout(()=>closeAuthModal(), 1200);
-  } catch(err){
-    showStatus('regStatus','❌ ' + (err.code === 'auth/email-already-in-use' ? 'E-mail já cadastrado' : err.message), 'error');
-  }
-}
-
-async function fazerLogout(){
-  await window.fb.signOut(window.auth);
-  localStorage.removeItem(PRO_KEY);
-  updateBanner();
-  closeAuthModal();
-  document.getElementById('userAvatarIcon').textContent = '👤';
-  document.getElementById('userNameShort').textContent = 'Entrar';
-  const proStatusHome = document.getElementById('proStatusHome');
-  const upgradeBtnHome = document.getElementById('upgradeBtnHome');
-  if(proStatusHome) proStatusHome.style.display = 'none';
-  if(upgradeBtnHome) upgradeBtnHome.style.display = 'flex';
-}
-
-/* ======================== AUTH STATE LISTENER (override) ======================== */
-function setupAuthListener(){
-  if(!window.fb || !window.auth) { setTimeout(setupAuthListener, 300); return; }
-  window.fb.onAuthStateChanged(window.auth, async (user) => {
-    if(user){
-      try {
-        const snap = await window.fb.getDoc(window.fb.doc(window.db, 'usuarios', user.uid));
-        if(snap.exists() && snap.data().pro === true){
-          localStorage.setItem(PRO_KEY, 'true');
-        }
-      } catch(e){}
-      const name = user.displayName || user.email || 'Conta';
-      document.getElementById('userAvatarIcon').textContent = '✅';
-      document.getElementById('userNameShort').textContent = name.split('@')[0].slice(0,10);
-      if(isPro()){
-        const proStatusHome = document.getElementById('proStatusHome');
-        const upgradeBtnHome = document.getElementById('upgradeBtnHome');
-        if(proStatusHome) proStatusHome.style.display = 'flex';
-        if(upgradeBtnHome) upgradeBtnHome.style.display = 'none';
-        const planEl = document.getElementById('proStatusPlan');
-        if(planEl) planEl.textContent = 'PRO Ativo ✅';
-      }
-      updateBanner();
-    }
-  });
-}
-
-/* ======================== WHATSAPP EXPORT ======================== */
-function enviarWhatsApp(){
-  const nome = document.getElementById('nomeCliente').value || 'Cliente';
-  const tel  = document.getElementById('telefoneCliente').value || '';
-  const end  = document.getElementById('enderecoCliente').value || '';
-  if(!itensOrcamento.length){ alert('Adicione itens ao orçamento!'); return; }
-  const total = itensOrcamento.reduce((s,i)=>s+i.total,0);
-  let msg = `*Orçamento Elétrica Pro*\n`;
-  msg += `Cliente: ${nome}\n`;
-  if(tel) msg += `Telefone: ${tel}\n`;
-  if(end) msg += `Endereço: ${end}\n`;
-  msg += `\n*Itens:*\n`;
-  itensOrcamento.forEach(item=>{
-    msg += `• ${item.d} — ${item.q}x R$ ${item.v.toFixed(2)} = R$ ${item.total.toFixed(2)}\n`;
-  });
-  msg += `\n*Total: R$ ${total.toFixed(2)}*\n`;
-  msg += `\nValidade: 30 dias | Pagamento: A combinar`;
-  const encoded = encodeURIComponent(msg);
-  window.open(`https://wa.me/?text=${encoded}`, '_blank');
-}
-
-/* ======================== HISTÓRICO ======================== */
-const HIST_KEY = 'eletricapro_historico';
-let _histFilter = 'todos';
-
-function getHistorico(){
-  return JSON.parse(localStorage.getItem(HIST_KEY) || '[]');
-}
-
-function salvarOrcamentoHistorico(){
-  const nome = document.getElementById('nomeCliente').value;
-  if(!nome || !itensOrcamento.length){ alert('Preencha o cliente e os itens antes de salvar!'); return; }
-  const total = itensOrcamento.reduce((s,i)=>s+i.total,0);
-  const hist = getHistorico();
-  hist.unshift({
-    id: Date.now(),
-    tipo: 'orcamento',
-    titulo: 'Orçamento — ' + nome,
-    detalhe: `${itensOrcamento.length} itens · R$ ${total.toFixed(2)}`,
-    data: new Date().toLocaleDateString('pt-BR'),
-    itens: [...itensOrcamento],
-    cliente: { nome, tel: document.getElementById('telefoneCliente').value, end: document.getElementById('enderecoCliente').value }
-  });
-  localStorage.setItem(HIST_KEY, JSON.stringify(hist.slice(0,100)));
-  alert('✅ Orçamento salvo no histórico!');
-  renderHistorico();
-}
-
-function salvarCalculoHistorico(tipo, resumo){
-  const hist = getHistorico();
-  hist.unshift({
-    id: Date.now(),
-    tipo: 'calculo',
-    titulo: tipo,
-    detalhe: resumo,
-    data: new Date().toLocaleDateString('pt-BR')
-  });
-  localStorage.setItem(HIST_KEY, JSON.stringify(hist.slice(0,100)));
-  renderHistorico();
-}
-
-function filtrarHistorico(filtro){
-  _histFilter = filtro;
-  renderHistorico();
-}
-
-function limparHistorico(){
-  if(confirm('⚠️ Limpar todo o histórico?')){
-    localStorage.removeItem(HIST_KEY);
-    renderHistorico();
-  }
-}
-
-function carregarOrcamentoHistorico(id){
-  const hist = getHistorico();
-  const item = hist.find(h=>h.id===id);
-  if(!item || item.tipo !== 'orcamento') return;
-  document.getElementById('nomeCliente').value = item.cliente.nome;
-  document.getElementById('telefoneCliente').value = item.cliente.tel || '';
-  document.getElementById('enderecoCliente').value = item.cliente.end || '';
-  itensOrcamento = item.itens || [];
-  renderItens();
-  openScreen('orcamentos','Orçamentos');
-}
-
-function excluirHistorico(id){
-  const hist = getHistorico().filter(h=>h.id!==id);
-  localStorage.setItem(HIST_KEY, JSON.stringify(hist));
-  renderHistorico();
-}
-
-function renderHistorico(){
-  const container = document.getElementById('listaHistorico');
-  if(!container) return;
-  let hist = getHistorico();
-  if(_histFilter !== 'todos') hist = hist.filter(h=>h.tipo===_histFilter);
-  if(!hist.length){ container.innerHTML='<p style="color:var(--text-muted);">Nenhum registro salvo.</p>'; return; }
-  container.innerHTML = hist.map(h=>`
-    <div class="hist-item">
-      <div class="hist-item-info">
-        <strong>${h.tipo==='orcamento'?'💰':'🧮'} ${h.titulo}</strong>
-        <small>${h.detalhe} · ${h.data}</small>
-      </div>
-      <div class="hist-item-actions">
-        ${h.tipo==='orcamento'?`<button class="btn" style="padding:.4rem .7rem;font-size:.8rem;" onclick="carregarOrcamentoHistorico(${h.id})">📂</button>`:''}
-        <button class="btn btn-red" style="padding:.4rem .7rem;font-size:.8rem;" onclick="excluirHistorico(${h.id})">🗑️</button>
-      </div>
-    </div>
-  `).join('');
-}
-
-/* ======================== NEW CALCULATORS ======================== */
-
-// --- DR / DPS ---
-function calcularDrDps(){
-  if(!checkFreeLimit('drDps')) return;
-  const corrente = parseFloat(document.getElementById('correnteDR').value);
-  const tipoDR   = document.getElementById('tipoDR').value;
-  const tensao   = document.getElementById('tensaoDR').value;
-  const nivelDPS = parseFloat(document.getElementById('nivelDPS').value);
-  if(!corrente){ alert('Informe a corrente do circuito!'); return; }
-
-  const sensMap = {residual:'30 mA', industrial:'100 mA', '10ma':'10 mA'};
-  const sensNom = sensMap[tipoDR];
-  const correnteDR = corrente <= 16 ? 25 : corrente <= 25 ? 40 : corrente <= 40 ? 63 : corrente <= 63 ? 80 : 100;
-  
-  const dpsCat = nivelDPS >= 6 ? 'Cat. IV — Entrada geral (ramal, medição)' :
-                 nivelDPS >= 4 ? 'Cat. III — Quadro de distribuição' :
-                 nivelDPS >= 2.5 ? 'Cat. II — Tomadas e cargas' : 'Cat. I — Equipamentos eletrônicos';
-  
-  const dpsTipoRec = nivelDPS >= 4 ? 'DPS Classe I (SPD Tipo 1)' : nivelDPS >= 2.5 ? 'DPS Classe II (SPD Tipo 2)' : 'DPS Classe III (SPD Tipo 3)';
-  
-  const tensaoDPS = tensao === '220t' ? '275 V (linha) / 320 V (fase-neutro)' : tensao === '220' ? '275 V' : '150 V';
-
-  const html = resultBox('DR/DPS — Resultado',[
-    ['Tipo de DR', `DR ${sensNom}`],
-    ['Corrente do DR', `${correnteDR} A (padrão comercial)`],
-    ['DPS recomendado', dpsTipoRec],
-    ['Categoria', dpsCat],
-    ['Tensão nominal DPS (Un)', tensaoDPS],
-    ['Corrente de impulso mínima', nivelDPS >= 4 ? '12,5 kA (8/20 µs)' : '5 kA (8/20 µs)'],
-  ]);
-
-  lastCalcResults.drDps = {correnteDR, sensNom, dpsTipoRec, dpsCat};
-  document.getElementById('resultDrDps').innerHTML = html;
-  salvarCalculoHistorico('DR/DPS', `DR ${correnteDR}A · ${sensNom} · ${dpsTipoRec}`);
-}
-
-// --- ELETRODUTO ---
-function calcularEletroduto(){
-  if(!checkFreeLimit('eletroduto')) return;
-  const diaEletroduto = parseFloat(document.getElementById('diaEletroduto').value);
-  const secaoCabo     = parseFloat(document.getElementById('secaoEletroduto').value);
-  
-  // diâmetros externos aproximados dos cabos (NBR 5410 tabela)
-  const diamCaboMap = {1.5:5.3, 2.5:5.8, 4:6.5, 6:7.4, 10:8.9, 16:10.2, 25:13.1, 35:15.0, 50:17.5};
-  const dCabo = diamCaboMap[secaoCabo] || (Math.sqrt(secaoCabo)*2.5 + 2);
-  
-  const areaCabo = Math.PI * Math.pow(dCabo/2, 2);
-  const areaEletroduto = Math.PI * Math.pow(diaEletroduto/2, 2);
-  
-  // Taxa de ocupação NBR 5410
-  const taxa1 = 0.53, taxa2 = 0.31, taxa3 = 0.40;
-  
-  const q1 = Math.floor((areaEletroduto * taxa1) / areaCabo);
-  const q2 = Math.floor((areaEletroduto * taxa2) / areaCabo);
-  const q3 = Math.floor((areaEletroduto * taxa3) / areaCabo);
-  
-  const html = resultBox(`Eletroduto Ø${diaEletroduto}mm × cabo ${secaoCabo}mm²`,[
-    ['Área interna do eletroduto', `${areaEletroduto.toFixed(0)} mm²`],
-    ['Área do cabo (ext. Ø${dCabo}mm)', `${areaCabo.toFixed(1)} mm²`],
-    ['Cabos (1 cabo — taxa 53%)', `${q1} condutor(es)`],
-    ['Cabos (2 cabos — taxa 31%)', `${q2} condutores`],
-    ['Cabos (3+ cabos — taxa 40%)', `${q3} condutores`],
-  ]);
-  
-  lastCalcResults.eletroduto = {diaEletroduto, secaoCabo, q1, q2, q3};
-  document.getElementById('resultEletroduto').innerHTML = html;
-  salvarCalculoHistorico('Eletroduto', `Ø${diaEletroduto}mm · ${secaoCabo}mm² · máx ${q3} cabos`);
-}
-
-// --- QUEDA TRIFÁSICO ---
-function calcularQuedaTrifasico(){
-  if(!checkFreeLimit('quedaTri')) return;
-  const Pkw   = parseFloat(document.getElementById('potQuedaTri').value);
-  const V     = parseFloat(document.getElementById('tensaoQuedaTri').value);
-  const fp    = parseFloat(document.getElementById('fpQuedaTri').value);
-  const L     = parseFloat(document.getElementById('compQuedaTri').value);
-  const s     = parseFloat(document.getElementById('secaoQuedaTri').value);
-  if(!Pkw||!V||!L||!s){ alert('Preencha todos os campos!'); return; }
-  
-  const P = Pkw * 1000;
-  const I = P / (Math.sqrt(3) * V * fp);
-  const ro = 0.0172;
-  // Trifásico: ΔU = √3 × I × (R·cosφ + X·senφ) × L
-  // Simplificado sem reatância: ΔU = √3 × ρ × L × I / s
-  const dV = Math.sqrt(3) * ro * L * I / s;
-  const pct = (dV / V) * 100;
-  const ok = pct <= 4;
-  
-  lastCalcResults.quedaTri = {Pkw, V, fp, L, s, I:I.toFixed(2), dV:dV.toFixed(2), pct:pct.toFixed(2), ok};
-  const html = resultBox('Queda de Tensão Trifásico',[
-    ['Potência', `${Pkw} kW`],
-    ['Corrente de linha', `${I.toFixed(2)} A`],
-    ['Queda de tensão (ΔU)', `${dV.toFixed(2)} V`],
-    ['Percentual', `${pct.toFixed(2)}%`],
-    ['Status (limite 4%)', ok ? '✅ Dentro do limite NBR' : '❌ Acima do limite — aumentar seção'],
-  ]);
-  document.getElementById('resultQuedaTri').innerHTML = html;
-  salvarCalculoHistorico('Queda Trifásico', `${Pkw}kW · ${s}mm² · ${pct.toFixed(1)}%`);
-}
-
-// --- BITOLA MOTOR ---
-function calcularBitolaMotor(){
-  if(!checkFreeLimit('motor')) return;
-  const cv     = parseFloat(document.getElementById('potMotor').value);
-  const tensao = document.getElementById('tensaoMotor').value;
-  const partida = document.getElementById('tipoPartidaMotor').value;
-  const fs     = parseFloat(document.getElementById('fsMotor').value) / 100 || 1;
-  if(!cv){ alert('Informe a potência do motor!'); return; }
-  
-  const P = cv * 735.499 * fs; // W
-  const isMonofasico = tensao === '220m';
-  const V = isMonofasico ? 220 : parseFloat(tensao);
-  const fpMotor = 0.85, rendMotor = 0.90;
-  
-  let I;
-  if(isMonofasico){
-    I = P / (V * fpMotor * rendMotor);
-  } else {
-    I = P / (Math.sqrt(3) * V * fpMotor * rendMotor);
-  }
-  
-  // Corrente de partida direta: 6–8× Inom
-  const Ipartida = partida === 'direta' ? I * 7 : partida === 'estrela-triangulo' ? I * 2.5 : I * 3;
-  
-  // Disjuntor Motor (DM / SDMF) — 100–125% da corrente nominal
-  const disjMotor = [10,16,20,25,32,40,50,63,70,80,100].find(d=>d>=I*1.25) || 100;
-  
-  // Contator: corrente nominal × 1.15
-  const contator = Math.ceil(I * 1.15 / 5) * 5;
-  
-  // Condutor
-  const cap_motores = [{s:1.5,c:15},{s:2.5,c:21},{s:4,c:28},{s:6,c:36},{s:10,c:50},{s:16,c:68},{s:25,c:89},{s:35,c:110},{s:50,c:134}];
-  let sec = 50;
-  for(let x of cap_motores) if(x.c >= I * 1.25){ sec = x.s; break; }
-  
-  const partidaNome = partida==='direta' ? 'Direta' : partida==='estrela-triangulo' ? 'Estrela-Triângulo (Y-Δ)' : 'Soft-Starter / Inversor';
-  
-  lastCalcResults.motor = {cv, V, I:I.toFixed(2), Ipartida:Ipartida.toFixed(0), sec, disjMotor, partida};
-  const html = resultBox(`Motor ${cv} cv — ${partidaNome}`,[
-    ['Potência', `${cv} cv = ${(P/1000).toFixed(2)} kW`],
-    ['Corrente nominal estimada', `${I.toFixed(2)} A`],
-    ['Corrente de partida estimada', `${Ipartida.toFixed(0)} A`],
-    ['Disjuntor/Protetor de motor', `${disjMotor} A`],
-    ['Contator (mínimo)', `${contator} A`],
-    ['Seção do condutor', `${sec} mm²`],
-    ['Proteção sobrecarga (relé)', `${(I*0.9).toFixed(1)} – ${(I*1.1).toFixed(1)} A`],
-  ]);
-  document.getElementById('resultMotor').innerHTML = html;
-  salvarCalculoHistorico('Bitola Motor', `${cv}cv · ${V}V · ${sec}mm² · ${disjMotor}A`);
-}
-
-// --- CUSTO ENERGIA MENSAL ---
-let energiaRowCount = 1;
-function addEnergiaRow(){
-  const container = document.getElementById('energiaItens');
-  const div = document.createElement('div');
-  div.className = 'consumo-item-row';
-  div.innerHTML = `
-    <div class="form-group"><label>Equipamento</label><input type="text" placeholder="Ex: Motor"></div>
-    <div class="form-group"><label>Potência (W)</label><input type="number" placeholder="Ex: 2000"></div>
-    <div class="form-group"><label>Horas/dia</label><input type="number" placeholder="Ex: 8" step="0.5"></div>
-    <div class="form-group"><label>Dias/mês</label><input type="number" placeholder="30" value="30"></div>
-    <div style="padding-bottom:.9rem;display:flex;align-items:flex-end;">
-      <button class="btn btn-red" onclick="this.closest('.consumo-item-row').remove()">🗑️</button>
-    </div>`;
-  container.appendChild(div);
-  energiaRowCount++;
-}
-
-function calcularEnergiaMensal(){
-  if(!checkFreeLimit('energiaMes')) return;
-  const rows = document.querySelectorAll('#energiaItens .consumo-item-row');
-  const tarifa = parseFloat(document.getElementById('tarifaEnergia').value) || 0.85;
-  const icms   = parseFloat(document.getElementById('icmsEnergia').value) || 0;
-  const tarifaFinal = tarifa * (1 + icms);
-  
-  let total = 0, items = [];
-  rows.forEach(row=>{
-    const inputs = row.querySelectorAll('input');
-    const nome = inputs[0].value || 'Equipamento';
-    const W = parseFloat(inputs[1].value) || 0;
-    const h = parseFloat(inputs[2].value) || 0;
-    const dias = parseFloat(inputs[3].value) || 30;
-    if(W && h){
-      const kwh = (W * h * dias) / 1000;
-      const custo = kwh * tarifaFinal;
-      total += kwh;
-      items.push({nome, W, h, dias, kwh:kwh.toFixed(2), custo:custo.toFixed(2)});
-    }
-  });
-  
-  if(!items.length){ alert('Preencha pelo menos um equipamento!'); return; }
-  const custoTotal = (total * tarifaFinal).toFixed(2);
-  
-  let html = `<div class="consumo-result-summary"><h4>💰 Custo Estimado de Energia — Mensal</h4>`;
-  html += `<div class="consumo-big">R$ ${custoTotal} <span>/mês</span></div>`;
-  html += `<div class="result-item"><span>Consumo total</span><strong>${total.toFixed(1)} kWh/mês</strong></div>`;
-  html += `<div class="result-item"><span>Tarifa utilizada</span><strong>R$ ${tarifaFinal.toFixed(4)}/kWh</strong></div>`;
-  html += `<div style="border-top:1px solid rgba(255,214,0,.3);margin:.8rem 0;"></div>`;
-  items.forEach(it=>{
-    html += `<div class="result-item"><span>${it.nome} (${it.W}W × ${it.h}h × ${it.dias}d)</span><strong>R$ ${it.custo}</strong></div>`;
-  });
-  html += `</div>`;
-  
-  lastCalcResults.energiaMes = {total, custoTotal, tarifa:tarifaFinal};
-  document.getElementById('resultEnergiaMes').innerHTML = html;
-  salvarCalculoHistorico('Custo Energia', `R$ ${custoTotal}/mês · ${total.toFixed(1)} kWh`);
-}
-
-/* ======================== PATCH INIT ======================== */
-// Override the original INIT to also setup auth and render historico
-const _origLoad = window.onload;
-window.addEventListener('load', () => {
-  initFree();
-  initTheme();
-  updateUnidades();
-  renderHistorico();
-  setTimeout(setupAuthListener, 500);
-  // Update user area if already logged
-  if(window.auth && window.auth.currentUser){
-    const u = window.auth.currentUser;
-    document.getElementById('userAvatarIcon').textContent = '✅';
-    document.getElementById('userNameShort').textContent = (u.email||'').split('@')[0].slice(0,10);
-  }
-});
-
+/* ======================== INIT ======================== */
+window.addEventListener('load', () => { initTrial(); initTheme(); updateUnidades(); });
 
 /* ======================== NOVAS FUNCIONALIDADES ======================== */
 // ===== NOVAS FUNCIONALIDADES - ELETRICOPRO =====
@@ -2606,7 +1690,7 @@ function updateUnidades() {
 }
 
 function calcularConversao() {
-  if(!checkFreeLimit('conversao')) return;
+  if(checkTrialExpired()) return;
   const tipo = document.getElementById('tipoConversao').value;
   const valor = parseFloat(document.getElementById('valorConversao').value);
   const unidade = document.getElementById('unidadeConversao').value;
@@ -2668,7 +1752,7 @@ function calcularConversao() {
 
 // ===== 2. CALCULADORA DE ILUMINAÇÃO =====
 function calcularIluminacao() {
-  if(!checkFreeLimit('iluminacao')) return;
+  if(checkTrialExpired()) return;
   
   const area = parseFloat(document.getElementById('areaIlum').value);
   const altura = parseFloat(document.getElementById('alturaIlum').value);
@@ -2737,7 +1821,7 @@ function calcularIluminacao() {
 
 // ===== 3. CALCULADORA DE CURTO-CIRCUITO =====
 function calcularCurtoCircuito() {
-  if(!checkFreeLimit('curtoCircuito')) return;
+  if(checkTrialExpired()) return;
   
   const tensao = parseFloat(document.getElementById('tensaoCC').value);
   const potTrafo = parseFloat(document.getElementById('potTrafo').value);
@@ -2812,7 +1896,7 @@ function adicionarCargaFD() {
 }
 
 function calcularFatorDemanda() {
-  if(!checkFreeLimit('fatorDemanda')) return;
+  if(checkTrialExpired()) return;
   
   const rows = document.querySelectorAll('.carga-fd-row');
   if (!rows.length) { alert('Adicione pelo menos uma carga!'); return; }
@@ -3001,90 +2085,5 @@ if ('serviceWorker' in navigator) {
 }
 </script>
  
-
-<!-- ========== AUTH MODAL ========== -->
-<div id="authModal" class="modal-overlay" style="display:none;" onclick="closeAuthModalOutside(event)">
-  <div class="modal-box">
-    <button class="modal-close" onclick="closeAuthModal()">✕</button>
-    <h3>👤 Minha Conta</h3>
-    <div id="loggedOutArea">
-      <div class="modal-tabs">
-        <div class="modal-tab active" onclick="switchAuthTab('login')">Entrar</div>
-        <div class="modal-tab" onclick="switchAuthTab('register')">Cadastrar</div>
-      </div>
-      <div id="formLogin" class="modal-form active">
-        <div class="form-group"><label>E-mail</label><input type="email" id="loginEmail" placeholder="seu@email.com"></div>
-        <div class="form-group"><label>Senha</label><input type="password" id="loginPass" placeholder="Sua senha"></div>
-        <button class="btn" style="width:100%;justify-content:center;" onclick="fazerLogin()">🔑 Entrar</button>
-        <div id="loginStatus" class="modal-status"></div>
-      </div>
-      <div id="formRegister" class="modal-form">
-        <div class="form-group"><label>Nome</label><input type="text" id="regNome" placeholder="Seu nome"></div>
-        <div class="form-group"><label>E-mail</label><input type="email" id="regEmail" placeholder="seu@email.com"></div>
-        <div class="form-group"><label>Senha (mín. 6 dígitos)</label><input type="password" id="regPass" placeholder="Criar senha"></div>
-        <button class="btn" style="width:100%;justify-content:center;" onclick="fazerCadastro()">📝 Criar Conta</button>
-        <div id="regStatus" class="modal-status"></div>
-      </div>
-    </div>
-    <div id="loggedInArea" style="display:none;">
-      <div style="text-align:center;padding:1rem 0;">
-        <div style="font-size:2.5rem;margin-bottom:.5rem;">👤</div>
-        <div id="loggedUserEmail" style="font-weight:700;margin-bottom:.3rem;"></div>
-        <div id="loggedUserPlan" style="font-size:.82rem;color:var(--text-muted);margin-bottom:1.2rem;"></div>
-        <button class="btn btn-green" onclick="openScreen('proScreen','Versão PRO')" style="margin-bottom:.5rem;width:100%;justify-content:center;">⚡ Ver Planos PRO</button>
-        <button class="btn btn-red" onclick="fazerLogout()" style="width:100%;justify-content:center;">🚪 Sair da Conta</button>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- ========== LOCK OVERLAY (Free Limit) ========== -->
-<div id="lockOverlay" class="lock-overlay" style="display:none;">
-  <div class="lock-overlay-box">
-    <div class="lock-overlay-icon">🔒</div>
-    <h2>Limite Free atingido</h2>
-    <p>Você já usou 2× este recurso hoje no plano gratuito.<br>Escolha um plano PRO para uso ilimitado:</p>
-    <div class="plans">
-      <div class="lock-plan" onclick="selecionarEIrPro('monthly')">
-        <div><div class="lock-plan-name">Mensal</div></div>
-        <div class="lock-plan-price">R$ 19,90</div>
-      </div>
-      <div class="lock-plan highlight" onclick="selecionarEIrPro('annual')">
-        <div><div class="lock-plan-name">Anual <span class="lock-plan-badge">-75%</span></div></div>
-        <div class="lock-plan-price">R$ 59,90</div>
-      </div>
-      <div class="lock-plan" onclick="selecionarEIrPro('lifetime')">
-        <div><div class="lock-plan-name">Vitalício <span class="lock-plan-badge">MELHOR</span></div></div>
-        <div class="lock-plan-price">R$ 89,90</div>
-      </div>
-    </div>
-    <button class="lock-btn-close" onclick="closeLockOverlay()">Continuar no Free</button>
-  </div>
-</div>
-
-<!-- ========== PRO PLANS MODAL ========== -->
-<div id="proModal" class="lock-overlay" style="display:none;">
-  <div class="lock-overlay-box">
-    <div class="lock-overlay-icon">⚡</div>
-    <h2>Ativar Elétrica<span style="color:#66bb6a;">Pro</span></h2>
-    <p>Use sem limites, exporte orçamentos e acesse todas as calculadoras:</p>
-    <div class="plans">
-      <div class="lock-plan" onclick="selecionarEIrPro('monthly')" id="proModal_monthly">
-        <div><div class="lock-plan-name">Mensal</div><div style="font-size:.75rem;color:rgba(255,255,255,.6);">30 dias</div></div>
-        <div class="lock-plan-price">R$ 19,90</div>
-      </div>
-      <div class="lock-plan highlight" onclick="selecionarEIrPro('annual')" id="proModal_annual">
-        <div><div class="lock-plan-name">Anual <span class="lock-plan-badge">-75%</span></div><div style="font-size:.75rem;color:rgba(255,255,255,.6);">Só R$ 4,99/mês</div></div>
-        <div class="lock-plan-price">R$ 59,90</div>
-      </div>
-      <div class="lock-plan" onclick="selecionarEIrPro('lifetime')" id="proModal_lifetime">
-        <div><div class="lock-plan-name">Vitalício <span class="lock-plan-badge">MELHOR</span></div><div style="font-size:.75rem;color:rgba(255,255,255,.6);">Pague 1x, use sempre</div></div>
-        <div class="lock-plan-price">R$ 89,90</div>
-      </div>
-    </div>
-    <button class="lock-btn-close" onclick="document.getElementById('proModal').style.display='none'">Fechar</button>
-  </div>
-</div>
-
 </body>
 </html>
