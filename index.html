@@ -997,33 +997,38 @@
 
   <!-- ========== CALC: ELETRODUTO ========== -->
   <div id="calcEletroduto" class="screen">
-    <div class="screen-title"><div class="dot"></div>Eletroduto</div>
+    <div class="screen-title"><div class="dot"></div>Eletroduto — Quantos condutores cabem</div>
     <div class="calc-card">
-      <h3>🧵 Dimensionamento de Eletroduto (ocupação)</h3>
+      <h3>🪣 Cálculo de Eletroduto</h3>
+      <p style="font-size:.82rem;color:var(--text-muted);margin-bottom:1rem;">NBR 5410 — Taxa de ocupação máx. 53% (1 cabo) / 31% (2 cabos) / 40% (3+ cabos)</p>
+      <div class="form-group"><label>Diâmetro do eletroduto (mm):</label>
+        <select id="diaEletroduto">
+          <option value="16">Ø 16 mm (1/2")</option>
+          <option value="20">Ø 20 mm (3/4")</option>
+          <option value="25">Ø 25 mm (1")</option>
+          <option value="32">Ø 32 mm (1¼")</option>
+          <option value="40">Ø 40 mm (1½")</option>
+          <option value="50">Ø 50 mm (2")</option>
+          <option value="63">Ø 63 mm (2½")</option>
+          <option value="75">Ø 75 mm (3")</option>
+        </select>
+      </div>
       <div class="form-group"><label>Seção do condutor (mm²):</label>
-        <select id="eletroSecao">
-          <option value="1.5">1,5</option>
-          <option value="2.5">2,5</option>
-          <option value="4">4</option>
-          <option value="6">6</option>
-          <option value="10">10</option>
-          <option value="16">16</option>
-          <option value="25">25</option>
-          <option value="35">35</option>
-          <option value="50">50</option>
+        <select id="secaoEletroduto">
+          <option value="1.5">1,5 mm² — diam. ext. ≈ 5,3 mm</option>
+          <option value="2.5">2,5 mm² — diam. ext. ≈ 5,8 mm</option>
+          <option value="4">4 mm² — diam. ext. ≈ 6,5 mm</option>
+          <option value="6">6 mm² — diam. ext. ≈ 7,4 mm</option>
+          <option value="10">10 mm² — diam. ext. ≈ 8,9 mm</option>
+          <option value="16">16 mm² — diam. ext. ≈ 10,2 mm</option>
+          <option value="25">25 mm² — diam. ext. ≈ 13,1 mm</option>
+          <option value="35">35 mm² — diam. ext. ≈ 15,0 mm</option>
+          <option value="50">50 mm² — diam. ext. ≈ 17,5 mm</option>
         </select>
       </div>
-      <div class="form-group"><label>Quantidade de condutores:</label><input type="number" id="eletroQtd" placeholder="Ex: 4" value="3" min="1"></div>
-      <div class="form-group"><label>Taxa máxima de ocupação (%):</label>
-        <select id="eletroOcupacao">
-          <option value="40">40% (recomendado)</option>
-          <option value="60">60%</option>
-        </select>
-      </div>
-      <button class="btn" onclick="calcularEletroduto()">📏 Calcular</button>
+      <button class="btn" onclick="calcularEletroduto()">⚡ Calcular</button>
       <button class="btn btn-yellow" onclick="gerarPDFCalc('Eletroduto')">📄 PDF</button>
       <div id="resultEletroduto"></div>
-      <p style="margin-top:0.8rem;color:var(--text-muted);font-size:0.85rem;">Usa diâmetros típicos (tabela interna do app). Para cabos especiais, confirme o diâmetro externo do fabricante.</p>
     </div>
   </div>
 
