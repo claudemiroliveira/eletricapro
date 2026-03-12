@@ -539,7 +539,16 @@
     }
     .pro-vender-item strong { display:block; font-size:0.92rem; margin-bottom:0.2rem; }
     .pro-vender-item p { font-size:0.82rem; color:var(--text-muted); line-height:1.6; margin:0; }
-  </style>
+  
+
+    /* ===== HISTÓRICO ===== */
+    .hist-item{background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.14);border-radius:12px;padding:0.85rem 0.9rem;margin:0.65rem 0;}
+    .hist-head{display:flex;justify-content:space-between;gap:0.8rem;align-items:flex-start;}
+    .hist-head strong{font-size:0.95rem;}
+    .hist-meta{color:var(--text-muted);font-size:0.78rem;margin-top:0.15rem;}
+    .hist-pre{white-space:pre-wrap;font-family:ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace;font-size:0.82rem;color:rgba(255,255,255,0.85);margin-top:0.55rem;line-height:1.35;}
+
+</style>
 </head>
 <body>
 
@@ -606,7 +615,12 @@
         <div class="tile-icon">📋</div>
         <div class="tile-label">Normas</div>
       </div>
-    </div>
+    
+      <div class="icon-tile" onclick="openScreen('historico', 'Histórico')">
+        <div class="tile-icon">🕘</div>
+        <div class="tile-label">Histórico</div>
+      </div>
+</div>
 
     <!-- ========== BOTÃO PRO ========== -->
     <div style="margin-top:1.5rem;">
@@ -656,6 +670,23 @@
       <div class="sub-tile" onclick="openScreen('calcFatorDemanda','Fator de Demanda')">
         <div class="s-icon">📊</div>
         <div class="s-text"><strong>Fator de Demanda</strong><span>Demanda Máxima</span></div>
+      </div>
+
+      <div class="sub-tile" onclick="openScreen('calcBitolaMotor','Bitola de Motor')">
+        <div class="s-icon">🧰</div>
+        <div class="s-text"><strong>Bitola Motor</strong><span>Condutor & Disjuntor</span></div>
+      </div>
+      <div class="sub-tile" onclick="openScreen('calcQuedaTri','Queda Trifásica')">
+        <div class="s-icon">⚡</div>
+        <div class="s-text"><strong>Queda Trifásico</strong><span>ΔV em 3F</span></div>
+      </div>
+      <div class="sub-tile" onclick="openScreen('calcEletroduto','Eletroduto')">
+        <div class="s-icon">🧵</div>
+        <div class="s-text"><strong>Eletroduto</strong><span>Ocupação / Diâmetro</span></div>
+      </div>
+      <div class="sub-tile" onclick="openScreen('calcDRDPS','DR / DPS')">
+        <div class="s-icon">🛡️</div>
+        <div class="s-text"><strong>DR / DPS</strong><span>Seleção rápida</span></div>
       </div>
     </div>
   </div>
@@ -898,7 +929,136 @@
     </div>
   </div>
 
-  <!-- ========== TABELAS HOME ========== -->
+  
+  <!-- ========== CALC: BITOLA MOTOR ========== -->
+  <div id="calcBitolaMotor" class="screen">
+    <div class="screen-title"><div class="dot"></div>Bitola de Motor</div>
+    <div class="calc-card">
+      <h3>🧰 Bitola para Motor (condutor / disjuntor)</h3>
+      <div class="form-group"><label>Potência:</label>
+        <div class="inline" style="display:flex; gap:0.6rem;">
+          <input type="number" id="motorPotencia" placeholder="Ex: 5" style="flex:1;">
+          <select id="motorUnidade" style="width:140px;">
+            <option value="cv">CV</option>
+            <option value="kw">kW</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-group"><label>Tipo:</label>
+        <select id="motorFases">
+          <option value="tri">Trifásico (3F)</option>
+          <option value="mono">Monofásico (1F)</option>
+        </select>
+      </div>
+      <div class="form-group"><label>Tensão (V):</label><input type="number" id="motorTensao" placeholder="Ex: 220" value="220"></div>
+      <div class="form-group"><label>Fator de potência (cos φ):</label><input type="number" id="motorFP" placeholder="Ex: 0.86" value="0.86" step="0.01" min="0.1" max="1"></div>
+      <div class="form-group"><label>Rendimento (η):</label><input type="number" id="motorEta" placeholder="Ex: 0.90" value="0.90" step="0.01" min="0.1" max="1"></div>
+      <div class="form-group"><label>Tipo de instalação (capacidade do cabo):</label>
+        <select id="motorTipoInstalacao">
+          <option value="B1">B1 (eletroduto embutido)</option>
+          <option value="B2">B2 (eletroduto aparente)</option>
+          <option value="C">C (bandeja / ao ar)</option>
+        </select>
+      </div>
+      <button class="btn" onclick="calcularBitolaMotor()">⚙️ Calcular</button>
+      <button class="btn btn-yellow" onclick="gerarPDFCalc('Bitola Motor')">📄 PDF</button>
+      <div id="resultBitolaMotor"></div>
+      <p style="margin-top:0.8rem;color:var(--text-muted);font-size:0.85rem;">
+        Observação: cálculo rápido para dimensionamento inicial. Para projeto final, aplicar fatores de correção, método de partida, agrupamento e NBR 5410.
+      </p>
+    </div>
+  </div>
+
+  <!-- ========== CALC: QUEDA TRIFÁSICO ========== -->
+  <div id="calcQuedaTri" class="screen">
+    <div class="screen-title"><div class="dot"></div>Queda Trifásica</div>
+    <div class="calc-card">
+      <h3>⚡ Queda de Tensão Trifásica (3F)</h3>
+      <div class="form-group"><label>Corrente (A):</label><input type="number" id="correnteQuedaTri" placeholder="Ex: 20"></div>
+      <div class="form-group"><label>Distância (m) (um sentido):</label><input type="number" id="distanciaQuedaTri" placeholder="Ex: 50"></div>
+      <div class="form-group"><label>Seção do condutor (mm²):</label>
+        <select id="secaoQuedaTri">
+          <option value="1.5">1,5 mm²</option><option value="2.5">2,5 mm²</option>
+          <option value="4">4 mm²</option><option value="6">6 mm²</option>
+          <option value="10">10 mm²</option><option value="16">16 mm²</option>
+          <option value="25">25 mm²</option><option value="35">35 mm²</option>
+          <option value="50">50 mm²</option>
+          <option value="70">70 mm²</option>
+          <option value="95">95 mm²</option>
+        </select>
+      </div>
+      <div class="form-group"><label>Tensão (V) (linha-linha):</label><input type="number" id="tensaoQuedaTri" placeholder="Ex: 380" value="380"></div>
+      <button class="btn" onclick="calcularQuedaTensaoTrifasica()">⚡ Calcular</button>
+      <button class="btn btn-yellow" onclick="gerarPDFCalc('Queda Trifásica')">📄 PDF</button>
+      <div id="resultQuedaTri"></div>
+      <p style="margin-top:0.8rem;color:var(--text-muted);font-size:0.85rem;">Fórmula aproximada (cobre): ΔV ≈ √3 · I · ρ · L / S</p>
+    </div>
+  </div>
+
+  <!-- ========== CALC: ELETRODUTO ========== -->
+  <div id="calcEletroduto" class="screen">
+    <div class="screen-title"><div class="dot"></div>Eletroduto</div>
+    <div class="calc-card">
+      <h3>🧵 Dimensionamento de Eletroduto (ocupação)</h3>
+      <div class="form-group"><label>Seção do condutor (mm²):</label>
+        <select id="eletroSecao">
+          <option value="1.5">1,5</option>
+          <option value="2.5">2,5</option>
+          <option value="4">4</option>
+          <option value="6">6</option>
+          <option value="10">10</option>
+          <option value="16">16</option>
+          <option value="25">25</option>
+          <option value="35">35</option>
+          <option value="50">50</option>
+        </select>
+      </div>
+      <div class="form-group"><label>Quantidade de condutores:</label><input type="number" id="eletroQtd" placeholder="Ex: 4" value="3" min="1"></div>
+      <div class="form-group"><label>Taxa máxima de ocupação (%):</label>
+        <select id="eletroOcupacao">
+          <option value="40">40% (recomendado)</option>
+          <option value="60">60%</option>
+        </select>
+      </div>
+      <button class="btn" onclick="calcularEletroduto()">📏 Calcular</button>
+      <button class="btn btn-yellow" onclick="gerarPDFCalc('Eletroduto')">📄 PDF</button>
+      <div id="resultEletroduto"></div>
+      <p style="margin-top:0.8rem;color:var(--text-muted);font-size:0.85rem;">Usa diâmetros típicos (tabela interna do app). Para cabos especiais, confirme o diâmetro externo do fabricante.</p>
+    </div>
+  </div>
+
+  <!-- ========== CALC: DR / DPS ========== -->
+  <div id="calcDRDPS" class="screen">
+    <div class="screen-title"><div class="dot"></div>DR / DPS</div>
+    <div class="calc-card">
+      <h3>🛡️ Seleção rápida de DR e DPS</h3>
+      <div class="form-group"><label>Disjuntor geral / corrente do circuito (A):</label><input type="number" id="drDisj" placeholder="Ex: 50" value="50"></div>
+      <div class="form-group"><label>Aplicação:</label>
+        <select id="drAplicacao">
+          <option value="pessoas">Proteção de pessoas (30 mA)</option>
+          <option value="incendio">Proteção contra incêndio (300 mA)</option>
+        </select>
+      </div>
+      <div class="form-group"><label>Rede / tensão:</label>
+        <select id="dpsRede">
+          <option value="127_220">127/220 V (residencial)</option>
+          <option value="220_380">220/380 V (trifásico)</option>
+        </select>
+      </div>
+      <div class="form-group"><label>Tipo de instalação:</label>
+        <select id="dpsLocal">
+          <option value="residencial">Residencial / comércio leve</option>
+          <option value="industrial">Industrial / alta exposição</option>
+        </select>
+      </div>
+      <button class="btn" onclick="calcularDRDPS()">✅ Recomendar</button>
+      <button class="btn btn-yellow" onclick="gerarPDFCalc('DR / DPS')">📄 PDF</button>
+      <div id="resultDRDPS"></div>
+      <p style="margin-top:0.8rem;color:var(--text-muted);font-size:0.85rem;">Resultado orientativo. Para especificação final, considerar esquema de aterramento, nível de surtos e seletividade.</p>
+    </div>
+  </div>
+
+<!-- ========== TABELAS HOME ========== -->
   <div id="tabelasHome" class="screen">
     <div class="screen-title"><div class="dot"></div>Tabelas Técnicas</div>
     <div class="sub-grid">
@@ -1178,6 +1338,8 @@
       <div id="listaItens"><p style="color:var(--text-muted);">Nenhum item adicionado</p></div>
       <div class="total-box" id="totalOrcamento">Total: R$ 0,00</div>
       <button class="btn btn-yellow" style="margin-top:0.8rem;" onclick="gerarPDFOrcamento()">📄 Gerar PDF do Orçamento</button>
+      <button class="btn" style="margin-top:0.6rem;" onclick="enviarOrcamentoWhatsApp()">📲 Enviar por WhatsApp</button>
+      <button class="btn btn-red" style="margin-top:0.6rem;" onclick="limparOrcamento()">🧹 Limpar Orçamento</button>
     </div>
   </div>
 
@@ -1248,7 +1410,25 @@
   </div>
 
 <!-- ========== TELA PRO ========== -->
-  <div id="proScreen" class="screen">
+  
+  <!-- ========== HISTÓRICO ========== -->
+  <div id="historico" class="screen">
+    <div class="screen-title"><div class="dot"></div>Histórico</div>
+    <div class="calc-card">
+      <h3>🕘 Histórico de Cálculos e Orçamentos</h3>
+      <div style="display:flex; gap:0.6rem; flex-wrap:wrap; margin:0.6rem 0 1rem;">
+        <button class="btn" onclick="exportarHistorico()">⬇️ Exportar (.json)</button>
+        <label class="btn" style="cursor:pointer;">⬆️ Importar (.json)
+          <input id="importHistoricoFile" type="file" accept="application/json" style="display:none" onchange="importarHistorico(this.files[0])">
+        </label>
+        <button class="btn btn-red" onclick="limparHistorico()">🧹 Limpar</button>
+      </div>
+      <div id="historicoLista"></div>
+      <p style="margin-top:0.8rem;color:var(--text-muted);font-size:0.85rem;">Dica: o histórico e os campos ficam salvos neste dispositivo (localStorage).</p>
+    </div>
+  </div>
+
+<div id="proScreen" class="screen">
     <div class="screen-title"><div class="dot"></div>Versao PRO</div>
 
     <div class="pro-hero">
@@ -1622,8 +1802,501 @@ function gerarPDFOrcamento(){
   doc.save('orcamento_'+pdfSafe(nome).replace(/ /g,'_')+'_'+Date.now()+'.pdf');
 }
 
+
+
+/* ======================== SALVAMENTO (AUTO) ======================== */
+const EP_FIELD_PREFIX = 'eletricapro_field_';
+const EP_HIST_KEY = 'eletricapro_historico_v1';
+const EP_ORC_KEY  = 'eletricapro_orcamento_v1';
+const EP_CONSUMO_KEY = 'eletricapro_consumo_v1';
+const EP_FD_KEY = 'eletricapro_fatordemanda_v1';
+
+function autoRestoreFields(){
+  document.querySelectorAll('input[id], select[id], textarea[id]').forEach(el=>{
+    const k = EP_FIELD_PREFIX + el.id;
+    const saved = localStorage.getItem(k);
+    if(saved!==null){
+      if(el.type==='checkbox') el.checked = saved==='1';
+      else el.value = saved;
+    }
+    const save=()=>{
+      if(el.type==='checkbox') localStorage.setItem(k, el.checked?'1':'0');
+      else localStorage.setItem(k, el.value);
+    };
+    el.addEventListener('input', save);
+    el.addEventListener('change', save);
+  });
+}
+
+function histGet(){
+  try{ return JSON.parse(localStorage.getItem(EP_HIST_KEY) || '[]'); }catch(e){ return []; }
+}
+function histSet(arr){ localStorage.setItem(EP_HIST_KEY, JSON.stringify(arr)); }
+function addHistorico(tipo, titulo, texto){
+  const arr = histGet();
+  arr.unshift({ id: Date.now(), ts: new Date().toISOString(), tipo, titulo, texto: (texto||'').slice(0, 4000) });
+  while(arr.length>120) arr.pop();
+  histSet(arr);
+}
+function formatTs(iso){
+  try{ return new Date(iso).toLocaleString('pt-BR'); }catch(e){ return iso; }
+}
+function renderHistorico(){
+  const lista = document.getElementById('historicoLista');
+  if(!lista) return;
+  const arr = histGet();
+  if(!arr.length){
+    lista.innerHTML = `<p style="color:var(--text-muted);">Nenhum registro ainda. Faça um cálculo ou gere um orçamento.</p>`;
+    return;
+  }
+  lista.innerHTML = arr.map(e=>`
+    <div class="hist-item">
+      <div class="hist-head">
+        <div>
+          <strong>${e.titulo}</strong>
+          <div class="hist-meta">${formatTs(e.ts)} • ${e.tipo}</div>
+        </div>
+        <button class="btn btn-red" style="padding:0.35rem 0.6rem;" onclick="removerHistorico(${e.id})">🗑️</button>
+      </div>
+      <div class="hist-pre">${(e.texto||'').replace(/</g,'&lt;')}</div>
+    </div>
+  `).join('');
+}
+function removerHistorico(id){
+  histSet(histGet().filter(x=>x.id!==id));
+  renderHistorico();
+}
+function limparHistorico(){
+  if(!confirm('Deseja limpar todo o histórico?')) return;
+  histSet([]);
+  renderHistorico();
+}
+function exportarHistorico(){
+  const data = { app:'EletricaPro', version:1, exportedAt:new Date().toISOString(), historico: histGet() };
+  const blob = new Blob([JSON.stringify(data,null,2)], {type:'application/json'});
+  const a=document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'eletricapro_historico_'+Date.now()+'.json';
+  document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(()=>URL.revokeObjectURL(a.href), 1200);
+}
+async function importarHistorico(file){
+  if(!file) return;
+  try{
+    const txt = await file.text();
+    const obj = JSON.parse(txt);
+    const arr = obj.historico || obj || [];
+    if(!Array.isArray(arr)) throw new Error('Formato inválido');
+    const merged = [...arr, ...histGet()]
+      .filter(x=>x && typeof x==='object' && x.id)
+      .sort((a,b)=>(b.id||0)-(a.id||0));
+    histSet(merged.slice(0,120));
+    alert('Histórico importado com sucesso!');
+    renderHistorico();
+  }catch(e){
+    alert('Falha ao importar: '+e.message);
+  }
+}
+
+// Renderiza histórico automaticamente ao abrir a tela
+const _openScreenOriginal = openScreen;
+openScreen = function(id, title){
+  _openScreenOriginal(id, title);
+  if(id==='historico') renderHistorico();
+};
+
+/* ======================== ORÇAMENTO: SALVAR / WHATSAPP ======================== */
+function saveOrcamento(){
+  const data = {
+    cliente:{
+      nome: document.getElementById('nomeCliente')?.value||'',
+      tel:  document.getElementById('telefoneCliente')?.value||'',
+      end:  document.getElementById('enderecoCliente')?.value||''
+    },
+    itens: itensOrcamento
+  };
+  localStorage.setItem(EP_ORC_KEY, JSON.stringify(data));
+}
+function loadOrcamento(){
+  try{
+    const raw = localStorage.getItem(EP_ORC_KEY);
+    if(!raw) return;
+    const data = JSON.parse(raw);
+    if(data?.cliente){
+      if(document.getElementById('nomeCliente')) document.getElementById('nomeCliente').value = data.cliente.nome||'';
+      if(document.getElementById('telefoneCliente')) document.getElementById('telefoneCliente').value = data.cliente.tel||'';
+      if(document.getElementById('enderecoCliente')) document.getElementById('enderecoCliente').value = data.cliente.end||'';
+    }
+    if(Array.isArray(data?.itens)) itensOrcamento = data.itens;
+    renderItens();
+  }catch(e){}
+}
+function limparOrcamento(){
+  if(!confirm('Limpar orçamento atual?')) return;
+  itensOrcamento=[];
+  if(document.getElementById('itemDescricao')) document.getElementById('itemDescricao').value='';
+  if(document.getElementById('itemQuantidade')) document.getElementById('itemQuantidade').value='1';
+  if(document.getElementById('itemValor')) document.getElementById('itemValor').value='';
+  renderItens();
+  saveOrcamento();
+}
+function onlyDigits(s){ return (s||'').toString().replace(/\D/g,''); }
+function enviarOrcamentoWhatsApp(){
+  if(!itensOrcamento.length){ alert('Adicione itens ao orçamento primeiro.'); return; }
+  const nome = document.getElementById('nomeCliente')?.value||'';
+  const telRaw = document.getElementById('telefoneCliente')?.value||'';
+  let tel = onlyDigits(telRaw);
+  if(!tel){ alert('Informe o telefone do cliente (WhatsApp) no campo Telefone.'); return; }
+  if(tel.length<=11) tel = '55' + tel; // assume Brasil se não tiver DDI
+
+  const total = itensOrcamento.reduce((s,i)=>s+i.total,0);
+  const linhas = itensOrcamento.map(i=>`- ${i.d}: ${i.q} x R$ ${i.v.toFixed(2)} = R$ ${i.total.toFixed(2)}`);
+  const msg = [
+    'Olá! Segue orçamento:',
+    nome?`Cliente: ${nome}`:'',
+    document.getElementById('enderecoCliente')?.value ? `Endereço: ${document.getElementById('enderecoCliente').value}` : '',
+    '',
+    ...linhas,
+    '',
+    `Total: R$ ${total.toFixed(2)}`,
+    '',
+    'Gerado no ElétricaPro'
+  ].filter(Boolean).join('\n');
+
+  addHistorico('orçamento','Orçamento (WhatsApp)', msg);
+  const url = `https://wa.me/${tel}?text=${encodeURIComponent(msg)}`;
+  window.open(url,'_blank');
+  saveOrcamento();
+}
+
+// Ajusta renderItens para salvar automaticamente
+const _renderItensOriginal = renderItens;
+renderItens = function(){
+  _renderItensOriginal();
+  saveOrcamento();
+};
+
+/* ======================== CONSUMO / FD: SALVAR LISTAS ======================== */
+function saveConsumo(){
+  const rows = document.querySelectorAll('.consumo-item-row');
+  const itens=[];
+  rows.forEach(row=>{
+    const inputs=row.querySelectorAll('input');
+    if(inputs.length>=3){
+      itens.push({nome:inputs[0].value||'', W:inputs[1].value||'', h:inputs[2].value||''});
+    }
+  });
+  localStorage.setItem(EP_CONSUMO_KEY, JSON.stringify(itens));
+}
+function loadConsumo(){
+  try{
+    const raw = localStorage.getItem(EP_CONSUMO_KEY);
+    if(!raw) return;
+    const itens = JSON.parse(raw);
+    if(!Array.isArray(itens) || !itens.length) return;
+    const container = document.getElementById('consumoItens');
+    if(!container) return;
+    container.innerHTML='';
+    consumoRowCount=1;
+    for(const _ of itens){ addConsumoRow(); }
+    const rows = document.querySelectorAll('.consumo-item-row');
+    rows.forEach((row,idx)=>{
+      const inputs=row.querySelectorAll('input');
+      const it=itens[idx]||{};
+      if(inputs[0]) inputs[0].value=it.nome||'';
+      if(inputs[1]) inputs[1].value=it.W||'';
+      if(inputs[2]) inputs[2].value=it.h||'';
+    });
+  }catch(e){}
+}
+
+const _addConsumoRowOriginal = addConsumoRow;
+addConsumoRow = function(){
+  _addConsumoRowOriginal();
+  const rows = document.querySelectorAll('.consumo-item-row');
+  const last = rows[rows.length-1];
+  if(last){
+    last.querySelectorAll('input').forEach(i=>{ i.addEventListener('input', saveConsumo); i.addEventListener('change', saveConsumo); });
+    const btn = last.querySelector('button');
+    if(btn){
+      const old = btn.getAttribute('onclick') || '';
+      btn.setAttribute('onclick', old + '; saveConsumo();');
+    }
+  }
+  saveConsumo();
+};
+
+const _calcularConsumoOriginal = calcularConsumo;
+calcularConsumo = function(){
+  _calcularConsumoOriginal();
+  const r = lastCalcResults.consumo;
+  if(r){ addHistorico('cálculo','Consumo', `Consumo total: ${r.totalW.toFixed(1)} kWh/mês\nCusto estimado: R$ ${r.custo}`); }
+  saveConsumo();
+};
+
+function saveFD(){
+  const rows = document.querySelectorAll('.carga-fd-row');
+  const itens=[];
+  rows.forEach(row=>{
+    const inputs=row.querySelectorAll('input');
+    if(inputs.length>=4){
+      itens.push({nome:inputs[0].value||'', pot:inputs[1].value||'', qtd:inputs[2].value||'1', fd:inputs[3].value||'75'});
+    }
+  });
+  localStorage.setItem(EP_FD_KEY, JSON.stringify(itens));
+}
+function loadFD(){
+  try{
+    const raw = localStorage.getItem(EP_FD_KEY);
+    if(!raw) return;
+    const itens = JSON.parse(raw);
+    if(!Array.isArray(itens) || !itens.length) return;
+    const container = document.getElementById('cargasFD');
+    if(!container) return;
+    container.innerHTML='';
+    for(const _ of itens){ adicionarCargaFD(); }
+    const rows = document.querySelectorAll('.carga-fd-row');
+    rows.forEach((row,idx)=>{
+      const inputs=row.querySelectorAll('input');
+      const it=itens[idx]||{};
+      if(inputs[0]) inputs[0].value=it.nome||'';
+      if(inputs[1]) inputs[1].value=it.pot||'';
+      if(inputs[2]) inputs[2].value=it.qtd||'1';
+      if(inputs[3]) inputs[3].value=it.fd||'75';
+      inputs.forEach(i=>{ i.addEventListener('input', saveFD); i.addEventListener('change', saveFD); });
+      const btn = row.querySelector('button');
+      if(btn){
+        const old = btn.getAttribute('onclick') || '';
+        btn.setAttribute('onclick', old + '; saveFD();');
+      }
+    });
+  }catch(e){}
+}
+const _adicionarCargaFDOriginal = adicionarCargaFD;
+adicionarCargaFD = function(){ _adicionarCargaFDOriginal(); saveFD(); };
+const _calcularFatorDemandaOriginal = calcularFatorDemanda;
+calcularFatorDemanda = function(){
+  _calcularFatorDemandaOriginal();
+  const r = lastCalcResults.fatorDemanda;
+  if(r){
+    addHistorico('cálculo','Fator de Demanda', `Pot. instalada: ${r.potenciaInstalada.toFixed(0)} W\nDemanda: ${r.demandaMaxima.toFixed(0)} W\nFD global: ${r.fdGlobal.toFixed(1)}%\nCorrente: ${r.correnteDemanda.toFixed(2)} A\nSeção: ${r.secaoRec} mm²\nDisj.: ${r.disjRec} A`);
+  }
+  saveFD();
+};
+
+/* ======================== NOVAS CALCULADORAS ======================== */
+function _capacidadePorMetodo(tipo){
+  const cap={
+    B1:[{s:1.5,c:15.5},{s:2.5,c:21},{s:4,c:28},{s:6,c:36},{s:10,c:50},{s:16,c:68},{s:25,c:89},{s:35,c:110},{s:50,c:134},{s:70,c:170},{s:95,c:210}],
+    B2:[{s:1.5,c:17.5},{s:2.5,c:24},{s:4,c:32},{s:6,c:41},{s:10,c:57},{s:16,c:76},{s:25,c:101},{s:35,c:125},{s:50,c:151},{s:70,c:192},{s:95,c:232}],
+    C: [{s:1.5,c:19.5},{s:2.5,c:27},{s:4,c:36},{s:6,c:46},{s:10,c:63},{s:16,c:85},{s:25,c:112},{s:35,c:138},{s:50,c:168},{s:70,c:213},{s:95,c:258}]
+  };
+  return cap[tipo]||cap.B1;
+}
+
+function calcularBitolaMotor(){
+  if(checkTrialExpired()) return;
+  const pot = parseFloat(document.getElementById('motorPotencia').value);
+  const unidade = document.getElementById('motorUnidade').value;
+  const fases = document.getElementById('motorFases').value;
+  const V = parseFloat(document.getElementById('motorTensao').value);
+  const fp = parseFloat(document.getElementById('motorFP').value);
+  const eta = parseFloat(document.getElementById('motorEta').value);
+  const tipo = document.getElementById('motorTipoInstalacao').value;
+  if(!pot || !V || !fp || !eta){ alert('Preencha todos os campos!'); return; }
+  const P_w = (unidade==='cv') ? pot*735.5 : pot*1000;
+  const I = (fases==='tri') ? (P_w/(Math.sqrt(3)*V*fp*eta)) : (P_w/(V*fp*eta));
+  const tabela = _capacidadePorMetodo(tipo);
+  let sec = tabela[tabela.length-1].s;
+  for(const x of tabela){ if(x.c>=I*1.25){ sec=x.s; break; } }
+  const disj = [6,10,16,20,25,32,40,50,63,70,80,100,125].find(d=>d>=I*1.25) || 125;
+
+  lastCalcResults.bitolaMotor = {pot, unidade, fases, V, fp, eta, I:+I.toFixed(2), sec, disj, metodo:tipo};
+  addHistorico('cálculo','Bitola Motor', `Potência: ${pot} ${unidade.toUpperCase()}\nTipo: ${fases==='tri'?'Trifásico':'Monofásico'}\nTensão: ${V} V\nCorrente estimada: ${I.toFixed(2)} A\nSeção recomendada: ${sec} mm²\nDisjuntor recomendado: ${disj} A\nMétodo: ${tipo}`);
+
+  showResult('resultBitolaMotor', resultBox('Bitola para Motor',[
+    ['Potência', `${pot} ${unidade.toUpperCase()}`],
+    ['Tipo', fases==='tri'?'Trifásico (3F)':'Monofásico (1F)'],
+    ['Corrente estimada', `${I.toFixed(2)} A`],
+    ['Seção recomendada', `${sec} mm²`],
+    ['Disjuntor (aprox.)', `${disj} A`]
+  ]));
+}
+
+function calcularQuedaTensaoTrifasica(){
+  if(checkTrialExpired()) return;
+  const I = parseFloat(document.getElementById('correnteQuedaTri').value);
+  const L = parseFloat(document.getElementById('distanciaQuedaTri').value);
+  const s = parseFloat(document.getElementById('secaoQuedaTri').value);
+  const V = parseFloat(document.getElementById('tensaoQuedaTri').value);
+  if(!I||!L||!s||!V){ alert('Preencha todos os campos!'); return; }
+  const ro=0.0172;
+  const dV = Math.sqrt(3) * I * (ro*L/s);
+  const pct = (dV/V)*100;
+  const ok = pct<=4;
+  lastCalcResults.quedaTri={I,L,s,V,dV:+dV.toFixed(2),pct:+pct.toFixed(2),ok};
+  addHistorico('cálculo','Queda Trifásica', `I: ${I} A\nL: ${L} m\nSeção: ${s} mm²\nV: ${V} V\nΔV: ${dV.toFixed(2)} V\n%: ${pct.toFixed(2)}%\nStatus: ${ok?'OK (≤4%)':'ACIMA (>4%)'}`);
+  showResult('resultQuedaTri', resultBox('Queda Trifásica',[
+    ['Queda de tensão', `${dV.toFixed(2)} V`],
+    ['Percentual', `${pct.toFixed(2)}%`],
+    ['Status (limite 4%)', ok?'✅ Dentro do limite':'❌ Acima do limite']
+  ]));
+}
+
+function calcularEletroduto(){
+  if(checkTrialExpired()) return;
+  const sec = parseFloat(document.getElementById('eletroSecao').value);
+  const qtd = parseInt(document.getElementById('eletroQtd').value||'0',10);
+  const occ = parseFloat(document.getElementById('eletroOcupacao').value)/100;
+  if(!sec||!qtd||qtd<1){ alert('Preencha os campos!'); return; }
+
+  // diâmetros típicos (mm) — baseados na tabela de condutores já existente no app
+  const diam = {1.5:1.38,2.5:1.78,4:2.25,6:2.76,10:3.57,16:4.51,25:5.64,35:6.68,50:7.98};
+  const d = diam[sec] || 2.25;
+  const areaCabo = Math.PI * Math.pow(d/2,2);
+  const areaTotal = areaCabo * qtd;
+  const areaNec = areaTotal / occ;
+
+  const elet = [
+    {nom:'16 mm', di:13},
+    {nom:'20 mm', di:16},
+    {nom:'25 mm', di:21},
+    {nom:'32 mm', di:27},
+    {nom:'40 mm', di:35},
+    {nom:'50 mm', di:44}
+  ];
+  let rec = elet[elet.length-1];
+  for(const e of elet){
+    const areaInt = Math.PI * Math.pow(e.di/2,2);
+    if(areaInt >= areaNec){ rec=e; break; }
+  }
+
+  lastCalcResults.eletroduto = {sec,qtd,occ:occ*100,d,areaTotal,areaNec,rec:rec.nom};
+  addHistorico('cálculo','Eletroduto', `Seção: ${sec} mm²\nQtd: ${qtd}\nOcupação máx: ${(occ*100).toFixed(0)}%\nDiâmetro condutor (típico): ${d} mm\nEletroduto recomendado: ${rec.nom}`);
+
+  showResult('resultEletroduto', resultBox('Eletroduto (aprox.)',[
+    ['Seção / qtd', `${sec} mm² × ${qtd}`],
+    ['Ocupação máx.', `${(occ*100).toFixed(0)}%`],
+    ['Área total cabos', `${areaTotal.toFixed(1)} mm²`],
+    ['Eletroduto recomendado', rec.nom]
+  ]));
+}
+
+function calcularDRDPS(){
+  if(checkTrialExpired()) return;
+  const disj = parseFloat(document.getElementById('drDisj').value);
+  const aplic = document.getElementById('drAplicacao').value;
+  const rede = document.getElementById('dpsRede').value;
+  const local = document.getElementById('dpsLocal').value;
+  if(!disj){ alert('Informe a corrente (A).'); return; }
+
+  const drSens = (aplic==='pessoas') ? '30 mA' : '300 mA';
+  const drIn = [25,40,63,80,100,125].find(x=>x>=disj) || 125;
+  const drTipo = 'Tipo A (recomendado)';
+
+  const uc = (rede==='127_220') ? '275 V (L-N)' : '385 V (L-L)';
+  const classe = 'Classe II (Tipo 2)';
+  const imax = (local==='industrial') ? '≥ 40 kA (8/20 µs)' : '≥ 20 kA (8/20 µs)';
+  const polos = (rede==='127_220') ? '2P (L-N) + PE' : '4P (3F+N) + PE';
+
+  lastCalcResults.drdps = {disj, drIn, drSens, drTipo, uc, classe, imax, polos};
+  addHistorico('cálculo','DR / DPS', `Disjuntor/corrente: ${disj} A\nDR: In ${drIn} A | IΔn ${drSens} | ${drTipo}\nDPS: ${classe} | Uc ${uc} | Imax ${imax} | ${polos}`);
+
+  showResult('resultDRDPS', resultBox('Recomendação',[
+    ['DR (corrente nominal In)', `${drIn} A`],
+    ['DR (sensibilidade IΔn)', drSens],
+    ['DR (tipo)', drTipo],
+    ['DPS (classe)', classe],
+    ['DPS (Uc)', uc],
+    ['DPS (Imax sugerido)', imax],
+    ['Pólos / ligação', polos]
+  ]));
+}
+
+/* ======================== HISTÓRICO: CALCS EXISTENTES ======================== */
+const _calcularLeiOhmOriginal = calcularLeiOhm;
+calcularLeiOhm = function(){
+  _calcularLeiOhmOriginal();
+  if(lastCalcResults.leiOhm){ const r=lastCalcResults.leiOhm; addHistorico('cálculo','Lei de Ohm',`V: ${r.v} V\nI: ${r.i} A\nR: ${r.r} Ω`); }
+};
+const _calcularPotenciaOriginal = calcularPotencia;
+calcularPotencia = function(){
+  _calcularPotenciaOriginal();
+  if(lastCalcResults.potencia){ const r=lastCalcResults.potencia; addHistorico('cálculo','Potência',`Tipo: ${r.tipo}\nV: ${r.V} V\nI: ${r.I} A\nFP: ${r.fp}\nP: ${r.P} W\nS: ${r.S} VA\nQ: ${r.Q} VAr`); }
+};
+const _calcularQuedaOriginal = calcularQuedaTensao;
+calcularQuedaTensao = function(){
+  _calcularQuedaOriginal();
+  if(lastCalcResults.quedaTensao){ const r=lastCalcResults.quedaTensao; addHistorico('cálculo','Queda de Tensão',`I: ${r.I} A\nL: ${r.L} m\nSeção: ${r.s} mm²\nV: ${r.V} V\nΔV: ${r.dV} V\n%: ${r.pct}%\nStatus: ${r.ok?'OK':'Acima'}`); }
+};
+const _dimensionarCondutorOriginal = dimensionarCondutor;
+dimensionarCondutor = function(){
+  _dimensionarCondutorOriginal();
+  if(lastCalcResults.condutor){ const r=lastCalcResults.condutor; addHistorico('cálculo','Dimensionamento',`P: ${r.P} W\nV: ${r.V} V\nI: ${r.I} A\nSeção: ${r.sec} mm²\nDisj.: ${r.disj} A\nQueda: ${r.pct}%`); }
+};
+
+/* ======================== PDF: SUPORTE ÀS NOVAS CALCS ======================== */
+const _gerarPDFCalcOriginal = gerarPDFCalc;
+gerarPDFCalc = function(tipo){
+  if(['Bitola Motor','Queda Trifásica','Eletroduto','DR / DPS'].includes(tipo)){
+    if(checkTrialExpired()) return;
+    const {jsPDF}=window.jspdf;
+    const doc=new jsPDF();
+    pdfHeader(doc,'Relatorio: '+pdfSafe(tipo));
+    doc.setFontSize(14); doc.setFont(undefined,'bold');
+    doc.text(pdfSafe('Calculo: '+tipo),20,58);
+    doc.setFontSize(10); doc.setFont(undefined,'normal');
+    let y=70;
+    const line=(l,v)=>{ doc.text(pdfSafe(l+': '+v),20,y); y+=8; };
+
+    if(tipo==='Bitola Motor' && lastCalcResults.bitolaMotor){
+      const r=lastCalcResults.bitolaMotor;
+      line('Potencia', r.pot+' '+r.unidade.toUpperCase());
+      line('Tipo', r.fases==='tri'?'Trifasico':'Monofasico');
+      line('Tensao', r.V+' V');
+      line('FP', r.fp); line('Rendimento', r.eta);
+      line('Corrente estimada', r.I+' A');
+      line('Secao recomendada', r.sec+' mm2');
+      line('Disjuntor', r.disj+' A');
+      line('Metodo', r.metodo);
+    } else if(tipo==='Queda Trifásica' && lastCalcResults.quedaTri){
+      const r=lastCalcResults.quedaTri;
+      line('Corrente', r.I+' A');
+      line('Distancia', r.L+' m');
+      line('Secao', r.s+' mm2');
+      line('Tensao (LL)', r.V+' V');
+      line('Queda', r.dV+' V');
+      line('Percentual', r.pct+'%');
+      line('Status', r.ok?'OK - Dentro do limite':'ATENCAO - Acima do limite');
+    } else if(tipo==='Eletroduto' && lastCalcResults.eletroduto){
+      const r=lastCalcResults.eletroduto;
+      line('Secao', r.sec+' mm2');
+      line('Quantidade', r.qtd);
+      line('Ocupacao', r.occ.toFixed(0)+'%');
+      line('Diametro tipico', r.d+' mm');
+      line('Eletroduto recomendado', r.rec);
+    } else if(tipo==='DR / DPS' && lastCalcResults.drdps){
+      const r=lastCalcResults.drdps;
+      line('Corrente', r.disj+' A');
+      line('DR In', r.drIn+' A');
+      line('DR IΔn', r.drSens);
+      line('DR tipo', r.drTipo);
+      line('DPS classe', r.classe);
+      line('DPS Uc', r.uc);
+      line('DPS Imax', r.imax);
+      line('Polos', r.polos);
+    } else {
+      line('Info', 'Sem dados. Faça o cálculo antes de gerar o PDF.');
+    }
+
+    pdfFooter(doc);
+    doc.save('calc_'+pdfSafe(tipo).replace(/\s/g,'_')+'_'+Date.now()+'.pdf');
+    return;
+  }
+  return _gerarPDFCalcOriginal(tipo);
+};
 /* ======================== INIT ======================== */
-window.addEventListener('load', () => { initTrial(); initTheme(); updateUnidades(); });
+window.addEventListener('load', () => { initTrial(); initTheme(); updateUnidades(); autoRestoreFields(); loadOrcamento(); loadConsumo(); loadFD(); });
 
 /* ======================== NOVAS FUNCIONALIDADES ======================== */
 // ===== NOVAS FUNCIONALIDADES - ELETRICOPRO =====
@@ -2060,9 +2733,6 @@ window.fb = {
 };
 
 </script>
-<!-- SEU SCRIPT PRINCIPAL (muito importante) -->
-<script src="app.js"></script>
-
 <!-- REGISTRO DO SERVICE WORKER (PWA OFFLINE) -->
 <script>
 if ('serviceWorker' in navigator) {
