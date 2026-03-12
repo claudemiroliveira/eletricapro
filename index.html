@@ -2394,6 +2394,31 @@
           .catch(err => console.warn('⚠️ Erro ao registrar SW:', err));
       });
     }
+    
   </script>
+  <script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-app.js";
+import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-auth.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyCibrDhAmeTg-2W9TiXhomotfLEM5EqwgE",
+  authDomain: "eletrica-pro.firebaseapp.com",
+  projectId: "eletrica-pro",
+  storageBucket: "eletrica-pro.firebasestorage.app",
+  messagingSenderId: "318733768519",
+  appId: "1:318733768519:web:93e0bdcdecd49b9570de62"
+};
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+
+onAuthStateChanged(auth, (user) => {
+  if(user){
+    console.log("Usuário logado:", user.email);
+  }else{
+    console.log("Usuário não logado");
+  }
+});
+</script>
 </body>
 </html>
