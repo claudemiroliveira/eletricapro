@@ -541,9 +541,9 @@
           <div class="tile-icon">🔌</div>
           <div class="tile-label">Instalações</div>
         </div>
-        <div class="icon-tile" onclick="openScreen('consumo', 'Consumo')">
-          <div class="tile-icon">⚡</div>
-          <div class="tile-label">Consumo</div>
+        <div class="icon-tile" onclick="openScreen('curiosidades', 'Curiosidades')">
+          <div class="tile-icon">🧠</div>
+          <div class="tile-label">Curiosidades</div>
         </div>
         <div class="icon-tile" onclick="openScreen('orcamentos', 'Orçamentos')">
           <div class="tile-icon">💰</div>
@@ -1089,45 +1089,143 @@
       </div>
     </div>
 
-    <!-- ========== CONSUMO ========== -->
-    <div id="consumo" class="screen">
-      <div class="screen-title"><div class="dot"></div>Consumo de Energia</div>
+    <!-- ========== CURIOSIDADES ========== -->
+    <div id="curiosidades" class="screen">
+      <div class="screen-title"><div class="dot"></div>Curiosidades Elétricas</div>
+
+      <!-- Você sabia? -->
       <div class="calc-card">
-        <h3>⚡ Calculadora de Consumo</h3>
-        <div id="consumoItens">
-          <div class="consumo-item-row" id="consumoRow0">
-            <div class="form-group"><label>Aparelho</label><input type="text" placeholder="Ex: Geladeira"></div>
-            <div class="form-group"><label>Potência (W)</label><input type="number" placeholder="Ex: 300"></div>
-            <div class="form-group"><label>Horas/dia</label><input type="number" placeholder="Ex: 8" step="0.5"></div>
+        <h3>⚡ Você sabia?</h3>
+        <div style="display:flex;flex-direction:column;gap:0.9rem;">
+
+          <div style="background:rgba(33,150,243,0.1);border-left:3px solid var(--blue-glow);border-radius:8px;padding:0.9rem 1rem;">
+            <strong style="color:var(--yellow-soft);">🔦 A velocidade da eletricidade</strong>
+            <p style="font-size:0.87rem;color:rgba(255,255,255,0.82);margin-top:0.4rem;line-height:1.6;">
+              Os elétrons numa fiação doméstica se movem devagar — cerca de <strong>1 mm/s</strong>. O que viaja
+              à velocidade da luz (~300.000 km/s) é o <em>campo elétrico</em>, não os elétrons em si. É como
+              empurrar uma fila de bolinhas: a última se move quase que instantaneamente.
+            </p>
           </div>
+
+          <div style="background:rgba(33,150,243,0.1);border-left:3px solid var(--blue-glow);border-radius:8px;padding:0.9rem 1rem;">
+            <strong style="color:var(--yellow-soft);">⚡ Por que 60 Hz no Brasil?</strong>
+            <p style="font-size:0.87rem;color:rgba(255,255,255,0.82);margin-top:0.4rem;line-height:1.6;">
+              A frequência de <strong>60 Hz</strong> (ciclos por segundo) foi adotada por influência norte-americana
+              no início da eletrificação. A Europa usa 50 Hz. Na prática, 60 Hz reduz levemente o tremor
+              (flicker) de lâmpadas incandescentes e deixa motores um pouco mais velozes.
+            </p>
+          </div>
+
+          <div style="background:rgba(33,150,243,0.1);border-left:3px solid var(--blue-glow);border-radius:8px;padding:0.9rem 1rem;">
+            <strong style="color:var(--yellow-soft);">🌩️ Um raio tem quantos volts?</strong>
+            <p style="font-size:0.87rem;color:rgba(255,255,255,0.82);margin-top:0.4rem;line-height:1.6;">
+              Um raio pode atingir até <strong>1 bilhão de volts</strong> e liberar energia em apenas
+              1–2 milissegundos. Apesar disso, a energia total de um raio equivale a acender uma lâmpada
+              de 100 W por apenas <em>3 meses</em> — o problema é a potência instantânea gigantesca.
+            </p>
+          </div>
+
+          <div style="background:rgba(33,150,243,0.1);border-left:3px solid var(--blue-glow);border-radius:8px;padding:0.9rem 1rem;">
+            <strong style="color:var(--yellow-soft);">🐟 Enguia elétrica: até 860 V!</strong>
+            <p style="font-size:0.87rem;color:rgba(255,255,255,0.82);margin-top:0.4rem;line-height:1.6;">
+              A <em>Electrophorus electricus</em> (enguia elétrica da Amazônia) gera descargas de até
+              <strong>860 volts</strong> usando órgãos especializados com milhares de células chamadas
+              eletrócitos — verdadeiras baterias biológicas empilhadas em série, como pilhas AA num
+              controle remoto.
+            </p>
+          </div>
+
+          <div style="background:rgba(33,150,243,0.1);border-left:3px solid var(--blue-glow);border-radius:8px;padding:0.9rem 1rem;">
+            <strong style="color:var(--yellow-soft);">🧲 CA vs CC — a Guerra das Correntes</strong>
+            <p style="font-size:0.87rem;color:rgba(255,255,255,0.82);margin-top:0.4rem;line-height:1.6;">
+              No final do século XIX, <strong>Edison</strong> (corrente contínua – CC) e
+              <strong>Tesla/Westinghouse</strong> (corrente alternada – CA) disputaram qual padrão
+              dominaria o mundo. A CA venceu por ser mais eficiente para transmissão a longas distâncias.
+              Hoje, ironicamente, data centers e carros elétricos reabilitam a CC em larga escala.
+            </p>
+          </div>
+
+          <div style="background:rgba(33,150,243,0.1);border-left:3px solid var(--blue-glow);border-radius:8px;padding:0.9rem 1rem;">
+            <strong style="color:var(--yellow-soft);">🏠 Quanto custa 1 kWh no Brasil?</strong>
+            <p style="font-size:0.87rem;color:rgba(255,255,255,0.82);margin-top:0.4rem;line-height:1.6;">
+              A tarifa residencial média gira em torno de <strong>R$ 0,75 a R$ 1,00/kWh</strong> (2024),
+              variando por distribuidora e bandeira tarifária. Um chuveiro de 6.500 W ligado 15 min/dia
+              consome ~49 kWh/mês — em torno de R$ 45 só no banho.
+            </p>
+          </div>
+
+          <div style="background:rgba(33,150,243,0.1);border-left:3px solid var(--blue-glow);border-radius:8px;padding:0.9rem 1rem;">
+            <strong style="color:var(--yellow-soft);">🔋 Por que pilhas AA têm 1,5 V?</strong>
+            <p style="font-size:0.87rem;color:rgba(255,255,255,0.82);margin-top:0.4rem;line-height:1.6;">
+              O valor de <strong>1,5 V</strong> é determinado pela química da reação entre zinco e
+              dióxido de manganês. É uma constante eletroquímica, não uma escolha de design.
+              Pilhas de lítio (usadas em câmeras e laptops) produzem <strong>3,6 V</strong> pela
+              mesma razão — química diferente, potencial diferente.
+            </p>
+          </div>
+
+          <div style="background:rgba(33,150,243,0.1);border-left:3px solid var(--blue-glow);border-radius:8px;padding:0.9rem 1rem;">
+            <strong style="color:var(--yellow-soft);">🌊 Hidrelétrica: como a água vira luz</strong>
+            <p style="font-size:0.87rem;color:rgba(255,255,255,0.82);margin-top:0.4rem;line-height:1.6;">
+              Cerca de <strong>63% da eletricidade</strong> gerada no Brasil vem de usinas hidrelétricas
+              (2023). A queda d'água gira turbinas que acionam geradores — basicamente o mesmo princípio
+              do dínamo de bicicleta, só que em escala de gigawatts. Itaipu sozinha abastece ~10% do país.
+            </p>
+          </div>
+
         </div>
-        <button class="btn" style="margin-top:0.5rem;" onclick="addConsumoRow()">➕ Adicionar aparelho</button>
-        <button class="btn btn-yellow" onclick="calcularConsumo()">⚡ Calcular</button>
-        <button class="btn btn-yellow" onclick="gerarPDFCalc('Consumo')">📄 Gerar PDF</button>
-        <div id="resultConsumo"></div>
       </div>
 
+      <!-- Glossário Rápido -->
       <div class="calc-card">
-        <h3>💡 Tabela de referência de potências</h3>
+        <h3>📖 Glossário Rápido</h3>
         <div class="table-responsive">
           <table>
-            <thead><tr><th>Aparelho</th><th>Potência Típica (W)</th><th>Uso médio (h/dia)</th></tr></thead>
+            <thead><tr><th>Termo</th><th>Significado simples</th></tr></thead>
             <tbody>
-              <tr><td>Lâmpada LED</td><td>9 – 15</td><td>5</td></tr>
-              <tr><td>TV 50"</td><td>100 – 130</td><td>5</td></tr>
-              <tr><td>Geladeira Duplex</td><td>300 – 400</td><td>24</td></tr>
-              <tr><td>Ar-Condicionado 9000 BTU</td><td>900</td><td>8</td></tr>
-              <tr><td>Ar-Condicionado 12000 BTU</td><td>1.200</td><td>8</td></tr>
-              <tr><td>Chuveiro Elétrico</td><td>5.500 – 7.500</td><td>0,5</td></tr>
-              <tr><td>Forno Elétrico</td><td>1.200 – 2.000</td><td>1</td></tr>
-              <tr><td>Micro-ondas</td><td>800 – 1.200</td><td>0,5</td></tr>
-              <tr><td>Máquina de lavar</td><td>1.000 – 1.500</td><td>1</td></tr>
-              <tr><td>Computador Desktop</td><td>200 – 400</td><td>8</td></tr>
-              <tr><td>Notebook</td><td>45 – 90</td><td>8</td></tr>
+              <tr><td><strong>Volt (V)</strong></td><td>Pressão que "empurra" os elétrons pelo fio</td></tr>
+              <tr><td><strong>Ampere (A)</strong></td><td>Quantidade de elétrons passando por segundo</td></tr>
+              <tr><td><strong>Watt (W)</strong></td><td>Potência = Volt × Ampere (trabalho por segundo)</td></tr>
+              <tr><td><strong>kWh</strong></td><td>1.000 W consumidos por 1 hora (unidade da conta de luz)</td></tr>
+              <tr><td><strong>Ohm (Ω)</strong></td><td>Resistência que o fio oferece à passagem da corrente</td></tr>
+              <tr><td><strong>Hertz (Hz)</strong></td><td>Quantas vezes a corrente inverte de sentido por segundo</td></tr>
+              <tr><td><strong>Disjuntor</strong></td><td>Interruptor automático que corta a energia em sobrecarga</td></tr>
+              <tr><td><strong>DR (diferencial-residual)</strong></td><td>Detecta fuga de corrente e protege contra choques</td></tr>
+              <tr><td><strong>Aterramento</strong></td><td>Caminho seguro para correntes de fuga irem para o solo</td></tr>
+              <tr><td><strong>Fator de Potência</strong></td><td>Eficiência do uso da energia (1 = perfeito, <0,92 = ruim)</td></tr>
+              <tr><td><strong>Fase / Neutro / Terra</strong></td><td>Fase leva a energia, Neutro retorna, Terra protege</td></tr>
+              <tr><td><strong>Condutor</strong></td><td>Fio ou cabo que transporta a corrente elétrica</td></tr>
             </tbody>
           </table>
         </div>
       </div>
+
+      <!-- Perigos da eletricidade -->
+      <div class="calc-card">
+        <h3>⚠️ O Perigo da Corrente — Não da Tensão</h3>
+        <p style="font-size:0.87rem;color:rgba(255,255,255,0.82);line-height:1.7;margin-bottom:0.8rem;">
+          Muita gente pensa que "voltagem alta = mais perigoso", mas o que mata é a <strong>corrente (Ampere)</strong>
+          que passa pelo corpo. Veja o efeito estimado no ser humano:
+        </p>
+        <div class="table-responsive">
+          <table>
+            <thead><tr><th>Corrente</th><th>Efeito no corpo humano</th></tr></thead>
+            <tbody>
+              <tr><td>1 mA</td><td>Formigamento leve, mal percebido</td></tr>
+              <tr><td>5 mA</td><td>Choque perceptível, desconfortável</td></tr>
+              <tr><td>10–20 mA</td><td>Contração muscular — pode travar a mão no fio!</td></tr>
+              <tr><td>50–100 mA</td><td>Fibrilação ventricular — risco de morte</td></tr>
+              <tr><td>100–200 mA</td><td>Morte muito provável</td></tr>
+              <tr><td>> 200 mA</td><td>Queimaduras graves (paradoxalmente pode não fibrilar)</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p style="font-size:0.82rem;color:var(--text-muted);margin-top:0.7rem;">
+          ⚡ O DR de 30 mA é obrigatório em banheiros exatamente por isso: ele desliga antes de a corrente
+          atingir níveis letais.
+        </p>
+      </div>
+
     </div>
 
     <!-- ========== ORÇAMENTOS ========== -->
