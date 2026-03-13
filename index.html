@@ -432,6 +432,51 @@
       margin-bottom:.5rem;
     }
     .btn-whatsapp:hover { transform:translateY(-2px); box-shadow:0 8px 22px rgba(37,211,102,.5); }
+
+    /* ===== PRO GATE MODAL ===== */
+    .pro-gate-overlay{
+      position:fixed; inset:0; z-index:9999;
+      background:rgba(0,0,0,.62);
+      display:none; align-items:center; justify-content:center;
+      padding:16px;
+      backdrop-filter: blur(6px);
+    }
+    .pro-gate-overlay.show{ display:flex; }
+    .pro-gate-modal{
+      width:100%; max-width:460px;
+      background: linear-gradient(135deg, rgba(13,35,71,0.98), rgba(10,22,40,0.98));
+      border:1px solid rgba(255,214,0,0.35);
+      border-radius:18px;
+      box-shadow:0 18px 60px rgba(0,0,0,0.6);
+      padding:18px 18px 16px;
+      position:relative;
+      overflow:hidden;
+    }
+    .pro-gate-modal::before{
+      content:''; position:absolute; inset:-2px;
+      background: radial-gradient(circle at 20% 10%, rgba(255,214,0,0.25), transparent 45%),
+                  radial-gradient(circle at 90% 80%, rgba(33,150,243,0.25), transparent 55%);
+      pointer-events:none;
+    }
+    .pro-gate-badge{
+      display:inline-flex; align-items:center; gap:8px;
+      background:rgba(255,214,0,0.12);
+      border:1px solid rgba(255,214,0,0.35);
+      color:var(--yellow);
+      font-weight:900;
+      letter-spacing:1px;
+      border-radius:999px;
+      padding:6px 10px;
+      margin-bottom:10px;
+      position:relative;
+      z-index:1;
+    }
+    .pro-gate-modal h3{ position:relative; z-index:1; font-size:1.15rem; }
+    .pro-gate-modal p{ position:relative; z-index:1; color:rgba(255,255,255,.78); font-size:.92rem; line-height:1.55; margin-top:6px; }
+    .pro-gate-feats{ position:relative; z-index:1; margin:12px 0 14px; padding-left:18px; color:rgba(255,255,255,.82); font-size:.9rem; }
+    .pro-gate-feats li{ margin:6px 0; }
+    .pro-gate-actions{ position:relative; z-index:1; display:flex; gap:10px; }
+    .pro-gate-actions .btn{ flex:1; }
   </style>
 </head>
 
@@ -1354,6 +1399,25 @@
 
   </div><!-- /container -->
 
+  <!-- PRO GATE MODAL -->
+  <div id="proGateModal" class="pro-gate-overlay" onclick="if(event.target===this) closeProModal()">
+    <div class="pro-gate-modal">
+      <div class="pro-gate-badge">👑 PRO</div>
+      <h3 id="proGateTitle">Recurso disponível no PRO</h3>
+      <p id="proGateSubtitle">Ative o PRO para liberar.</p>
+      <ul class="pro-gate-feats">
+        <li>✅ PDF (cálculos, tabelas e orçamentos)</li>
+        <li>✅ Salvar e acessar Histórico</li>
+        <li>✅ Enviar orçamento por WhatsApp</li>
+        <li>✅ Uso ilimitado (sem limite diário)</li>
+      </ul>
+      <div class="pro-gate-actions">
+        <button class="btn btn-yellow" onclick="window.location.href='login.html'">⚡ Ativar PRO</button>
+        <button class="btn" onclick="closeProModal()">Agora não</button>
+      </div>
+    </div>
+  </div>
+
   <!-- jsPDF -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.31/jspdf.plugin.autotable.min.js"></script>
@@ -1386,7 +1450,61 @@
     /* ======================== NAVIGATION ======================== */
     let screenStack = [];
 
+    // ======================== PRO / LIMITES (FREE) ========================
+    function getTrial(){
+      try { return JSON.parse(localStorage.getItem('eletricapro_trial') || '{}'); }
+      catch(e){ return {}; }
+    }
+
+    function isProActive(){
+      const t = getTrial();
+      if(!t || t.isPro !== true) return false;
+      // Se houver validade e já expirou, considera não-PRO
+      if(t.proUntil){
+        const until = new Date(t.proUntil);
+        if(!isNaN(until.getTime()) && until.getTime() < Date.now()) return false;
+      }
+      return true;
+    }
+
+    function openProModal(title, subtitle){
+      const m = document.getElementById('proGateModal');
+      if(!m) return alert('Recurso disponível somente no PRO.');
+      document.getElementById('proGateTitle').textContent = title || 'Disponível no PRO';
+      document.getElementById('proGateSubtitle').textContent = subtitle || 'Ative o PRO para liberar este recurso.';
+      m.classList.add('show');
+    }
+    function closeProModal(){
+      const m = document.getElementById('proGateModal');
+      if(m) m.classList.remove('show');
+    }
+
+    function requirePro(featureLabel){
+      if(isProActive()) return true;
+      openProModal('👑 Recurso PRO', `${featureLabel || 'Este recurso'} está disponível somente no PRO.`);
+      return false;
+    }
+
+    function canUseFree(featureKey, featureLabel){
+      if(isProActive()) return true;
+      const today = new Date().toISOString().slice(0,10); // YYYY-MM-DD
+      const storeKey = 'eletricapro_free_usage_' + today;
+      let data = {};
+      try { data = JSON.parse(localStorage.getItem(storeKey) || '{}'); } catch(e) { data = {}; }
+      const n = Number(data[featureKey] || 0);
+      if(n >= 2){
+        openProModal('⛔ Limite diário atingido', `${featureLabel || 'Este item'} no plano grátis: 2 usos/dia. Ative o PRO para uso ilimitado.`);
+        return false;
+      }
+      data[featureKey] = n + 1;
+      localStorage.setItem(storeKey, JSON.stringify(data));
+      return true;
+    }
+
     function openScreen(id, title) {
+      // Histórico agora é somente PRO
+      if(id === 'historico' && !requirePro('Histórico / Salvar')) return;
+
       document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
       document.getElementById(id).classList.add('active');
       screenStack.push(id);
@@ -1418,6 +1536,7 @@
 
     /* ======================== CALCULADORAS ======================== */
     function calcularLeiOhm(){
+      if(!canUseFree('leiOhm', 'Lei de Ohm')) return;
       const V=parseFloat(document.getElementById('tensaoOhm').value)||0;
       const I=parseFloat(document.getElementById('correnteOhm').value)||0;
       const R=parseFloat(document.getElementById('resistenciaOhm').value)||0;
@@ -1436,6 +1555,7 @@
     }
 
     function calcularPotencia(){
+      if(!canUseFree('potencia', 'Potência')) return;
       const V=parseFloat(document.getElementById('tensaoPot').value);
       const I=parseFloat(document.getElementById('correntePot').value);
       const fp=parseFloat(document.getElementById('fatorPot').value);
@@ -1454,6 +1574,7 @@
     }
 
     function calcularQuedaTensao(){
+      if(!canUseFree('quedaTensao', 'Queda de Tensão')) return;
       const I=parseFloat(document.getElementById('correnteQueda').value);
       const L=parseFloat(document.getElementById('distanciaQueda').value);
       const s=parseFloat(document.getElementById('secaoQueda').value);
@@ -1471,6 +1592,7 @@
     }
 
     function dimensionarCondutor(){
+      if(!canUseFree('dimensionamento', 'Dimensionamento')) return;
       const P=parseFloat(document.getElementById('potenciaCondutor').value);
       const V=parseFloat(document.getElementById('tensaoCondutor').value);
       const L=parseFloat(document.getElementById('distanciaCondutor').value);
@@ -1522,6 +1644,7 @@
     }
 
     function calcularConsumo(){
+      if(!canUseFree('consumo', 'Consumo')) return;
       const rows = document.querySelectorAll('.consumo-item-row');
       let totalKwh=0, items=[];
       rows.forEach(row=>{
@@ -1610,6 +1733,7 @@
     }
 
     function gerarPDFCalc(tipo){
+      if(!requirePro('Gerar PDF')) return;
       const {jsPDF}=window.jspdf;
       const doc=new jsPDF();
       pdfHeader(doc,'Relatorio: '+pdfSafe(tipo));
@@ -1671,6 +1795,7 @@
     }
 
     function gerarPDFTabela(tipo){
+      if(!requirePro('Gerar PDF')) return;
       const {jsPDF}=window.jspdf; const doc=new jsPDF();
       pdfHeader(doc,'Tabela: '+pdfSafe(tipo));
       doc.setFontSize(14); doc.setFont(undefined,'bold'); doc.text(pdfSafe('Tabela Tecnica: '+tipo),20,58);
@@ -1690,6 +1815,7 @@
     }
 
     function gerarPDFOrcamento(){
+      if(!requirePro('Gerar PDF')) return;
       const nome=document.getElementById('nomeCliente').value;
       if(!nome||!itensOrcamento.length){ alert('Preencha o nome do cliente e adicione itens!'); return; }
       const {jsPDF}=window.jspdf; const doc=new jsPDF();
@@ -1719,6 +1845,7 @@
 
     /* ======================== WHATSAPP EXPORT ======================== */
     function enviarWhatsApp(){
+      if(!requirePro('Enviar por WhatsApp')) return;
       const nome = document.getElementById('nomeCliente').value || 'Cliente';
       const tel  = document.getElementById('telefoneCliente').value || '';
       const end  = document.getElementById('enderecoCliente').value || '';
@@ -1747,6 +1874,7 @@
     }
 
     function salvarOrcamentoHistorico(){
+      if(!requirePro('Salvar no Histórico')) return;
       const nome = document.getElementById('nomeCliente').value;
       if(!nome || !itensOrcamento.length){ alert('Preencha o cliente e os itens antes de salvar!'); return; }
       const total = itensOrcamento.reduce((s,i)=>s+i.total,0);
@@ -1770,6 +1898,7 @@
     }
 
     function salvarCalculoHistorico(tipo, resumo){
+      if(!isProActive()) return; // Histórico é PRO
       const hist = getHistorico();
       hist.unshift({
         id: Date.now(),
@@ -1788,6 +1917,7 @@
     }
 
     function limparHistorico(){
+      if(!requirePro('Histórico')) return;
       if(confirm('⚠️ Limpar todo o histórico?')){
         localStorage.removeItem(HIST_KEY);
         renderHistorico();
@@ -1795,6 +1925,7 @@
     }
 
     function carregarOrcamentoHistorico(id){
+      if(!requirePro('Histórico')) return;
       const hist = getHistorico();
       const item = hist.find(h=>h.id===id);
       if(!item || item.tipo !== 'orcamento') return;
@@ -1807,6 +1938,7 @@
     }
 
     function excluirHistorico(id){
+      if(!requirePro('Histórico')) return;
       const hist = getHistorico().filter(h=>h.id!==id);
       localStorage.setItem(HIST_KEY, JSON.stringify(hist));
       renderHistorico();
@@ -1841,6 +1973,7 @@
 
     /* ======================== DR/DPS ======================== */
     function calcularDrDps(){
+      if(!canUseFree('drdps', 'DR/DPS')) return;
       const corrente = parseFloat(document.getElementById('correnteDR').value);
       const tipoDR   = document.getElementById('tipoDR').value;
       const tensao   = document.getElementById('tensaoDR').value;
@@ -1877,6 +2010,7 @@
 
     /* ======================== ELETRODUTO ======================== */
     function calcularEletroduto(){
+      if(!canUseFree('eletroduto', 'Eletroduto')) return;
       const diaEletroduto = parseFloat(document.getElementById('diaEletroduto').value);
       const secaoCabo     = parseFloat(document.getElementById('secaoEletroduto').value);
 
@@ -1906,6 +2040,7 @@
 
     /* ======================== QUEDA TRIFÁSICO ======================== */
     function calcularQuedaTrifasico(){
+      if(!canUseFree('quedaTri', 'Queda Trifásico')) return;
       const Pkw   = parseFloat(document.getElementById('potQuedaTri').value);
       const V     = parseFloat(document.getElementById('tensaoQuedaTri').value);
       const fp    = parseFloat(document.getElementById('fpQuedaTri').value);
@@ -1934,6 +2069,7 @@
 
     /* ======================== BITOLA MOTOR ======================== */
     function calcularBitolaMotor(){
+      if(!canUseFree('motor', 'Bitola Motor')) return;
       const cv     = parseFloat(document.getElementById('potMotor').value);
       const tensao = document.getElementById('tensaoMotor').value;
       const partida = document.getElementById('tipoPartidaMotor').value;
@@ -1993,6 +2129,7 @@
     }
 
     function calcularEnergiaMensal(){
+      if(!canUseFree('energiaMes', 'Custo Energia')) return;
       const rows = document.querySelectorAll('#energiaItens .consumo-item-row');
       const tarifa = parseFloat(document.getElementById('tarifaEnergia').value) || 0.85;
       const icms   = parseFloat(document.getElementById('icmsEnergia').value) || 0;
@@ -2092,6 +2229,7 @@
     }
 
     function calcularConversao() {
+      if(!canUseFree('conversao', 'Conversão')) return;
       const tipo = document.getElementById('tipoConversao').value;
       const valor = parseFloat(document.getElementById('valorConversao').value);
       const unidade = document.getElementById('unidadeConversao').value;
@@ -2152,6 +2290,7 @@
 
     /* ======================== ILUMINAÇÃO ======================== */
     function calcularIluminacao() {
+      if(!canUseFree('iluminacao', 'Iluminação')) return;
       const area = parseFloat(document.getElementById('areaIlum').value);
       const altura = parseFloat(document.getElementById('alturaIlum').value);
       const planoTrabalho = parseFloat(document.getElementById('planoTrabalho').value) || 0.75;
@@ -2212,6 +2351,7 @@
 
     /* ======================== CURTO-CIRCUITO ======================== */
     function calcularCurtoCircuito() {
+      if(!canUseFree('curto', 'Curto-Circuito')) return;
       const tensao = parseFloat(document.getElementById('tensaoCC').value);
       const potTrafo = parseFloat(document.getElementById('potTrafo').value);
       const impedTrafo = parseFloat(document.getElementById('impedTrafo').value) || 4;
@@ -2270,6 +2410,7 @@
     }
 
     function calcularFatorDemanda() {
+      if(!canUseFree('fatorDemanda', 'Fator de Demanda')) return;
       const rows = document.querySelectorAll('.carga-fd-row');
       if (!rows.length) { alert('Adicione pelo menos uma carga!'); return; }
 
