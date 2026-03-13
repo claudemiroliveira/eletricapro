@@ -1733,7 +1733,7 @@
         msg += `• ${item.d} — ${item.q}x R$ ${item.v.toFixed(2)} = R$ ${item.total.toFixed(2)}\n`;
       });
       msg += `\n*Total: R$ ${total.toFixed(2)}*\n`;
-      msg += `\nValidade: 30 dias | Pagamento: A combinar`;
+      msg += `\nValidade: a combinar | Pagamento: A combinar`;
       const encoded = encodeURIComponent(msg);
       window.open(`https://wa.me/?text=${encoded}`, '_blank');
     }
