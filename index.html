@@ -1712,7 +1712,7 @@
       });
       const fy=doc.lastAutoTable.finalY+14;
       doc.setFontSize(10);
-      doc.text(pdfSafe('Obs: Validade do orcamento: 30 dias | Condicoes: A combinar'),20,fy);
+      doc.text(pdfSafe('Obs: Validade do orcamento: a combinar | Condicoes: A combinar'),20,fy);
       pdfFooter(doc);
       doc.save('orcamento_'+pdfSafe(nome).replace(/ /g,'_')+'_'+Date.now()+'.pdf');
     }
