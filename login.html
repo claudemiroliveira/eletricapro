@@ -369,7 +369,36 @@
     @media (max-width: 420px) {
       .top-nav { flex-wrap: wrap; gap: 8px; }
     }
-  </style>
+  
+    /* ── SPICY COUNTDOWN (Vitalício) ── */
+    .spicy-countdown{
+      margin-top:10px;
+      padding:10px 12px;
+      border-radius:12px;
+      background:linear-gradient(135deg, rgba(244,63,94,.18), rgba(168,85,247,.16));
+      border:1px solid rgba(244,63,94,.35);
+      color:#ffe4e6;
+      font-weight:700;
+      font-size:13px;
+      letter-spacing:.2px;
+      box-shadow:0 10px 26px rgba(244,63,94,.18);
+      animation: spicyPulse 1.2s ease-in-out infinite;
+    }
+    .spicy-countdown span{
+      font-variant-numeric: tabular-nums;
+      color:#fff;
+      background:rgba(0,0,0,.25);
+      padding:2px 8px;
+      border-radius:999px;
+      border:1px solid rgba(255,255,255,.15);
+      margin-left:6px;
+    }
+    @keyframes spicyPulse{
+      0%,100%{ transform:translateY(0); filter:saturate(1); }
+      50%{ transform:translateY(-1px); filter:saturate(1.25); }
+    }
+
+</style>
 </head>
 <body>
 
@@ -590,6 +619,7 @@
       <div class="plan-price">
         <div class="amount"><span>R$</span> 89<span>,90</span></div>
         <div class="period">pagamento único</div>
+        <div id="spicyCountdown" class="spicy-countdown">🔥 Oferta do <strong>Vitalício</strong> termina em <span id="spicyTime">--:--:--</span></div>
         <div class="economy" style="background:#a855f722;color:#d8b4fe;border-color:#a855f744;">♾ Nunca expira</div>
       </div>
       <ul class="plan-features">
@@ -1030,6 +1060,44 @@ $("btnAnnual").onclick   = () => window.open(PAYMENT_LINKS.annual,   "_blank");
 $("btnLifetime").onclick = () => window.open(PAYMENT_LINKS.lifetime, "_blank");
 $("btnCancelPending").onclick = () => { $("pendingSection").style.display = "none"; };
 </script>
+
+<script>
+  // ── SPICY COUNTDOWN (Vitalício) ─────────────────────────────────────────
+  // Observação: contador local (front-end) para dar urgência no plano vitalício.
+  (function(){
+    const el = document.getElementById('spicyTime');
+    const box = document.getElementById('spicyCountdown');
+    if(!el || !box) return;
+
+    // Define um prazo persistente (ex.: 2h a partir do primeiro acesso)
+    const KEY = 'eletricapro_lifetime_countdown_end';
+    let end = Number(localStorage.getItem(KEY) || 0);
+    const now = Date.now();
+    const TWO_HOURS = 2 * 60 * 60 * 1000;
+
+    if(!end || end < now){
+      end = now + TWO_HOURS;
+      localStorage.setItem(KEY, String(end));
+    }
+
+    function pad(n){ return String(n).padStart(2,'0'); }
+    function tick(){
+      const diff = Math.max(0, end - Date.now());
+      const h = Math.floor(diff / 3600000);
+      const m = Math.floor((diff % 3600000) / 60000);
+      const s = Math.floor((diff % 60000) / 1000);
+      el.textContent = `${pad(h)}:${pad(m)}:${pad(s)}`;
+      if(diff <= 0){
+        // reinicia com outro prazo curto
+        end = Date.now() + TWO_HOURS;
+        localStorage.setItem(KEY, String(end));
+      }
+    }
+    tick();
+    setInterval(tick, 1000);
+  })();
+</script>
+
 <script defer src="https://static.cloudflareinsights.com/beacon.min.js/v8c78df7c7c0f484497ecbca7046644da1771523124516" integrity="sha512-8DS7rgIrAmghBFwoOTujcf6D9rXvH8xm8JQ1Ja01h9QX8EzXldiszufYa4IFfKdLUKTTrnSFXLDkUEOTrZQ8Qg==" data-cf-beacon='{"version":"2024.11.0","token":"4edd5f8ec12a48cfa682ab8261b80a79","server_timing":{"name":{"cfCacheStatus":true,"cfEdge":true,"cfExtPri":true,"cfL4":true,"cfOrigin":true,"cfSpeedBrain":true},"location_startswith":null}}' crossorigin="anonymous"></script>
 </body>
 </html>
