@@ -1,234 +1,150 @@
-# EletricaPRO — Guia de Deploy Completo
-## Cloud Functions + 3 Planos PRO (Mensal / Anual / Vitalício)
+================================================================================
+  README-IMPLEMENTACAO.txt
+  ElétricaPro — Pacote Legal LGPD
+  COFservicos · CNPJ 31.577.846/0001-12 · Iguape/SP
+  Versão dos documentos: 2026-03-v1
+================================================================================
 
----
+ARQUIVOS INCLUÍDOS NESTE PACOTE
+────────────────────────────────
+  politica-de-privacidade.html   → Política de Privacidade (LGPD)
+  termos-de-uso.html             → Termos de Uso
+  etica-e-conformidade.html      → Ética & Conformidade
+  consentimento-li-e-aceito.js   → Modal "Li e aceito" (bloqueio + localStorage)
+  snippet-head.html              → Trecho para colar no <head> do index.html
+  snippet-footer-links.html      → Rodapé legal para colar antes de </body>
+  README-IMPLEMENTACAO.txt       → Este arquivo
 
-## 📁 Estrutura do Projeto
 
-```
-eletricapro_v2/
-├── firebase.json              ← config Firebase (hosting, functions, emulator)
-├── firestore.rules            ← regras de segurança atualizadas
-├── firestore.indexes.json     ← índices compostos necessários
-├── functions/
-│   ├── package.json           ← dependências Node.js
-│   └── index.js               ← 6 Cloud Functions
-└── public/
-    ├── pro.html               ← tela PRO com 3 planos (cole no seu app)
-    └── admin.html             ← painel admin com aprovação 1 clique
-```
+COMO INSTALAR (PASSO A PASSO)
+────────────────────────────────
 
----
+PASSO 1 — Copie os arquivos para o seu site
+  Coloque TODOS os arquivos na RAIZ do seu site:
+  
+    /eletricapro/
+    ├── index.html                     ← já existe
+    ├── manifest.json                  ← já existe
+    ├── sw.js                          ← já existe
+    ├── politica-de-privacidade.html   ← NOVO
+    ├── termos-de-uso.html             ← NOVO
+    ├── etica-e-conformidade.html      ← NOVO
+    └── consentimento-li-e-aceito.js   ← NOVO
 
-## ⚙️ PASSO 1 — Configurar Firebase Console
+  Se quiser organizar em subpastas, ajuste os caminhos nos
+  href/src de acordo.
 
-### A) Authentication
-1. Acesse console.firebase.google.com → seu projeto
-2. Authentication → Sign-in method → **Google → Ativar**
 
-### B) Cloud Firestore
-1. Firestore Database → **Criar banco**
-2. Escolha modo Produção
-3. Região recomendada: **southamerica-east1 (São Paulo)**
+PASSO 2 — Edite o index.html (ADICIONAR NO <head>)
+  Abra seu index.html e localize a tag </head>.
+  Cole ANTES dela:
 
-### C) Cloud Functions
-1. Faça upgrade para plano **Blaze (pay-as-you-go)**
-   - Necessário para Cloud Functions
-   - Uso do gratuito é muito amplo para esse app (sem custo real)
+    <!-- ElétricaPro · LGPD Consent Script -->
+    <script src="consentimento-li-e-aceito.js" defer></script>
+    <meta name="referrer" content="strict-origin-when-cross-origin">
 
----
+  (O conteúdo completo está no arquivo snippet-head.html)
 
-## ⚙️ PASSO 2 — Descobrir seu UID Admin
 
-1. Acesse o app, faça login com Google
-2. Abra DevTools → Console → execute:
-   ```js
-   firebase.auth().currentUser.uid
-   ```
-   OU veja em Authentication → Users no console Firebase
-3. Copie seu UID
+PASSO 3 — Edite o index.html (ADICIONAR NO RODAPÉ)
+  Localize a tag </body> no index.html.
+  Cole ANTES dela o conteúdo de snippet-footer-links.html.
 
----
+  O rodapé ficará assim (exemplo):
 
-## ⚙️ PASSO 3 — Substituir configurações nos arquivos
+    ...
+    <footer class="ep-legal-footer">
+      <div class="ep-legal-brand">⚡ ElétricaPro</div>
+      <div class="ep-legal-links">
+        <a href="politica-de-privacidade.html">🔒 Política de Privacidade</a>
+        <a href="termos-de-uso.html">📋 Termos de Uso</a>
+        <a href="etica-e-conformidade.html">🤝 Ética & Conformidade</a>
+        <a href="mailto:eletricaproapp@gmail.com">✉ Suporte</a>
+      </div>
+      <div class="ep-legal-copy">
+        © 2026 COFservicos · CNPJ 31.577.846/0001-12 · Iguape/SP
+      </div>
+    </footer>
+    </body>
+    </html>
 
-### Em `functions/index.js` (linha 20):
-```js
-adminUids: ["COLE_SEU_UID_AQUI"],
-```
 
-### Em `public/admin.html` e `public/pro.html`:
-Substitua o bloco `firebaseConfig` com seus dados reais:
-```js
-const firebaseConfig = {
-  apiKey:            "...",
-  authDomain:        "...",
-  projectId:         "...",
-  storageBucket:     "...",
-  messagingSenderId: "...",
-  appId:             "..."
-};
-```
+PASSO 4 — Publique no GitHub Pages
+  Faça commit e push de todos os novos arquivos:
 
-### Em `public/pro.html` — links do PicPay:
-```js
-const PICPAY_LINKS = {
-  monthly:  "https://picpay.me/seunome/19.90",
-  annual:   "https://picpay.me/seunome/149.90",
-  lifetime: "https://picpay.me/seunome/299.90"
-};
-```
+    git add politica-de-privacidade.html termos-de-uso.html \
+            etica-e-conformidade.html consentimento-li-e-aceito.js
+    git commit -m "feat: adiciona documentos legais LGPD + modal aceite"
+    git push origin main
 
----
+  Aguarde ~1 min e acesse seu site — o modal aparecerá!
 
-## ⚙️ PASSO 4 — Instalar Firebase CLI e fazer deploy
 
-```bash
-# Instalar Firebase CLI (uma vez)
-npm install -g firebase-tools
+COMO FUNCIONA O MODAL "LI E ACEITO"
+────────────────────────────────────
+  • Ao abrir o app, o script verifica se o usuário já aceitou a versão
+    atual dos termos (LEGAL_VERSION = '2026-03-v1').
+  
+  • Se ainda não aceitou → exibe modal bloqueando o uso até aceitar.
+  
+  • O usuário lê os links, marca o checkbox e clica em "Confirmar".
+  
+  • O aceite é salvo no localStorage com:
+      - aceito: true
+      - versao: '2026-03-v1'
+      - data: (ISO 8601)
+      - ua: (User-Agent resumido)
+  
+  • Na próxima abertura, o modal não aparece mais.
+  
+  PARA FORÇAR NOVO ACEITE (ex: quando atualizar os textos):
+    Abra consentimento-li-e-aceito.js e altere a linha:
+      var LEGAL_VERSION = '2026-03-v1';
+    Para algo como:
+      var LEGAL_VERSION = '2026-06-v2';
+    Faça deploy — todos os usuários verão o modal novamente.
 
-# Login
-firebase login
 
-# Entrar na pasta do projeto
-cd eletricapro_v2
+COMPATIBILIDADE COM PWA (manifest.json + sw.js)
+────────────────────────────────────────────────
+  O script foi desenvolvido para PWA:
+  
+  • Funciona ANTES do Firebase Auth ser carregado (defer garante isso).
+  • Não interfere no Service Worker (sw.js).
+  • O localStorage é a melhor forma de salvar consentimento em PWA
+    (cookies podem ser bloqueados em alguns contextos standalone).
+  • Quando o app é adicionado à tela inicial (standalone mode),
+    o modal funciona normalmente.
 
-# Instalar dependências das Functions
-cd functions && npm install && cd ..
 
-# Deploy completo (rules + indexes + functions + hosting)
-firebase deploy
+COMPATIBILIDADE COM FIREBASE AUTH (CDN)
+─────────────────────────────────────────
+  O Firebase Auth é carregado no final do index.html via CDN.
+  O script de consentimento usa "defer" → executa APÓS o DOM estar
+  pronto, mas não bloqueia o carregamento do Firebase.
+  
+  Ordem de execução:
+    1. HTML/CSS carregados
+    2. consentimento-li-e-aceito.js executado (modal aparece se necessário)
+    3. Firebase Auth CDN carregado
+    4. Usuário aceita os termos → app fica disponível
 
-# OU deploy separado:
-firebase deploy --only functions
-firebase deploy --only firestore:rules
-firebase deploy --only firestore:indexes
-firebase deploy --only hosting
-```
 
----
+DADOS DO CONTROLADOR (para referência)
+────────────────────────────────────────
+  Razão Social:  COFservicos
+  CNPJ:          31.577.846/0001-12
+  Responsável:   CPF 338.951.628-09
+  Cidade/UF:     Iguape/SP
+  E-mail:        eletricaproapp@gmail.com
+  Versão legal:  2026-03-v1
 
-## ⚙️ PASSO 5 — Aplicar Firestore Rules e Indexes
 
-Ao rodar `firebase deploy`, as rules e indexes são aplicadas automaticamente.
+DÚVIDAS?
+────────
+  Entre em contato: eletricaproapp@gmail.com
 
-Se quiser aplicar manualmente no console:
-- Rules: Firestore → Rules → cole o conteúdo de `firestore.rules`
-- Indexes: são criados automaticamente via `firebase deploy --only firestore:indexes`
-
----
-
-## 🔔 Cloud Functions implantadas
-
-| Function | Tipo | Descrição |
-|---|---|---|
-| `approvePro` | Callable (admin) | Aprova solicitação e ativa PRO |
-| `rejectPro` | Callable (admin) | Rejeita solicitação com motivo |
-| `revokeProManual` | Callable (admin) | Revoga PRO de um usuário |
-| `renewPro` | Callable (admin) | Renova plano de um usuário |
-| `checkProExpiry` | Scheduled (01h BRT) | Expira assinaturas mensais/anuais |
-| `onProRequest` | Firestore trigger | Notifica admin em nova solicitação |
-
----
-
-## 💰 Planos PRO
-
-| Plano | Preço | Duração | Campo no Firestore |
-|---|---|---|---|
-| Mensal | R$ 19,90 | 30 dias | `proUntil = now + 30d` |
-| Anual | R$ 149,90 | 365 dias | `proUntil = now + 365d` |
-| Vitalício | R$ 299,90 | Permanente | `proUntil = null, proType = lifetime` |
-
----
-
-## 🗄️ Estrutura do Firestore
-
-### `users/{uid}`
-```json
-{
-  "email":       "usuario@gmail.com",
-  "photo":       "https://...",
-  "pro":         true,
-  "proType":     "monthly",        // "monthly" | "annual" | "lifetime"
-  "proUntil":    Timestamp,        // null para vitalício
-  "proSince":    Timestamp,
-  "createdAt":   Timestamp,
-  "updatedAt":   Timestamp
-}
-```
-
-### `pro_requests/{docId}`
-```json
-{
-  "uid":        "uid_do_usuario",
-  "email":      "usuario@gmail.com",
-  "plan":       "annual",          // "monthly" | "annual" | "lifetime"
-  "status":     "pending",         // "pending" | "approved" | "rejected"
-  "createdAt":  Timestamp,
-  "approvedAt": Timestamp,
-  "approvedBy": "uid_admin",
-  "reason":     "Pagamento não confirmado"  // só em rejected
-}
-```
-
-### `admin_notifications/{docId}`
-```json
-{
-  "type":       "pro_request",
-  "requestId":  "docId",
-  "uid":        "uid_usuario",
-  "email":      "usuario@gmail.com",
-  "plan":       "lifetime",
-  "planLabel":  "R$ 299,90 único",
-  "read":       false,
-  "createdAt":  Timestamp
-}
-```
-
----
-
-## 📱 Fluxo completo
-
-```
-Usuário abre pro.html
-  → Clica "Entrar com Google"
-  → Escolhe plano (Mensal / Anual / Vitalício)
-  → App abre PicPay no valor correto
-  → Cria pro_requests/{docId} com status "pending"
-  → Usuário envia comprovante (WhatsApp, e-mail, etc.)
-
-Admin recebe notificação
-  → Abre admin.html
-  → Vê solicitação pendente com nome, e-mail, plano
-  → Clica "✅ Aprovar"
-  → Cloud Function approvePro() executa:
-      - Seta users/{uid}.pro = true
-      - Seta users/{uid}.proType = plan
-      - Seta users/{uid}.proUntil = agora + dias do plano
-      - Marca pro_requests como "approved"
-
-App do usuário detecta mudança (onSnapshot) em tempo real
-  → Status muda para "PRO ATIVO ✓"
-  → localStorage.eletricapro_trial.isPro = true
-  → Todos os recursos desbloqueados
-```
-
----
-
-## 🔄 Expiração automática
-
-Todo dia às 01h (horário de Brasília), a função `checkProExpiry` roda e:
-- Busca usuários com `pro = true` e `proType in [monthly, annual]`
-- Filtra os com `proUntil <= agora`
-- Seta `pro = false` e `expiredAt = agora`
-
-O app detecta a mudança via `onSnapshot` e bloqueia automaticamente.
-
----
-
-## 🛡️ Segurança
-
-- Nenhum cliente pode modificar `users/{uid}` diretamente
-- Somente Cloud Functions com Admin SDK alteram o status PRO
-- Admin autenticado com UID validado no servidor (não no cliente)
-- Regras do Firestore validam plano, uid e email na criação da solicitação
+================================================================================
+  Gerado em: março de 2026
+  © COFservicos — Todos os direitos reservados
+================================================================================
