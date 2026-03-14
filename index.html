@@ -1483,7 +1483,384 @@
         <button class="btn" onclick="addEnergiaRow()">➕ Adicionar</button>
         <button class="btn btn-yellow" onclick="calcularEnergiaMensal()">💰 Calcular Custo</button>
         <button class="btn btn-yellow" onclick="gerarPDFCalc('Custo Energia')">📄 PDF</button>
-        <div id="resultEnergiaMes"></div>
+            <div id="resultEnergiaMes"></div>
+  </div>
+
+  <!-- ===== TABELA DE REFERÊNCIA — POTÊNCIA DOS APARELHOS ===== -->
+  <div class="calc-card" style="margin-top:1.2rem;">
+    <h3>📋 Tabela de Referência — Potência dos Aparelhos</h3>
+    <p style="font-size:0.82rem;color:var(--text-muted);margin-bottom:1rem;">
+      Use os valores abaixo como referência para preencher a calculadora acima. 
+      Atenção às observações (⚠️) de alguns aparelhos.
+    </p>
+
+    <div class="table-responsive">
+      <table>
+        <thead>
+          <tr>
+            <th>Aparelho</th>
+            <th>Potência Típica (W)</th>
+            <th>Observação</th>
+          </tr>
+        </thead>
+        <tbody>
+
+          <!-- CLIMATIZAÇÃO -->
+          <tr>
+            <td colspan="3" style="background:rgba(33,150,243,0.12);font-weight:700;color:var(--yellow-soft);font-size:0.8rem;letter-spacing:0.5px;">
+              🌡️ CLIMATIZAÇÃO
+            </td>
+          </tr>
+          <tr>
+            <td>Ar-condicionado 7.000 BTU</td>
+            <td>700 – 900 W</td>
+            <td></td>
+          </tr>
+          <tr>
+            <td>Ar-condicionado 9.000 BTU</td>
+            <td>900 – 1.100 W</td>
+            <td></td>
+          </tr>
+          <tr>
+            <td>Ar-condicionado 12.000 BTU</td>
+            <td>1.100 – 1.400 W</td>
+            <td></td>
+          </tr>
+          <tr>
+            <td>Ar-condicionado 18.000 BTU</td>
+            <td>1.600 – 2.000 W</td>
+            <td></td>
+          </tr>
+          <tr>
+            <td>Ventilador de teto</td>
+            <td>60 – 90 W</td>
+            <td></td>
+          </tr>
+          <tr>
+            <td>Ventilador de coluna</td>
+            <td>40 – 70 W</td>
+            <td></td>
+          </tr>
+
+          <!-- COZINHA / ALIMENTAÇÃO -->
+          <tr>
+            <td colspan="3" style="background:rgba(33,150,243,0.12);font-weight:700;color:var(--yellow-soft);font-size:0.8rem;letter-spacing:0.5px;">
+              🍳 COZINHA / ALIMENTAÇÃO
+            </td>
+          </tr>
+          <tr>
+            <td>Geladeira / Refrigerador</td>
+            <td>100 – 350 W</td>
+            <td>
+              <span style="color:#ffca28;font-size:0.82rem;">
+                ⚠️ O compressor não funciona 100% do tempo. Para uso normal, 
+                considere <strong>50% das horas</strong> (ex: se fica ligada 24h, 
+                use 12h/dia na calculadora). Em uso intenso (porta aberta com frequência), 
+                use 16–18h/dia.
+              </span>
+            </td>
+          </tr>
+          <tr>
+            <td>Freezer vertical/horizontal</td>
+            <td>150 – 400 W</td>
+            <td>
+              <span style="color:#ffca28;font-size:0.82rem;">
+                ⚠️ Assim como a geladeira, o compressor cicla. 
+                Considere <strong>50% das horas</strong> para uso doméstico normal. 
+                Freezers mais velhos ou sem inversores podem chegar a 60–70%.
+              </span>
+            </td>
+          </tr>
+          <tr>
+            <td>Micro-ondas</td>
+            <td>1.000 – 1.500 W</td>
+            <td>
+              <span style="color:var(--text-muted);font-size:0.82rem;">
+                💡 Uso médio: 15–30 min/dia. Use 0,25–0,5h/dia na calculadora.
+              </span>
+            </td>
+          </tr>
+          <tr>
+            <td>Forno elétrico / Air fryer grande</td>
+            <td>1.500 – 2.500 W</td>
+            <td>
+              <span style="color:var(--text-muted);font-size:0.82rem;">
+                💡 Uso intermitente. Estime o tempo real de uso.
+              </span>
+            </td>
+          </tr>
+          <tr>
+            <td>Cafeteira elétrica</td>
+            <td>800 – 1.200 W</td>
+            <td>
+              <span style="color:var(--text-muted);font-size:0.82rem;">
+                💡 Tempo de uso real: ~5–10 min por preparo.
+              </span>
+            </td>
+          </tr>
+          <tr>
+            <td>Liquidificador</td>
+            <td>300 – 700 W</td>
+            <td></td>
+          </tr>
+          <tr>
+            <td>Batedeira</td>
+            <td>200 – 500 W</td>
+            <td></td>
+          </tr>
+          <tr>
+            <td>Coifa / Exaustor</td>
+            <td>100 – 300 W</td>
+            <td></td>
+          </tr>
+          <tr>
+            <td>Lava-louças</td>
+            <td>1.200 – 2.000 W</td>
+            <td>
+              <span style="color:var(--text-muted);font-size:0.82rem;">
+                💡 Ciclo de 1–2h/uso. Estime quantos ciclos por mês.
+              </span>
+            </td>
+          </tr>
+
+          <!-- BANHO / ÁGUA -->
+          <tr>
+            <td colspan="3" style="background:rgba(33,150,243,0.12);font-weight:700;color:var(--yellow-soft);font-size:0.8rem;letter-spacing:0.5px;">
+              🚿 BANHO / ÁGUA
+            </td>
+          </tr>
+          <tr>
+            <td>Chuveiro elétrico (baixa)</td>
+            <td>4.000 – 5.000 W</td>
+            <td>
+              <span style="color:#f44336;font-size:0.82rem;">
+                🔴 Maior consumidor residencial. Circuito exclusivo obrigatório.
+              </span>
+            </td>
+          </tr>
+          <tr>
+            <td>Chuveiro elétrico (média/alta)</td>
+            <td>5.500 – 7.500 W</td>
+            <td>
+              <span style="color:#f44336;font-size:0.82rem;">
+                🔴 Circuito exclusivo 6 mm². Tempo médio de banho: 8–15 min/dia.
+              </span>
+            </td>
+          </tr>
+          <tr>
+            <td>Aquecedor de passagem a gás</td>
+            <td>~ 10 W (bomba)</td>
+            <td>
+              <span style="color:#4caf50;font-size:0.82rem;">
+                ✅ Praticamente sem consumo elétrico.
+              </span>
+            </td>
+          </tr>
+          <tr>
+            <td>Bomba d'água (residencial)</td>
+            <td>500 – 1.500 W</td>
+            <td>
+              <span style="color:#ffca28;font-size:0.82rem;">
+                ⚠️ Funciona de forma intermitente. Estimativa típica: 
+                1–2h/dia para uso doméstico normal.
+              </span>
+            </td>
+          </tr>
+
+          <!-- LAVANDERIA -->
+          <tr>
+            <td colspan="3" style="background:rgba(33,150,243,0.12);font-weight:700;color:var(--yellow-soft);font-size:0.8rem;letter-spacing:0.5px;">
+              👕 LAVANDERIA
+            </td>
+          </tr>
+          <tr>
+            <td>Máquina de lavar (ciclo de lavagem)</td>
+            <td>500 – 1.000 W</td>
+            <td>
+              <span style="color:var(--text-muted);font-size:0.82rem;">
+                💡 Ciclo completo: ~1h. Estime pelo nº de ciclos/mês.
+              </span>
+            </td>
+          </tr>
+          <tr>
+            <td>Secadora de roupas elétrica</td>
+            <td>2.000 – 5.000 W</td>
+            <td>
+              <span style="color:#f44336;font-size:0.82rem;">
+                🔴 Alto consumo. Prefira secagem ao sol sempre que possível.
+              </span>
+            </td>
+          </tr>
+          <tr>
+            <td>Ferro de passar (convencional)</td>
+            <td>1.000 – 2.000 W</td>
+            <td>
+              <span style="color:#ffca28;font-size:0.82rem;">
+                ⚠️ O termostato desliga e religar ciclicamente. 
+                Considere <strong>50–70% do tempo</strong> com potência plena.
+              </span>
+            </td>
+          </tr>
+
+          <!-- ENTRETENIMENTO / INFORMÁTICA -->
+          <tr>
+            <td colspan="3" style="background:rgba(33,150,243,0.12);font-weight:700;color:var(--yellow-soft);font-size:0.8rem;letter-spacing:0.5px;">
+              📺 ENTRETENIMENTO / INFORMÁTICA
+            </td>
+          </tr>
+          <tr>
+            <td>TV LED 32"</td>
+            <td>40 – 60 W</td>
+            <td></td>
+          </tr>
+          <tr>
+            <td>TV LED 50" – 55"</td>
+            <td>80 – 130 W</td>
+            <td></td>
+          </tr>
+          <tr>
+            <td>TV LED 65" ou maior</td>
+            <td>120 – 200 W</td>
+            <td></td>
+          </tr>
+          <tr>
+            <td>Computador desktop (completo)</td>
+            <td>150 – 400 W</td>
+            <td>
+              <span style="color:var(--text-muted);font-size:0.82rem;">
+                💡 PCs gamer com placa de vídeo dedicada podem ultrapassar 400 W.
+              </span>
+            </td>
+          </tr>
+          <tr>
+            <td>Notebook / Laptop</td>
+            <td>45 – 90 W</td>
+            <td></td>
+          </tr>
+          <tr>
+            <td>Monitor LED 24"</td>
+            <td>20 – 40 W</td>
+            <td></td>
+          </tr>
+          <tr>
+            <td>Roteador Wi-Fi</td>
+            <td>5 – 15 W</td>
+            <td>
+              <span style="color:var(--text-muted);font-size:0.82rem;">
+                💡 Fica ligado 24h/dia — use 24h e 30 dias na calculadora.
+              </span>
+            </td>
+          </tr>
+          <tr>
+            <td>Videogame (PS5 / Xbox Series X)</td>
+            <td>100 – 200 W</td>
+            <td></td>
+          </tr>
+
+          <!-- ILUMINAÇÃO -->
+          <tr>
+            <td colspan="3" style="background:rgba(33,150,243,0.12);font-weight:700;color:var(--yellow-soft);font-size:0.8rem;letter-spacing:0.5px;">
+              💡 ILUMINAÇÃO
+            </td>
+          </tr>
+          <tr>
+            <td>Lâmpada LED bulbo 9W</td>
+            <td>9 W</td>
+            <td>
+              <span style="color:#4caf50;font-size:0.82rem;">
+                ✅ Equivalente à incandescente 60W. Multiplique pelo nº de lâmpadas.
+              </span>
+            </td>
+          </tr>
+          <tr>
+            <td>Lâmpada LED bulbo 12W</td>
+            <td>12 W</td>
+            <td></td>
+          </tr>
+          <tr>
+            <td>Luminária LED tubular (T8) 18W</td>
+            <td>18 W</td>
+            <td></td>
+          </tr>
+          <tr>
+            <td>Spot/Downlight LED 7W</td>
+            <td>7 W</td>
+            <td></td>
+          </tr>
+
+          <!-- OUTROS -->
+          <tr>
+            <td colspan="3" style="background:rgba(33,150,243,0.12);font-weight:700;color:var(--yellow-soft);font-size:0.8rem;letter-spacing:0.5px;">
+              🔧 OUTROS EQUIPAMENTOS
+            </td>
+          </tr>
+          <tr>
+            <td>Aspirador de pó</td>
+            <td>1.000 – 1.500 W</td>
+            <td>
+              <span style="color:var(--text-muted);font-size:0.82rem;">
+                💡 Uso breve: ~15–30 min/dia nos dias de uso.
+              </span>
+            </td>
+          </tr>
+          <tr>
+            <td>Secador de cabelo</td>
+            <td>1.500 – 2.200 W</td>
+            <td>
+              <span style="color:var(--text-muted);font-size:0.82rem;">
+                💡 Uso: ~5–15 min/dia nos dias de uso.
+              </span>
+            </td>
+          </tr>
+          <tr>
+            <td>Carregador de celular</td>
+            <td>5 – 25 W</td>
+            <td></td>
+          </tr>
+          <tr>
+            <td>Portão eletrônico (motor)</td>
+            <td>200 – 500 W</td>
+            <td>
+              <span style="color:var(--text-muted);font-size:0.82rem;">
+                💡 Acionamento breve (~30 seg/vez). Calcule pela quantidade de acionamentos.
+              </span>
+            </td>
+          </tr>
+          <tr>
+            <td>Motor monofásico ½ CV</td>
+            <td>~370 W</td>
+            <td></td>
+          </tr>
+          <tr>
+            <td>Motor monofásico 1 CV</td>
+            <td>~750 W</td>
+            <td></td>
+          </tr>
+          <tr>
+            <td>Motor monofásico 2 CV</td>
+            <td>~1.500 W</td>
+            <td></td>
+          </tr>
+
+        </tbody>
+      </table>
+    </div>
+
+    <!-- LEGENDA -->
+    <div style="margin-top:1rem;padding:0.9rem 1rem;background:rgba(255,255,255,0.04);border:1px solid rgba(33,150,243,0.2);border-radius:10px;font-size:0.82rem;line-height:1.8;color:var(--text-muted);">
+      <strong style="color:var(--yellow-soft);">📌 Legenda das Observações:</strong><br>
+      <span style="color:#ffca28;">⚠️ Atenção</span> — Aparelho com funcionamento cíclico ou intermitente: 
+      considere apenas o tempo médio de acionamento real, não o tempo total conectado.<br>
+      <span style="color:#f44336;">🔴 Alto consumo</span> — Equipamento com potência elevada. 
+      Impacta significativamente a conta de luz.<br>
+      <span style="color:#4caf50;">✅ Baixo consumo</span> — Equipamento eficiente. 
+      Pequeno impacto na conta de luz.<br>
+      <span>💡 Dica</span> — Sugestão para melhor precisão no cálculo.
+    </div>
+  </div>
+
+</div>
+
       </div>
     </div>
 
