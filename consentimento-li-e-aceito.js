@@ -22,7 +22,7 @@
   /* ─────────────────────────────────────────
      CONFIGURAÇÃO — edite aqui quando precisar
   ───────────────────────────────────────── */
-  var LEGAL_VERSION = '2026-03-v1';       // Mude para forçar novo aceite
+  var LEGAL_VERSION = '2026-03-v2';       // Mude para forçar novo aceite
   var STORAGE_KEY   = 'ep_legal_aceite';  // Chave no localStorage
   var BLOQUEAR_USO  = true;               // true = bloqueia app até aceitar
 
