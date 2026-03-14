@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Política de Privacidade — ElétricaPro</title>
+  <style>
+    :root {
+      --primary: #f59e0b;
+      --dark: #1e293b;
+      --text: #334155;
+      --bg: #f8fafc;
+      --card: #ffffff;
+      --border: #e2e8f0;
+      --radius: 12px;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.7;
+    }
+    header {
+      background: var(--dark);
+      color: #fff;
+      padding: 2rem 1.5rem 1.5rem;
+      text-align: center;
+    }
+    header .logo { font-size: 1rem; color: var(--primary); font-weight: 700; letter-spacing: 2px; text-transform: uppercase; }
+    header h1 { font-size: 1.8rem; margin: 0.4rem 0 0.2rem; }
+    header p { font-size: 0.85rem; color: #94a3b8; }
+    .container { max-width: 860px; margin: 0 auto; padding: 2rem 1.5rem 4rem; }
+    .badge {
+      display: inline-block;
+      background: #ecfdf5;
+      color: #065f46;
+      border: 1px solid #6ee7b7;
+      border-radius: 99px;
+      font-size: 0.78rem;
+      font-weight: 600;
+      padding: 0.25rem 0.9rem;
+      margin-bottom: 1.5rem;
+    }
+    section { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); padding: 1.5rem 2rem; margin-bottom: 1.25rem; }
+    section h2 {
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: var(--dark);
+      margin-bottom: 0.85rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 2px solid var(--primary);
+      display: inline-block;
+    }
+    p, li { font-size: 0.93rem; color: var(--text); }
+    ul { padding-left: 1.4rem; margin-top: 0.5rem; }
+    li { margin-bottom: 0.35rem; }
+    a { color: var(--primary); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    .info-box {
+      background: #fffbeb;
+      border-left: 4px solid var(--primary);
+      border-radius: 6px;
+      padding: 1rem 1.25rem;
+      margin-top: 0.75rem;
+      font-size: 0.88rem;
+    }
+    .info-box strong { color: var(--dark); }
+    footer-back { display: block; text-align: center; margin-top: 2.5rem; }
+    .btn-back {
+      display: inline-block;
+      background: var(--dark);
+      color: #fff;
+      border-radius: 8px;
+      padding: 0.65rem 1.6rem;
+      font-size: 0.9rem;
+      font-weight: 600;
+      text-decoration: none;
+      transition: background 0.2s;
+    }
+    .btn-back:hover { background: #334155; text-decoration: none; }
+    table { width: 100%; border-collapse: collapse; margin-top: 0.75rem; font-size: 0.88rem; }
+    th { background: #f1f5f9; color: var(--dark); padding: 0.6rem 0.8rem; text-align: left; border: 1px solid var(--border); }
+    td { padding: 0.55rem 0.8rem; border: 1px solid var(--border); vertical-align: top; }
+    tr:nth-child(even) td { background: #f8fafc; }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="logo">⚡ ElétricaPro</div>
+  <h1>Política de Privacidade</h1>
+  <p>Última atualização: março de 2026</p>
+</header>
+
+<div class="container">
+  <span class="badge">✅ Conforme LGPD — Lei nº 13.709/2018</span>
+
+  <!-- 1 -->
+  <section>
+    <h2>1. Identificação do Controlador</h2>
+    <p>O responsável pelo tratamento dos seus dados pessoais (Controlador, conforme art. 5º, VI da LGPD) é:</p>
+    <div class="info-box">
+      <strong>Razão Social / Nome:</strong> COFservicos<br>
+      <strong>CNPJ:</strong> 31.577.846/0001-12<br>
+      <strong>Cidade/UF:</strong> Iguape/SP — Brasil<br>
+      <strong>E-mail de privacidade:</strong> <a href="mailto:eletricaproapp@gmail.com">eletricaproapp@gmail.com</a>
+    </div>
+  </section>
+
+  <!-- 2 -->
+  <section>
+    <h2>2. Dados Coletados e Finalidades</h2>
+    <p>Coletamos somente os dados estritamente necessários para o funcionamento do aplicativo:</p>
+    <table>
+      <thead>
+        <tr>
+          <th>Dado</th>
+          <th>Finalidade</th>
+          <th>Base Legal (LGPD)</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>E-mail e senha (Firebase Auth)</td>
+          <td>Autenticação e controle de acesso</td>
+          <td>Execução de contrato (art. 7º, V)</td>
+        </tr>
+        <tr>
+          <td>UID do usuário (Firebase)</td>
+          <td>Identificar sessão e sincronizar dados</td>
+          <td>Execução de contrato (art. 7º, V)</td>
+        </tr>
+        <tr>
+          <td>Dados de orçamentos / serviços elétricos</td>
+          <td>Geração e armazenamento de orçamentos pelo usuário</td>
+          <td>Execução de contrato (art. 7º, V)</td>
+        </tr>
+        <tr>
+          <td>Registro de aceite (LGPD/Termos)</td>
+          <td>Comprovação de consentimento</td>
+          <td>Cumprimento de obrigação legal (art. 7º, II)</td>
+        </tr>
+        <tr>
+          <td>Dados técnicos (logs, erros)</td>
+          <td>Diagnóstico e melhoria do serviço</td>
+          <td>Legítimo interesse (art. 7º, IX)</td>
+        </tr>
+      </tbody>
+    </table>
+    <p style="margin-top:0.75rem;"><strong>Não coletamos</strong> dados sensíveis (saúde, biometria, etc.) nem dados de menores de 18 anos.</p>
+  </section>
+
+  <!-- 3 -->
+  <section>
+    <h2>3. Como Usamos os Dados</h2>
+    <ul>
+      <li>Autenticar seu acesso ao aplicativo ElétricaPro;</li>
+      <li>Armazenar e recuperar seus orçamentos e cálculos elétricos;</li>
+      <li>Registrar e comprovar o aceite dos Termos de Uso e desta Política (LGPD);</li>
+      <li>Melhorar a experiência e corrigir erros no aplicativo;</li>
+      <li>Cumprir obrigações legais e regulatórias.</li>
+    </ul>
+    <p style="margin-top:0.75rem;"><strong>Não vendemos, alugamos ou compartilhamos seus dados com terceiros para fins comerciais.</strong></p>
+  </section>
+
+  <!-- 4 -->
+  <section>
+    <h2>4. Compartilhamento com Terceiros</h2>
+    <p>Os dados podem ser processados pelos seguintes fornecedores, exclusivamente para prestar o serviço:</p>
+    <table>
+      <thead>
+        <tr><th>Fornecedor</th><th>Função</th><th>País</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Google Firebase</strong></td>
+          <td>Autenticação (Firebase Auth) e banco de dados</td>
+          <td>EUA (SCCs aplicáveis)</td>
+        </tr>
+        <tr>
+          <td><strong>GitHub Pages</strong></td>
+          <td>Hospedagem do aplicativo web</td>
+          <td>EUA</td>
+        </tr>
+      </tbody>
+    </table>
+    <p style="margin-top:0.75rem;">Todos os fornecedores possuem políticas de proteção de dados adequadas. Transferências internacionais ocorrem conforme art. 33 da LGPD.</p>
+  </section>
+
+  <!-- 5 -->
+  <section>
+    <h2>5. Armazenamento e Retenção</h2>
+    <ul>
+      <li><strong>Firebase Auth:</strong> enquanto a conta estiver ativa. Excluída a conta, os dados são removidos em até 90 dias.</li>
+      <li><strong>Orçamentos/dados do app:</strong> armazenados pelo período de uso ativo. O usuário pode excluir a qualquer momento.</li>
+      <li><strong>Registro de aceite (localStorage):</strong> armazenado localmente no dispositivo do usuário.</li>
+      <li><strong>Logs de erro:</strong> até 12 meses, excluídos automaticamente.</li>
+    </ul>
+  </section>
+
+  <!-- 6 -->
+  <section>
+    <h2>6. PWA, Service Worker e Armazenamento Local</h2>
+    <p>O ElétricaPro é um <strong>Progressive Web App (PWA)</strong>. Para funcionar offline e com melhor desempenho:</p>
+    <ul>
+      <li>Um <strong>Service Worker (sw.js)</strong> armazena arquivos estáticos do app em cache no seu dispositivo;</li>
+      <li>O <strong>localStorage</strong> é usado para salvar preferências e o registro de aceite desta Política;</li>
+      <li>Nenhum cookie de rastreamento ou publicidade é utilizado.</li>
+    </ul>
+  </section>
+
+  <!-- 7 -->
+  <section>
+    <h2>7. Segurança</h2>
+    <ul>
+      <li>Comunicação via <strong>HTTPS</strong> (TLS);</li>
+      <li>Autenticação gerenciada pelo <strong>Firebase Auth</strong> (padrão de mercado);</li>
+      <li>Senhas nunca são armazenadas em texto plano;</li>
+      <li>Acesso restrito aos dados apenas por sistemas autorizados.</li>
+    </ul>
+  </section>
+
+  <!-- 8 -->
+  <section>
+    <h2>8. Seus Direitos (LGPD — art. 18)</h2>
+    <p>Você pode, a qualquer momento, solicitar por e-mail para <a href="mailto:eletricaproapp@gmail.com">eletricaproapp@gmail.com</a>:</p>
+    <ul>
+      <li><strong>Confirmação</strong> da existência de tratamento;</li>
+      <li><strong>Acesso</strong> aos dados pessoais que mantemos;</li>
+      <li><strong>Correção</strong> de dados incompletos, inexatos ou desatualizados;</li>
+      <li><strong>Anonimização, bloqueio ou eliminação</strong> de dados desnecessários;</li>
+      <li><strong>Portabilidade</strong> dos seus dados a outro fornecedor;</li>
+      <li><strong>Eliminação</strong> dos dados tratados com base em consentimento;</li>
+      <li><strong>Revogação do consentimento</strong> a qualquer tempo;</li>
+      <li><strong>Oposição</strong> ao tratamento que viole a LGPD.</li>
+    </ul>
+    <p style="margin-top:0.75rem;">Responderemos em até <strong>15 dias úteis</strong>.</p>
+  </section>
+
+  <!-- 9 -->
+  <section>
+    <h2>9. Encarregado (DPO)</h2>
+    <div class="info-box">
+      <strong>Responsável pelo tratamento de dados:</strong> COFservicos<br>
+      <strong>Contato:</strong> <a href="mailto:eletricaproapp@gmail.com">eletricaproapp@gmail.com</a><br>
+      <strong>CNPJ:</strong> 31.577.846/0001-12
+    </div>
+  </section>
+
+  <!-- 10 -->
+  <section>
+    <h2>10. Alterações nesta Política</h2>
+    <p>Podemos atualizar esta Política periodicamente. Quando isso ocorrer:</p>
+    <ul>
+      <li>A data de "Última atualização" será alterada;</li>
+      <li>Um novo aceite será solicitado ao abrir o aplicativo;</li>
+      <li>Você poderá sempre consultar a versão vigente nesta página.</li>
+    </ul>
+  </section>
+
+  <!-- 11 -->
+  <section>
+    <h2>11. Contato e Autoridade Nacional</h2>
+    <p>Para dúvidas: <a href="mailto:eletricaproapp@gmail.com">eletricaproapp@gmail.com</a></p>
+    <p style="margin-top:0.5rem;">Caso não obtenha retorno satisfatório, você pode contatar a <strong>Autoridade Nacional de Proteção de Dados (ANPD)</strong>: <a href="https://www.gov.br/anpd" target="_blank" rel="noopener">www.gov.br/anpd</a></p>
+  </section>
+
+  <footer-back>
+    <a href="index.html" class="btn-back">← Voltar ao ElétricaPro</a>
+  </footer-back>
+</div>
+
+</body>
+</html>

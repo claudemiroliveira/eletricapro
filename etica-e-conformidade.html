@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Ética &amp; Conformidade — ElétricaPro</title>
+  <style>
+    :root {
+      --primary: #f59e0b;
+      --dark: #1e293b;
+      --text: #334155;
+      --bg: #f8fafc;
+      --card: #ffffff;
+      --border: #e2e8f0;
+      --radius: 12px;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.7;
+    }
+    header {
+      background: var(--dark);
+      color: #fff;
+      padding: 2rem 1.5rem 1.5rem;
+      text-align: center;
+    }
+    header .logo { font-size: 1rem; color: var(--primary); font-weight: 700; letter-spacing: 2px; text-transform: uppercase; }
+    header h1 { font-size: 1.8rem; margin: 0.4rem 0 0.2rem; }
+    header p { font-size: 0.85rem; color: #94a3b8; }
+    .container { max-width: 860px; margin: 0 auto; padding: 2rem 1.5rem 4rem; }
+    .badge {
+      display: inline-block;
+      background: #f0fdf4;
+      color: #15803d;
+      border: 1px solid #86efac;
+      border-radius: 99px;
+      font-size: 0.78rem;
+      font-weight: 600;
+      padding: 0.25rem 0.9rem;
+      margin-bottom: 1.5rem;
+    }
+    section { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); padding: 1.5rem 2rem; margin-bottom: 1.25rem; }
+    section h2 {
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: var(--dark);
+      margin-bottom: 0.85rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 2px solid var(--primary);
+      display: inline-block;
+    }
+    p, li { font-size: 0.93rem; color: var(--text); }
+    ul { padding-left: 1.4rem; margin-top: 0.5rem; }
+    li { margin-bottom: 0.35rem; }
+    a { color: var(--primary); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    .value-cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 1rem;
+      margin-top: 1rem;
+    }
+    .value-card {
+      background: #f8fafc;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 1rem;
+      text-align: center;
+    }
+    .value-card .icon { font-size: 1.8rem; margin-bottom: 0.4rem; }
+    .value-card strong { display: block; font-size: 0.9rem; color: var(--dark); margin-bottom: 0.3rem; }
+    .value-card p { font-size: 0.8rem; color: #64748b; }
+    .info-box {
+      background: #fffbeb;
+      border-left: 4px solid var(--primary);
+      border-radius: 6px;
+      padding: 1rem 1.25rem;
+      margin-top: 0.75rem;
+      font-size: 0.88rem;
+    }
+    .green-box {
+      background: #f0fdf4;
+      border-left: 4px solid #22c55e;
+      border-radius: 6px;
+      padding: 1rem 1.25rem;
+      margin-top: 0.75rem;
+      font-size: 0.88rem;
+    }
+    footer-back { display: block; text-align: center; margin-top: 2.5rem; }
+    .btn-back {
+      display: inline-block;
+      background: var(--dark);
+      color: #fff;
+      border-radius: 8px;
+      padding: 0.65rem 1.6rem;
+      font-size: 0.9rem;
+      font-weight: 600;
+      text-decoration: none;
+      transition: background 0.2s;
+    }
+    .btn-back:hover { background: #334155; text-decoration: none; }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="logo">⚡ ElétricaPro</div>
+  <h1>Ética &amp; Conformidade</h1>
+  <p>Última atualização: março de 2026</p>
+</header>
+
+<div class="container">
+  <span class="badge">🤝 Nosso compromisso com você</span>
+
+  <!-- 1 -->
+  <section>
+    <h2>1. Nossos Valores</h2>
+    <p>A <strong>COFservicos</strong> opera o ElétricaPro com base nos seguintes princípios éticos:</p>
+    <div class="value-cards">
+      <div class="value-card">
+        <div class="icon">🔒</div>
+        <strong>Privacidade</strong>
+        <p>Seus dados são seus. Coletamos apenas o necessário.</p>
+      </div>
+      <div class="value-card">
+        <div class="icon">🔍</div>
+        <strong>Transparência</strong>
+        <p>Deixamos claro como o app funciona e o que fazemos com seus dados.</p>
+      </div>
+      <div class="value-card">
+        <div class="icon">⚖️</div>
+        <strong>Responsabilidade</strong>
+        <p>Assumimos nossas obrigações legais e técnicas.</p>
+      </div>
+      <div class="value-card">
+        <div class="icon">🤝</div>
+        <strong>Respeito</strong>
+        <p>Tratamos cada usuário com dignidade e profissionalismo.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 2 -->
+  <section>
+    <h2>2. Conformidade Legal</h2>
+    <p>O ElétricaPro está em conformidade com:</p>
+    <ul>
+      <li><strong>LGPD</strong> — Lei Geral de Proteção de Dados Pessoais (Lei nº 13.709/2018);</li>
+      <li><strong>Marco Civil da Internet</strong> (Lei nº 12.965/2014);</li>
+      <li><strong>Código de Defesa do Consumidor</strong> (Lei nº 8.078/1990) — quando aplicável;</li>
+      <li><strong>Código Civil Brasileiro</strong> para obrigações contratuais;</li>
+      <li>Normas técnicas <strong>ABNT NBR 5410</strong> (referências nos cálculos do app).</li>
+    </ul>
+  </section>
+
+  <!-- 3 -->
+  <section>
+    <h2>3. Proteção de Dados Pessoais (LGPD)</h2>
+    <p>Cumprimos os princípios estabelecidos no art. 6º da LGPD:</p>
+    <ul>
+      <li><strong>Finalidade:</strong> dados coletados para fins legítimos, específicos e informados;</li>
+      <li><strong>Adequação:</strong> tratamento compatível com as finalidades informadas;</li>
+      <li><strong>Necessidade:</strong> limitamos a coleta ao mínimo necessário (data minimization);</li>
+      <li><strong>Livre acesso:</strong> garantimos consulta gratuita sobre seus dados;</li>
+      <li><strong>Qualidade dos dados:</strong> facilitamos correção de dados incompletos;</li>
+      <li><strong>Transparência:</strong> informações claras sobre o tratamento;</li>
+      <li><strong>Segurança:</strong> medidas técnicas para proteger seus dados;</li>
+      <li><strong>Prevenção:</strong> adotamos práticas para evitar danos;</li>
+      <li><strong>Não discriminação:</strong> dados não são usados para fins discriminatórios;</li>
+      <li><strong>Responsabilização:</strong> demonstramos conformidade com a lei.</li>
+    </ul>
+  </section>
+
+  <!-- 4 -->
+  <section>
+    <h2>4. Compromisso Anti-Spam e Anti-Marketing Abusivo</h2>
+    <div class="green-box">✅ A COFservicos <strong>não envia spam</strong> e <strong>não comercializa</strong> dados de usuários para fins publicitários.</div>
+    <ul style="margin-top:0.75rem;">
+      <li>Comunicações são enviadas apenas quando estritamente necessárias (ex.: alertas de segurança da conta);</li>
+      <li>Não utilizamos seus dados para segmentação publicitária;</li>
+      <li>Não integramos redes de anúncios (Google Ads, Meta Ads) que rastreiem usuários do app;</li>
+      <li>Caso você receba comunicação indesejada em nosso nome, reporte imediatamente.</li>
+    </ul>
+  </section>
+
+  <!-- 5 -->
+  <section>
+    <h2>5. Uso Responsável da Tecnologia</h2>
+    <ul>
+      <li><strong>Firebase Auth (Google):</strong> Utilizamos autenticação de mercado para garantir segurança sem armazenar senhas;</li>
+      <li><strong>Service Worker / PWA:</strong> Cache local é usado exclusivamente para desempenho offline do app;</li>
+      <li><strong>localStorage:</strong> Utilizado apenas para preferências do usuário e registro de aceite dos termos;</li>
+      <li><strong>Sem rastreamento:</strong> Não instalamos pixels de rastreamento, cookies de terceiros ou fingerprinting;</li>
+      <li><strong>Código aberto-friendly:</strong> Quando aplicável, utilizamos bibliotecas sob licenças abertas e compatíveis.</li>
+    </ul>
+  </section>
+
+  <!-- 6 -->
+  <section>
+    <h2>6. Segurança da Informação</h2>
+    <ul>
+      <li>Toda comunicação usa <strong>HTTPS/TLS</strong>;</li>
+      <li>Credenciais são gerenciadas exclusivamente pelo <strong>Firebase Auth</strong>;</li>
+      <li>Revisamos periodicamente permissões e acessos ao banco de dados;</li>
+      <li>Em caso de incidente de segurança que afete dados pessoais, notificaremos os usuários e a ANPD conforme exigido pela LGPD (art. 48).</li>
+    </ul>
+  </section>
+
+  <!-- 7 -->
+  <section>
+    <h2>7. Responsabilidade Técnica e Elétrica</h2>
+    <div class="info-box">
+      ⚡ O ElétricaPro é uma ferramenta de <strong>apoio técnico</strong> para profissionais da área elétrica. Todo projeto elétrico deve ser executado e assinado por profissional legalmente habilitado perante o <strong>CREA</strong> ou <strong>CFT</strong>.
+    </div>
+    <ul style="margin-top:0.75rem;">
+      <li>Os cálculos fornecidos seguem como referência as normas ABNT, mas não substituem análise técnica profissional;</li>
+      <li>A COFservicos não se responsabiliza por danos causados pelo uso incorreto dos resultados do app;</li>
+      <li>O profissional que utiliza a ferramenta assume integral responsabilidade técnica e legal pelos projetos executados.</li>
+    </ul>
+  </section>
+
+  <!-- 8 -->
+  <section>
+    <h2>8. Canal de Denúncias e Contato Ético</h2>
+    <p>Se você identificar qualquer prática contrária a estes princípios — incluindo uso indevido de dados, discriminação ou comportamento antiético — entre em contato:</p>
+    <div class="info-box">
+      <strong>COFservicos — Canal de Ética</strong><br>
+      E-mail: <a href="mailto:eletricaproapp@gmail.com">eletricaproapp@gmail.com</a><br>
+      Iguape/SP — Brasil<br><br>
+      <strong>ANPD (Autoridade Nacional de Proteção de Dados):</strong><br>
+      <a href="https://www.gov.br/anpd" target="_blank" rel="noopener">www.gov.br/anpd</a>
+    </div>
+    <p style="margin-top:0.75rem;">Responderemos em até <strong>10 dias úteis</strong>.</p>
+  </section>
+
+  <!-- 9 -->
+  <section>
+    <h2>9. Revisão e Atualização</h2>
+    <p>Este documento é revisado periodicamente para refletir mudanças legais, tecnológicas ou operacionais. A data de atualização fica registrada no topo desta página. Alterações significativas resultarão em novo pedido de aceite no aplicativo.</p>
+  </section>
+
+  <footer-back>
+    <a href="index.html" class="btn-back">← Voltar ao ElétricaPro</a>
+  </footer-back>
+</div>
+
+</body>
+</html>
