@@ -68,7 +68,7 @@
       "url": "/eletricapro/?calc=queda",
       "icons": [
         {
-          "src": "/eletricapro/icons/shortcut-queda.png",
+          "src": "/icons/shortcut-queda.png",
           "sizes": "96x96",
           "type": "image/png"
         }
@@ -81,7 +81,7 @@
       "url": "/eletricapro/?calc=dimensionamento",
       "icons": [
         {
-          "src": "/eletricapro/icons/shortcut-dim.png",
+          "src": "/icons/shortcut-dim.png",
           "sizes": "96x96",
           "type": "image/png"
         }
@@ -94,7 +94,7 @@
       "url": "/eletricapro/?tab=orcamentos",
       "icons": [
         {
-          "src": "/eletricapro/icons/shortcut-orc.png",
+          "src": "/icons/shortcut-orc.png",
           "sizes": "96x96",
           "type": "image/png"
         }
@@ -104,21 +104,21 @@
 
   "screenshots": [
     {
-      "src": "/eletricapro/screenshots/screenshot-mobile-1.png",
+      "src": "/screenshots/screenshot-mobile-1.png",
       "sizes": "390x844",
       "type": "image/png",
       "form_factor": "narrow",
       "label": "Calculadoras elétricas — Lei de Ohm"
     },
     {
-      "src": "/eletricapro/screenshots/screenshot-mobile-2.png",
+      "src": "/screenshots/screenshot-mobile-2.png",
       "sizes": "390x844",
       "type": "image/png",
       "form_factor": "narrow",
       "label": "Tabelas técnicas ABNT NBR 5410"
     },
     {
-      "src": "/eletricapro/screenshots/screenshot-desktop-1.png",
+      "src": "/screenshots/screenshot-desktop-1.png",
       "sizes": "1280x800",
       "type": "image/png",
       "form_factor": "wide",
