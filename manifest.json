@@ -66,13 +66,13 @@
   "screenshots": [
     {
       "src": "/eletricapro/screenshots/tela1.png",
-      "sizes": "1080x1920",
+      "sizes": "720x1280",
       "type": "image/png",
       "form_factor": "narrow"
     },
     {
       "src": "/eletricapro/screenshots/tela2.png",
-      "sizes": "1080x1920",
+      "sizes": "720x1280",
       "type": "image/png",
       "form_factor": "narrow"
     }
