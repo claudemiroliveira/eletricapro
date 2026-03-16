@@ -3,7 +3,7 @@
   "name": "ElétricaPro",
   "short_name": "ElétricaPro",
   "description": "App profissional para cálculos elétricos, tabelas técnicas, instalações e orçamentos",
-  "start_url": "/eletricapro/index.html",
+  "start_url": "/eletricapro/",
   "scope": "/eletricapro/",
   "display": "standalone",
   "display_override": ["standalone", "minimal-ui"],
