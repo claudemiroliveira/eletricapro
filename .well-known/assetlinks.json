@@ -1,1 +1,12 @@
-
+[
+  {
+    "relation": ["delegate_permission/common.handle_all_urls"],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "com.eletricapro.app",
+      "sha256_cert_fingerprints": [
+        "COLOCAR_SHA256_AQUI"
+      ]
+    }
+  }
+]
