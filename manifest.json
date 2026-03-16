@@ -4,57 +4,56 @@
   "description": "Ferramentas profissionais para eletricistas: calculadoras, tabelas ABNT NBR 5410, orçamentos e normas técnicas.",
   "lang": "pt-BR",
   "dir": "ltr",
+
   "start_url": "/eletricapro/?utm_source=pwa",
   "scope": "/eletricapro/",
   "id": "/eletricapro/",
+
   "display": "standalone",
   "display_override": ["window-controls-overlay", "standalone", "browser"],
+
   "orientation": "any",
+
   "theme_color": "#1a1a2e",
   "background_color": "#1a1a2e",
+
   "categories": ["utilities", "productivity", "education"],
+
   "icons": [
     {
       "src": "icons/icon-72.png",
       "sizes": "72x72",
-      "type": "image/png",
-      "purpose": "any"
+      "type": "image/png"
     },
     {
       "src": "icons/icon-96.png",
       "sizes": "96x96",
-      "type": "image/png",
-      "purpose": "any"
+      "type": "image/png"
     },
     {
       "src": "icons/icon-128.png",
       "sizes": "128x128",
-      "type": "image/png",
-      "purpose": "any"
+      "type": "image/png"
     },
     {
       "src": "icons/icon-144.png",
       "sizes": "144x144",
-      "type": "image/png",
-      "purpose": "any"
+      "type": "image/png"
     },
     {
       "src": "icons/icon-152.png",
       "sizes": "152x152",
-      "type": "image/png",
-      "purpose": "any"
+      "type": "image/png"
     },
     {
       "src": "icons/icon-192.png",
       "sizes": "192x192",
-      "type": "image/png",
-      "purpose": "any"
+      "type": "image/png"
     },
     {
       "src": "icons/icon-384.png",
       "sizes": "384x384",
-      "type": "image/png",
-      "purpose": "any"
+      "type": "image/png"
     },
     {
       "src": "icons/icon-512.png",
@@ -63,37 +62,79 @@
       "purpose": "any maskable"
     }
   ],
+
+  "screenshots": [
+    {
+      "src": "/eletricapro/screenshots/tela1.png",
+      "sizes": "1080x1920",
+      "type": "image/png",
+      "form_factor": "narrow"
+    },
+    {
+      "src": "/eletricapro/screenshots/tela2.png",
+      "sizes": "1080x1920",
+      "type": "image/png",
+      "form_factor": "narrow"
+    }
+  ],
+
   "shortcuts": [
     {
       "name": "Lei de Ohm",
       "short_name": "Ohm",
       "description": "Calcular V, I ou R pela Lei de Ohm",
       "url": "/eletricapro/?calc=ohm",
-      "icons": [{ "src": "icons/icon-96.png", "sizes": "96x96", "type": "image/png" }]
+      "icons": [
+        {
+          "src": "icons/icon-96.png",
+          "sizes": "96x96",
+          "type": "image/png"
+        }
+      ]
     },
     {
       "name": "Queda de Tensão",
       "short_name": "Queda V",
       "description": "Calcular queda de tensão no circuito",
       "url": "/eletricapro/?calc=queda",
-      "icons": [{ "src": "icons/icon-96.png", "sizes": "96x96", "type": "image/png" }]
+      "icons": [
+        {
+          "src": "icons/icon-96.png",
+          "sizes": "96x96",
+          "type": "image/png"
+        }
+      ]
     },
     {
       "name": "Dimensionamento",
       "short_name": "Condutor",
       "description": "Dimensionar condutor e disjuntor",
       "url": "/eletricapro/?calc=dimensionamento",
-      "icons": [{ "src": "icons/icon-96.png", "sizes": "96x96", "type": "image/png" }]
+      "icons": [
+        {
+          "src": "icons/icon-96.png",
+          "sizes": "96x96",
+          "type": "image/png"
+        }
+      ]
     },
     {
       "name": "Orçamento",
       "short_name": "Orçamento",
       "description": "Criar novo orçamento para o cliente",
       "url": "/eletricapro/?tab=orcamentos",
-      "icons": [{ "src": "icons/icon-96.png", "sizes": "96x96", "type": "image/png" }]
+      "icons": [
+        {
+          "src": "icons/icon-96.png",
+          "sizes": "96x96",
+          "type": "image/png"
+        }
+      ]
     }
   ],
+
   "prefer_related_applications": false,
+
   "edge_side_panel": {
     "preferred_width": 400
   }
