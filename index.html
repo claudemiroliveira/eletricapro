@@ -3221,9 +3221,9 @@
     
   </script>
   <script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-app.js";
-import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-auth.js";
-import { getFirestore, doc, onSnapshot } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-firestore.js";
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js";
+import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-auth.js";
+import { getFirestore, doc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyCibrDhAmeTg-2W9TiXhomotfLEM5EqwgE",
@@ -3284,7 +3284,11 @@ function setUserChip(user){
   avatar.textContent = '✅';
 }
 
+// ── Proteção contra cold start / redirect prematuro (Fix #4) ──
+let authResolved = false;
+
 onAuthStateChanged(auth, (user) => {
+  authResolved = true;
   if(!user){
     setLockedUI();
     // abre sempre no login
@@ -3303,6 +3307,11 @@ onAuthStateChanged(auth, (user) => {
     setProBadge(!!data.pro, data.proType);
   });
 });
+
+// Segurança: se Firebase não responder em 5s, redireciona para login
+setTimeout(() => {
+  if(!authResolved) window.location.replace('login.html?start=1');
+}, 5000);
 </script>
   <!-- ============================================================
      snippet-footer-links.html
@@ -3359,12 +3368,13 @@ onAuthStateChanged(auth, (user) => {
     <a href="politica-de-privacidade.html">🔒 Política de Privacidade</a>
     <a href="termos-de-uso.html">📋 Termos de Uso</a>
     <a href="etica-e-conformidade.html">🤝 Ética &amp; Conformidade</a>
-    <a href="mailto:eletricaproapp@gmail.com">✉ Suporte</a>
+    <a href="/cdn-cgi/l/email-protection#9cf9f0f9e8eef5fffdeceef3fdececdcfbf1fdf5f0b2fff3f1">✉ Suporte</a>
   </div>
   <div class="ep-legal-copy">
     © 2026 COFservicos · CNPJ 31.577.846/0001-12 · Iguape/SP
   </div>
 </footer>
 
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script defer src="https://static.cloudflareinsights.com/beacon.min.js/v8c78df7c7c0f484497ecbca7046644da1771523124516" integrity="sha512-8DS7rgIrAmghBFwoOTujcf6D9rXvH8xm8JQ1Ja01h9QX8EzXldiszufYa4IFfKdLUKTTrnSFXLDkUEOTrZQ8Qg==" data-cf-beacon='{"version":"2024.11.0","token":"4edd5f8ec12a48cfa682ab8261b80a79","server_timing":{"name":{"cfCacheStatus":true,"cfEdge":true,"cfExtPri":true,"cfL4":true,"cfOrigin":true,"cfSpeedBrain":true},"location_startswith":null}}' crossorigin="anonymous"></script>
 </body>
 </html>
