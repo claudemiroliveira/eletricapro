@@ -793,6 +793,7 @@ const firebaseConfig = {
 
 const app  = initializeApp(firebaseConfig);
 const auth = getAuth(app);
+auth.languageCode = 'pt-BR';
 const db   = getFirestore(app);
 
 let currentUser = null;
@@ -1019,17 +1020,28 @@ window.registerWithEmail = async function() {
 
     // ── ENVIO DE E-MAIL DE VERIFICAÇÃO (Firebase Auth nativo) ──────────────
     try {
+      const continueUrl = new URL('login.html', window.location.href).href;
       await sendEmailVerification(cred.user, {
-        url: window.location.origin + "/login.html",   // redireciona após verificar
+        url: continueUrl,
         handleCodeInApp: false
       });
       showMsg("registerMsg",
-        "✅ Conta criada! Um e-mail de confirmação foi enviado para <strong>" + email + "</strong>. Verifique sua caixa de entrada.",
+        "✅ Conta criada! Um e-mail de confirmação foi enviado para <strong>" + email + "</strong>. Verifique a caixa de entrada e o spam.",
         "success");
     } catch (verErr) {
-      // Conta criada, mas e-mail de verificação falhou (não crítico)
-      console.warn("sendEmailVerification error:", verErr);
-      showMsg("registerMsg", "✅ Conta criada! Bem-vindo ao EletricaPRO.", "success");
+      console.error("sendEmailVerification error:", verErr);
+      const verifyMsgs = {
+        "auth/unauthorized-continue-uri": "⚠️ Conta criada, mas o domínio de retorno do e-mail não está autorizado no Firebase.",
+        "auth/invalid-continue-uri": "⚠️ Conta criada, mas a URL de retorno do e-mail é inválida.",
+        "auth/missing-continue-uri": "⚠️ Conta criada, mas a URL de retorno do e-mail não foi definida.",
+        "auth/too-many-requests": "⚠️ Conta criada, mas o Firebase bloqueou temporariamente o envio de e-mail. Tente novamente em alguns minutos."
+      };
+      showMsg(
+        "registerMsg",
+        (verifyMsgs[verErr.code] || "⚠️ Conta criada, mas não foi possível enviar o e-mail de verificação agora.") +
+        " Confira se 'claudemiroliveira.github.io' está em Authorized domains no Firebase Authentication.",
+        "error"
+      );
     }
     // ──────────────────────────────────────────────────────────────────────
 
@@ -1158,6 +1170,7 @@ $("btnCancelPending").onclick = () => { $("pendingSection").style.display = "non
   })();
 </script>
 
+<script defer src="https://static.cloudflareinsights.com/beacon.min.js/v8c78df7c7c0f484497ecbca7046644da1771523124516" integrity="sha512-8DS7rgIrAmghBFwoOTujcf6D9rXvH8xm8JQ1Ja01h9QX8EzXldiszufYa4IFfKdLUKTTrnSFXLDkUEOTrZQ8Qg==" data-cf-beacon='{"version":"2024.11.0","token":"4edd5f8ec12a48cfa682ab8261b80a79","server_timing":{"name":{"cfCacheStatus":true,"cfEdge":true,"cfExtPri":true,"cfL4":true,"cfOrigin":true,"cfSpeedBrain":true},"location_startswith":null}}' crossorigin="anonymous"></script>
 <script defer src="https://static.cloudflareinsights.com/beacon.min.js/v8c78df7c7c0f484497ecbca7046644da1771523124516" integrity="sha512-8DS7rgIrAmghBFwoOTujcf6D9rXvH8xm8JQ1Ja01h9QX8EzXldiszufYa4IFfKdLUKTTrnSFXLDkUEOTrZQ8Qg==" data-cf-beacon='{"version":"2024.11.0","token":"4edd5f8ec12a48cfa682ab8261b80a79","server_timing":{"name":{"cfCacheStatus":true,"cfEdge":true,"cfExtPri":true,"cfL4":true,"cfOrigin":true,"cfSpeedBrain":true},"location_startswith":null}}' crossorigin="anonymous"></script>
 <script defer src="https://static.cloudflareinsights.com/beacon.min.js/v8c78df7c7c0f484497ecbca7046644da1771523124516" integrity="sha512-8DS7rgIrAmghBFwoOTujcf6D9rXvH8xm8JQ1Ja01h9QX8EzXldiszufYa4IFfKdLUKTTrnSFXLDkUEOTrZQ8Qg==" data-cf-beacon='{"version":"2024.11.0","token":"4edd5f8ec12a48cfa682ab8261b80a79","server_timing":{"name":{"cfCacheStatus":true,"cfEdge":true,"cfExtPri":true,"cfL4":true,"cfOrigin":true,"cfSpeedBrain":true},"location_startswith":null}}' crossorigin="anonymous"></script>
 </body>
