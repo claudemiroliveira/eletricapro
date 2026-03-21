@@ -1,4 +1,4 @@
-const CACHE_NAME = "eletricapro-v67";
+const CACHE_NAME = "eletricapro-v68";
 
 const FILES_TO_CACHE = [
   "./",
@@ -6,6 +6,10 @@ const FILES_TO_CACHE = [
   "./login.html",
   "./manifest.json",
   "./app.js",
+  "./consentimento-li-e-aceito.js",
+  "./politica-de-privacidade.html",
+  "./termos-de-uso.html",
+  "./etica-e-conformidade.html",
  // "./js/jspdf.umd.min.js",
 //  "./js/jspdf.plugin.autotable.min.js",
   "./icons/icon-72.png",
