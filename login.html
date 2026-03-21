@@ -636,13 +636,35 @@
         <li><span class="check">✓</span> Todas as atualizações futuras</li>
         <li><span class="check">✓</span> Acesso em múltiplos dispositivos</li>
       </ul>
-      <button class="plan-btn lifetime" id="btnLifetime">♾ Pagarfont 99,90</button>
+      <button class="plan-btn lifetime" id="btnLifetime">♾ Pagar R$ 99,90</button>
   <li><span class="check">✓</span>  em até 12x no cartão de crédito</li>
     
     </div>
   </div>
 
-  <!-- BOTÃO CONTINUAR PARA O APP -->
+  
+
+  <!-- ── CONFIRMAÇÃO APÓS PAGAMENTO (para liberação automática via Firebase Functions) ── -->
+  <div id="afterPayBox" style="display:none;max-width:860px;margin:18px auto 0;padding:0 20px;">
+    <div style="border:1px solid var(--border);background:linear-gradient(135deg,var(--surface),var(--surface2));border-radius:var(--radius);padding:14px 14px;">
+      <div style="display:flex;gap:10px;align-items:flex-start;">
+        <div style="font-size:22px;">✅</div>
+        <div style="flex:1;">
+          <strong style="display:block;">Pagamento aberto</strong>
+          <span style="color:var(--muted);font-size:13px;line-height:1.45;">
+            Após concluir o pagamento no PicPay, clique em <b>"Já paguei"</b> para registrar a ativação.
+            Se o projeto estiver com a <b>Cloud Function</b> habilitada, o PRO é liberado automaticamente em segundos.
+          </span>
+        </div>
+      </div>
+      <div style="display:flex;gap:10px;margin-top:12px;">
+        <button id="btnJaPaguei" class="plan-btn annual" style="flex:1;">✅ Já paguei</button>
+        <button id="btnFecharAfterPay" class="plan-btn" style="flex:1;background:#2e3350;color:#e2e8f0;">Fechar</button>
+      </div>
+    </div>
+  </div>
+
+<!-- BOTÃO CONTINUAR PARA O APP -->
   <div style="text-align:center;margin-top:28px;padding:0 20px;">
     <button onclick="irParaApp()" style="
       display:inline-flex;align-items:center;gap:10px;justify-content:center;
@@ -685,30 +707,6 @@
   </div>
 </div>
 
-<!-- ── FAQ ── -->
-<div class="faq-section">
-  <h2>❓ Perguntas frequentes</h2>
-  <div class="faq-item">
-    <div class="faq-q" onclick="toggleFaq(this)">Como funciona o pagamento? <span>▾</span></div>
-    <div class="faq-a"><p>Clique no botão do plano desejado → você será redirecionado ao PicPay → após o pagamento, clique em "Já paguei" para enviar a solicitação → aguarde a confirmação (geralmente em poucos minutos).</p></div>
-  </div>
-  <div class="faq-item">
-    <div class="faq-q" onclick="toggleFaq(this)">Meu PRO funciona em outros dispositivos? <span>▾</span></div>
-    <div class="faq-a"><p>Sim! O PRO fica vinculado à sua conta, não ao dispositivo. Basta fazer login com o mesmo e-mail em qualquer aparelho.</p></div>
-  </div>
-  <div class="faq-item">
-    <div class="faq-q" onclick="toggleFaq(this)">Qual a diferença entre Mensal e Anual? <span>▾</span></div>
-    <div class="faq-a"><p>No plano Mensal você paga R$ 19,90 e tem 30 dias de acesso, renováveis. No Anual, paga R$ 59,90 e tem 365 dias — economia de R$ 178,90 comparado a 12 meses mensais.</p></div>
-  </div>
-  <div class="faq-item">
-    <div class="faq-q" onclick="toggleFaq(this)">O plano Vitalício realmente é para sempre? <span>▾</span></div>
-    <div class="faq-a"><p>Sim! Pagamento único de R$99,90 e você nunca mais precisa renovar. Inclui todas as atualizações futuras do aplicativo.</p></div>
-  </div>
-  <div class="faq-item">
-    <div class="faq-q" onclick="toggleFaq(this)">Quanto tempo leva para liberar o PRO? <span>▾</span></div>
-    <div class="faq-a"><p>Após enviar o comprovante de pagamento, a liberação costuma ocorrer em até 30 minutos durante o horário comercial. Assim que aprovado, o PRO é ativado automaticamente no app.</p></div>
-  </div>
-</div>
 
 <!-- ── TOAST ── -->
 <div id="toast"></div>
@@ -775,7 +773,7 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/fireba
 import {
   getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged,
   signInWithEmailAndPassword, createUserWithEmailAndPassword,
-  sendPasswordResetEmail, updateProfile
+  sendPasswordResetEmail, updateProfile, sendEmailVerification
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 import {
   getFirestore, doc, setDoc, getDoc, collection, addDoc, query,
@@ -904,7 +902,7 @@ async function checkPendingRequest() {
     if (!snap || snap.empty) { $("pendingSection").style.display = "none"; return; }
     const req = snap.docs[0].data();
     $("pendingSection").style.display = "block";
-    const labels = { monthly:"Mensal (R$ 19,90)", annual:"Anual (R$ 59,90)", lifetime:"Vitalício (R$ 89,90)" };
+    const labels = { monthly:"Mensal (R$ 19,90)", annual:"Anual (R$ 59,90)", lifetime:"Vitalício (R$ 99,90)" };
     $("pendingPlan").textContent = `Plano solicitado: ${labels[req.plan] || req.plan}`;
   } catch(e) { console.log("Pending check:", e.message); }
 }
@@ -925,7 +923,7 @@ async function requestPro(plan) {
     });
     btn.innerHTML = orig; btn.disabled = false;
     $("pendingSection").style.display = "block";
-    const labels = { monthly:"Mensal (R$ 19,90)", annual:"Anual (R$ 59,90)", lifetime:"Vitalício (R$ 89,90)" };
+    const labels = { monthly:"Mensal (R$ 19,90)", annual:"Anual (R$ 59,90)", lifetime:"Vitalício (R$ 99,90)" };
     $("pendingPlan").textContent = `Plano solicitado: ${labels[plan]}`;
     toast("✅ Solicitação enviada! Aguarde a confirmação.");
   } catch(e) {
@@ -958,6 +956,7 @@ onAuthStateChanged(auth, async user => {
       });
     }
     subscribeUser(user.uid);
+    maybeAutoRedirect();
     $("statusBox").innerHTML = `<div class="icon"><div class="spinner"></div></div>
       <div><strong>Verificando status PRO...</strong></div>`;
   } else {
@@ -1017,7 +1016,25 @@ window.registerWithEmail = async function() {
   try {
     const cred = await createUserWithEmailAndPassword(auth, email, password);
     await updateProfile(cred.user, { displayName: name });
-    showMsg("registerMsg", "✅ Conta criada! Bem-vindo ao EletricaPRO.", "success");
+
+    // ── ENVIO DE E-MAIL DE VERIFICAÇÃO (Firebase Auth nativo) ──────────────
+    try {
+      await sendEmailVerification(cred.user, {
+        url: window.location.origin + "/login.html",   // redireciona após verificar
+        handleCodeInApp: false
+      });
+      showMsg("registerMsg",
+        "✅ Conta criada! Um e-mail de confirmação foi enviado para <strong>" + email + "</strong>. Verifique sua caixa de entrada.",
+        "success");
+    } catch (verErr) {
+      // Conta criada, mas e-mail de verificação falhou (não crítico)
+      console.warn("sendEmailVerification error:", verErr);
+      showMsg("registerMsg", "✅ Conta criada! Bem-vindo ao EletricaPRO.", "success");
+    }
+    // ──────────────────────────────────────────────────────────────────────
+
+    btn.innerHTML = "Criar conta";
+
   } catch(e) {
     const msgs = {
       "auth/email-already-in-use": "❌ E-mail já cadastrado. Faça login.",
@@ -1057,15 +1074,50 @@ const logout = async () => {
 $("btnLogout")  && ($("btnLogout").onclick  = logout);
 $("btnLogout2") && ($("btnLogout2").onclick = logout);
 
+
+
+// ── CONTROLE DE FLUXO (start / planos) ───────────────────────
+const params = new URLSearchParams(location.search);
+const OPEN_PLANS = params.get('planos') === '1';
+
+function maybeAutoRedirect(){
+  // Se o app foi aberto para login normal (PWA/start), redireciona para o app assim que logar.
+  if(!OPEN_PLANS){
+    setTimeout(() => {
+      // evita loop se o usuário quiser ficar aqui
+      if (currentUser) window.location.replace('index.html');
+    }, 450);
+  }
+}
+
+let selectedPlan = null;
+function openPayment(plan){
+  selectedPlan = plan;
+  window.open(PAYMENT_LINKS[plan], '_blank');
+  const box = document.getElementById('afterPayBox');
+  if(box) box.style.display = 'block';
+  toast('Abra o PicPay e conclua o pagamento.');
+}
+
+// "Já paguei" cria a solicitação no Firestore.
+// Se você tiver a Cloud Function de auto-aprovação, isso ativa o PRO automaticamente.
+$("btnJaPaguei") && ($("btnJaPaguei").onclick = () => {
+  if(!selectedPlan) return toast('Selecione um plano primeiro.', true);
+  requestPro(selectedPlan);
+});
+$("btnFecharAfterPay") && ($("btnFecharAfterPay").onclick = () => {
+  const box = document.getElementById('afterPayBox');
+  if(box) box.style.display = 'none';
+});
 // ── PAYMENT LINKS ─────────────────────────────────────────────
 const PAYMENT_LINKS = {
   monthly:  "https://link.picpay.com/p/177379752669ba0096bd8af",
   annual:   "https://link.picpay.com/p/177379784169ba01d1cb515",
   lifetime: "https://link.picpay.com/p/177379796869ba025058e63"
 };
-$("btnMonthly").onclick  = () => window.open(PAYMENT_LINKS.monthly,  "_blank");
-$("btnAnnual").onclick   = () => window.open(PAYMENT_LINKS.annual,   "_blank");
-$("btnLifetime").onclick = () => window.open(PAYMENT_LINKS.lifetime, "_blank");
+$("btnMonthly").onclick  = () => openPayment("monthly");
+$("btnAnnual").onclick   = () => openPayment("annual");
+$("btnLifetime").onclick = () => openPayment("lifetime");
 $("btnCancelPending").onclick = () => { $("pendingSection").style.display = "none"; };
 </script>
 
