@@ -108,16 +108,20 @@
     }
 
     /* ===== SCREENS ===== */
-    .screen { display: none; }
-    .screen.active {
-      display: block;
-      animation: slideUp 0.35s ease-out;
-    }
-    @keyframes slideUp {
-      from { opacity:0; transform:translateY(20px); }
-      to   { opacity:1; transform:translateY(0); }
-    }
-
+   /* ✅ DEPOIS — sem flash entre telas */
+.screen {
+  display: none;
+  opacity: 0;
+}
+.screen.active {
+  display: block;
+  animation: slideUp 0.35s ease-out forwards;
+}
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+ 
     /* ===== HERO ===== */
     .hero { text-align: center; padding: 2rem 1rem 1.5rem; }
     .hero-logo {
