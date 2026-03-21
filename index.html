@@ -49,6 +49,8 @@
       color: var(--white);
       min-height: 100vh;
       overflow-x: hidden;
+      display: flex;
+      flex-direction: column;
     }
 
     /* Animated starfield */
@@ -103,8 +105,10 @@
     /* ===== MAIN CONTAINER ===== */
     .container {
       position: relative; z-index: 10;
-      background:var(--blue-deep):
+      background: var(--blue-deep);
       max-width: 960px; margin: 0 auto; padding: 1.5rem 1rem 4rem;
+      width: 100%;
+      flex: 1 0 auto;
     }
 
     /* ===== SCREENS ===== */
@@ -3246,16 +3250,19 @@ const db = getFirestore(app);
 // ── Guard: app só abre logado ──────────────────────────────────
 const container = document.querySelector('.container');
 const header = document.getElementById('appHeader');
+const footer = document.querySelector('.ep-legal-footer');
 
 function setLockedUI(){
-  // evita “flash” do app antes do redirect
+  // evita tela vazia com footer solto antes do redirect
   if(container) container.style.display = 'none';
   if(header) header.style.display = 'none';
+  if(footer) footer.style.display = 'none';
 }
 
 function setUnlockedUI(){
   if(container) container.style.display = '';
   if(header) header.style.display = '';
+  if(footer) footer.style.display = '';
 }
 
 setLockedUI();
@@ -3336,6 +3343,7 @@ setTimeout(() => {
     padding: 1.25rem 1.5rem;
     text-align: center;
     margin-top: auto;
+    width: 100%;
   }
   .ep-legal-footer .ep-legal-brand {
     font-size: 0.8rem;
@@ -3363,7 +3371,21 @@ setTimeout(() => {
   }
   .ep-legal-footer .ep-legal-copy {
     font-size: 0.72rem;
-    color: #475569;
+    color: #94a3b8;
+  }
+
+  @media (max-width: 640px) {
+    .ep-legal-footer {
+      padding: 1rem 0.9rem 1.1rem;
+    }
+    .ep-legal-footer .ep-legal-links {
+      gap: 0.45rem 0.9rem;
+    }
+    .ep-legal-footer .ep-legal-links a,
+    .ep-legal-footer .ep-legal-copy {
+      font-size: 0.78rem;
+      line-height: 1.6;
+    }
   }
 </style>
 
@@ -3381,5 +3403,6 @@ setTimeout(() => {
 </footer>
 
 <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script defer src="https://static.cloudflareinsights.com/beacon.min.js/v8c78df7c7c0f484497ecbca7046644da1771523124516" integrity="sha512-8DS7rgIrAmghBFwoOTujcf6D9rXvH8xm8JQ1Ja01h9QX8EzXldiszufYa4IFfKdLUKTTrnSFXLDkUEOTrZQ8Qg==" data-cf-beacon='{"version":"2024.11.0","token":"4edd5f8ec12a48cfa682ab8261b80a79","server_timing":{"name":{"cfCacheStatus":true,"cfEdge":true,"cfExtPri":true,"cfL4":true,"cfOrigin":true,"cfSpeedBrain":true},"location_startswith":null}}' crossorigin="anonymous"></script>
+<script defer src="https://static.cloudflareinsights.com/beacon.min.js/v8c78df7c7c0f484497ecbca7046644da1771523124516" integrity="sha512-8DS7rgIrAmghBFwoOTujcf6D9rXvH8xm8JQ1Ja01h9QX8EzXldiszufYa4IFfKdLUKTTrnSFXLDkUEOTrZQ8Qg==" data-cf-beacon='{"version":"2024.11.0","token":"4edd5f8ec12a48cfa682ab8261b80a79","server_timing":{"name":{"cfCacheStatus":true,"cfEdge":true,"cfExtPri":true,"cfL4":true,"cfOrigin":true,"cfSpeedBrain":true},"location_startswith":null}}' crossorigin="anonymous"></script>
 </body>
 </html>
