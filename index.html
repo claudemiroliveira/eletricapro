@@ -505,7 +505,7 @@
     </div>
 
     <div id="userAreaBtn"
-      onclick="window.location.href='login.html'"
+      onclick="window.location.href='login.html?planos=1'"
       style="display:flex;align-items:center;gap:.5rem;padding:.45rem .8rem;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);border-radius:10px;cursor:pointer;font-size:.8rem;transition:.3s ease;white-space:nowrap;"
       title="Login / Minha Conta">
       <span id="userAvatarIcon">👤</span>
@@ -573,7 +573,7 @@
           </span>
           <span class="pro-arrow">→</span>
         </button>
-        <a href="etica.html" style="display:block;margin-top:0.9rem;text-align:center;color:rgba(255,255,255,0.85);text-decoration:underline;font-size:0.9rem;">
+        <a href="etica-e-conformidade.html" style="display:block;margin-top:0.9rem;text-align:center;color:rgba(255,255,255,0.85);text-decoration:underline;font-size:0.9rem;">
           Ética, privacidade e termos
         </a>
       </div>
@@ -637,9 +637,105 @@
           <div class="s-icon">💡</div>
           <div class="s-text"><strong>Custo Energia</strong><span>Estimativa mensal</span></div>
         </div>
+
+        <!-- Novas calculadoras (2026) -->
+        <div class="sub-tile" onclick="openScreen('calcCorrente','Corrente do Circuito')">
+          <div class="s-icon">🧷</div>
+          <div class="s-text"><strong>Corrente</strong><span>Monofásico / Trifásico</span></div>
+        </div>
+        <div class="sub-tile" onclick="openScreen('calcCapacitores','Correção de FP')">
+          <div class="s-icon">🟦</div>
+          <div class="s-text"><strong>Banco de Capacitores</strong><span>kVAr necessário</span></div>
+        </div>
+        <div class="sub-tile" onclick="openScreen('calcCaboPerdas','Perdas no Cabo')">
+          <div class="s-icon">🔥</div>
+          <div class="s-text"><strong>Perdas</strong><span>ΔV + W no cabo</span></div>
+        </div>
+        <div class="sub-tile" onclick="openScreen('calcBtu','BTU ↔ W')">
+          <div class="s-icon">🌡️</div>
+          <div class="s-text"><strong>BTU/h</strong><span>Conversão para W</span></div>
+        </div>
       </div>
     </div>
 
+
+
+    <!-- ========== CALC: CORRENTE (NOVO) ========== -->
+    <div id="calcCorrente" class="screen">
+      <div class="screen-title"><div class="dot"></div>Corrente do Circuito</div>
+      <div class="calc-card">
+        <h3>🧷 Corrente (I)</h3>
+        <p style="font-size:0.82rem;color:var(--text-muted);margin-bottom:1rem;">Útil para estimar a corrente do circuito e auxiliar no dimensionamento do disjuntor.</p>
+        <div class="form-group"><label>Potência (kW):</label><input type="number" id="potKwCorr" placeholder="Ex: 5.5" step="0.01"></div>
+        <div class="form-group"><label>Tensão (V):</label><input type="number" id="tensaoCorr" placeholder="Ex: 220" value="220"></div>
+        <div class="form-group"><label>Fator de Potência (cos φ):</label><input type="number" id="fpCorr" placeholder="Ex: 0.92" step="0.01" value="0.92"></div>
+        <div class="form-group"><label>Rendimento (η) (opcional):</label><input type="number" id="etaCorr" placeholder="Ex: 0.90" step="0.01" value="1"></div>
+        <div class="form-group"><label>Tipo de Circuito:</label>
+          <select id="tipoCorr">
+            <option value="mono">Monofásico</option>
+            <option value="tri">Trifásico</option>
+          </select>
+        </div>
+        <button class="btn" onclick="calcularCorrenteCircuito()">⚡ Calcular</button>
+        <button class="btn btn-yellow" onclick="gerarPDFCalc('Corrente do Circuito')">📄 PDF</button>
+        <div id="resultCorrente"></div>
+      </div>
+    </div>
+
+    <!-- ========== CALC: BANCO DE CAPACITORES (NOVO) ========== -->
+    <div id="calcCapacitores" class="screen">
+      <div class="screen-title"><div class="dot"></div>Correção de Fator de Potência</div>
+      <div class="calc-card">
+        <h3>🟦 Banco de Capacitores (kVAr)</h3>
+        <p style="font-size:0.82rem;color:var(--text-muted);margin-bottom:1rem;">Calcula o reativo (kVAr) aproximado para elevar o FP de um valor atual para um desejado.</p>
+        <div class="form-group"><label>Potência ativa (kW):</label><input type="number" id="potKwCap" placeholder="Ex: 10" step="0.01"></div>
+        <div class="form-group"><label>FP atual (cos φ1):</label><input type="number" id="fpAtualCap" placeholder="Ex: 0.72" step="0.01" value="0.72"></div>
+        <div class="form-group"><label>FP desejado (cos φ2):</label><input type="number" id="fpDesejCap" placeholder="Ex: 0.92" step="0.01" value="0.92"></div>
+        <button class="btn" onclick="calcularBancoCapacitores()">⚡ Calcular</button>
+        <button class="btn btn-yellow" onclick="gerarPDFCalc('Correção de FP')">📄 PDF</button>
+        <div id="resultCapacitores"></div>
+      </div>
+    </div>
+
+    <!-- ========== CALC: PERDAS NO CABO (NOVO) ========== -->
+    <div id="calcCaboPerdas" class="screen">
+      <div class="screen-title"><div class="dot"></div>Perdas no Cabo</div>
+      <div class="calc-card">
+        <h3>🔥 Perdas (ΔV e W) no cabo</h3>
+        <p style="font-size:0.82rem;color:var(--text-muted);margin-bottom:1rem;">Estimativa rápida com resistividade típica (20°C). Para projetos críticos, use dados do fabricante e correções de temperatura.</p>
+        <div class="form-group"><label>Material:</label>
+          <select id="matCabo">
+            <option value="cu">Cobre</option>
+            <option value="al">Alumínio</option>
+          </select>
+        </div>
+        <div class="form-group"><label>Seção (mm²):</label><input type="number" id="secCabo" placeholder="Ex: 6" step="0.1" value="6"></div>
+        <div class="form-group"><label>Comprimento (m) (ida):</label><input type="number" id="lenCabo" placeholder="Ex: 30" value="30"></div>
+        <div class="form-group"><label>Corrente (A):</label><input type="number" id="iCabo" placeholder="Ex: 25" value="25"></div>
+        <div class="form-group"><label>Tensão do circuito (V):</label><input type="number" id="vCabo" placeholder="Ex: 220" value="220"></div>
+        <button class="btn" onclick="calcularPerdasCabo()">⚡ Calcular</button>
+        <button class="btn btn-yellow" onclick="gerarPDFCalc('Perdas no Cabo')">📄 PDF</button>
+        <div id="resultCaboPerdas"></div>
+      </div>
+    </div>
+
+    <!-- ========== CALC: BTU ↔ W (NOVO) ========== -->
+    <div id="calcBtu" class="screen">
+      <div class="screen-title"><div class="dot"></div>BTU/h ↔ W</div>
+      <div class="calc-card">
+        <h3>🌡️ Conversor BTU/h ↔ W</h3>
+        <div class="form-group"><label>Valor:</label><input type="number" id="valorBtu" placeholder="Ex: 9000" step="1"></div>
+        <div class="form-group"><label>Converter:</label>
+          <select id="tipoBtu">
+            <option value="btu2w">BTU/h → W</option>
+            <option value="w2btu">W → BTU/h</option>
+          </select>
+        </div>
+        <button class="btn" onclick="calcularBTU()">⚡ Converter</button>
+        <button class="btn btn-yellow" onclick="gerarPDFCalc('BTU ↔ W')">📄 PDF</button>
+        <div id="resultBtu"></div>
+      </div>
+    </div>
     <!-- ========== CALC: LEI DE OHM ========== -->
     <div id="calcLeiOhm" class="screen">
       <div class="screen-title"><div class="dot"></div>Lei de Ohm</div>
@@ -2987,6 +3083,114 @@
       }
     }
 
+
+
+    // ─────────────────────────────────────────────────────────
+    // NOVAS CALCULADORAS (2026)
+    // ─────────────────────────────────────────────────────────
+
+    function calcularCorrenteCircuito(){
+      const PkW = parseFloat(document.getElementById('potKwCorr').value);
+      const V   = parseFloat(document.getElementById('tensaoCorr').value);
+      const fp  = parseFloat(document.getElementById('fpCorr').value || '1');
+      const eta = parseFloat(document.getElementById('etaCorr').value || '1');
+      const tipo= document.getElementById('tipoCorr').value;
+
+      if(!PkW || !V){
+        document.getElementById('resultCorrente').innerHTML = `<div class="result-box err">⚠️ Informe pelo menos Potência e Tensão.</div>`;
+        return;
+      }
+
+      const P = PkW * 1000;
+      const denom = (tipo === 'tri') ? (Math.sqrt(3) * V * fp * eta) : (V * fp * eta);
+      const I = P / denom;
+
+      const disj = Math.ceil(I/5)*5; // arredonda p/ múltiplo de 5A
+      document.getElementById('resultCorrente').innerHTML = `
+        <div class="result-box ok">
+          <strong>Corrente estimada:</strong> ${I.toFixed(2)} A<br/>
+          <span style="opacity:.85">Sugestão rápida de disjuntor (aprox.):</span> ${disj} A
+        </div>`;
+      salvarHistorico('Corrente do Circuito', `I ≈ ${I.toFixed(2)} A | Sug. disj.: ${disj} A`);
+    }
+
+    function calcularBancoCapacitores(){
+      const PkW = parseFloat(document.getElementById('potKwCap').value);
+      const fp1 = parseFloat(document.getElementById('fpAtualCap').value);
+      const fp2 = parseFloat(document.getElementById('fpDesejCap').value);
+
+      if(!PkW || !fp1 || !fp2){
+        document.getElementById('resultCapacitores').innerHTML = `<div class="result-box err">⚠️ Preencha todos os campos.</div>`;
+        return;
+      }
+      if(fp1 >= 1 || fp2 >= 1 || fp1 <= 0 || fp2 <= 0){
+        document.getElementById('resultCapacitores').innerHTML = `<div class="result-box err">⚠️ FP deve estar entre 0 e 1.</div>`;
+        return;
+      }
+      if(fp2 <= fp1){
+        document.getElementById('resultCapacitores').innerHTML = `<div class="result-box err">⚠️ O FP desejado deve ser maior que o atual.</div>`;
+        return;
+      }
+
+      const phi1 = Math.acos(fp1);
+      const phi2 = Math.acos(fp2);
+      const kvar = PkW * (Math.tan(phi1) - Math.tan(phi2));
+
+      document.getElementById('resultCapacitores').innerHTML = `
+        <div class="result-box ok">
+          <strong>Reativo necessário:</strong> ${kvar.toFixed(2)} kVAr<br/>
+          <span style="opacity:.85">(Valor aproximado para correção de FP)</span>
+        </div>`;
+      salvarHistorico('Correção de FP', `kVAr ≈ ${kvar.toFixed(2)}`);
+    }
+
+    function calcularPerdasCabo(){
+      const mat = document.getElementById('matCabo').value;
+      const A   = parseFloat(document.getElementById('secCabo').value);
+      const L   = parseFloat(document.getElementById('lenCabo').value);
+      const I   = parseFloat(document.getElementById('iCabo').value);
+      const V   = parseFloat(document.getElementById('vCabo').value);
+
+      if(!A || !L || !I || !V){
+        document.getElementById('resultCaboPerdas').innerHTML = `<div class="result-box err">⚠️ Preencha seção, comprimento, corrente e tensão.</div>`;
+        return;
+      }
+
+      // Resistividade típica (Ω·mm²/m)
+      const rho = (mat === 'al') ? 0.0282 : 0.0172;
+      const R = rho * (2*L) / A; // ida e volta
+      const dV = I * R;
+      const dVperc = (dV / V) * 100;
+      const perdasW = (I**2) * R;
+
+      document.getElementById('resultCaboPerdas').innerHTML = `
+        <div class="result-box ok">
+          <strong>Resistência do trecho (ida+volta):</strong> ${R.toFixed(4)} Ω<br/>
+          <strong>Queda de tensão:</strong> ${dV.toFixed(2)} V (${dVperc.toFixed(2)}%)<br/>
+          <strong>Perdas:</strong> ${perdasW.toFixed(1)} W
+        </div>`;
+      salvarHistorico('Perdas no Cabo', `ΔV ≈ ${dV.toFixed(2)} V (${dVperc.toFixed(2)}%) | P≈${perdasW.toFixed(1)}W`);
+    }
+
+    function calcularBTU(){
+      const val = parseFloat(document.getElementById('valorBtu').value);
+      const tipo = document.getElementById('tipoBtu').value;
+      if(!val){
+        document.getElementById('resultBtu').innerHTML = `<div class="result-box err">⚠️ Informe um valor.</div>`;
+        return;
+      }
+      // 1 BTU/h ≈ 0,29307107 W
+      let out, unit;
+      if(tipo === 'btu2w'){
+        out = val * 0.29307107;
+        unit = 'W';
+      } else {
+        out = val / 0.29307107;
+        unit = 'BTU/h';
+      }
+      document.getElementById('resultBtu').innerHTML = `<div class="result-box ok"><strong>Resultado:</strong> ${out.toFixed(2)} ${unit}</div>`;
+      salvarHistorico('BTU ↔ W', `${out.toFixed(2)} ${unit}`);
+    }
     /* ======================== INIT ======================== */
     window.addEventListener('load', () => {
       initTheme();
@@ -3019,6 +3223,7 @@
   <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-app.js";
 import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-auth.js";
+import { getFirestore, doc, onSnapshot } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-firestore.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyCibrDhAmeTg-2W9TiXhomotfLEM5EqwgE",
@@ -3031,13 +3236,72 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
+const db = getFirestore(app);
+
+// ── Guard: app só abre logado ──────────────────────────────────
+const container = document.querySelector('.container');
+const header = document.getElementById('appHeader');
+
+function setLockedUI(){
+  // evita “flash” do app antes do redirect
+  if(container) container.style.display = 'none';
+  if(header) header.style.display = 'none';
+}
+
+function setUnlockedUI(){
+  if(container) container.style.display = '';
+  if(header) header.style.display = '';
+}
+
+setLockedUI();
+
+function setProBadge(isPro, proType){
+  const btn = document.getElementById('upgradeBtnHome');
+  if(!btn) return;
+  if(isPro){
+    const label = ({monthly:'Mensal', annual:'Anual', lifetime:'Vitalício'})[proType] || 'PRO';
+    btn.style.background = 'linear-gradient(135deg, #f5c518 0%, #f59e0b 55%, #ffe29a 100%)';
+    btn.style.borderColor = '#f5c518';
+    btn.querySelector('.pro-badge').textContent = 'PRO';
+    btn.querySelector('.pro-btn-text strong').textContent = `👑 PRO Ativo — ${label}`;
+    btn.querySelector('.pro-btn-text small').textContent = 'Acesso liberado nesta conta';
+    btn.querySelector('.pro-arrow').textContent = '✓';
+  } else {
+    btn.removeAttribute('style');
+    btn.querySelector('.pro-badge').textContent = 'PRO';
+    btn.querySelector('.pro-btn-text strong').textContent = 'Ativar Versão PRO';
+    btn.querySelector('.pro-btn-text small').textContent = 'Mensal R$19,90 · Anual R$59,90 · Vitalício R$99,90';
+    btn.querySelector('.pro-arrow').textContent = '→';
+  }
+}
+
+function setUserChip(user){
+  const nameEl = document.getElementById('userNameShort');
+  const avatar = document.getElementById('userAvatarIcon');
+  if(!nameEl || !avatar) return;
+  const name = (user.displayName || user.email || 'Conta');
+  nameEl.textContent = name.length > 14 ? name.slice(0, 14) + '…' : name;
+  avatar.textContent = '✅';
+}
 
 onAuthStateChanged(auth, (user) => {
-  if(user){
-    console.log("Usuário logado:", user.email);
-  }else{
-    console.log("Usuário não logado");
+  if(!user){
+    setLockedUI();
+    // abre sempre no login
+    window.location.replace('login.html?start=1');
+    return;
   }
+
+  setUserChip(user);
+  setUnlockedUI();
+
+  // acompanha status PRO em tempo real
+  const ref = doc(db, 'users', user.uid);
+  onSnapshot(ref, (snap) => {
+    if(!snap.exists()) { setProBadge(false); return; }
+    const data = snap.data() || {};
+    setProBadge(!!data.pro, data.proType);
+  });
 });
 </script>
   <!-- ============================================================
