@@ -1,21 +1,5 @@
 // Sistema de Trial de 7 dias
-const TRIAL_KEY = 'eletrico_pro_trial';
-const TRIAL_DAYS = 7;
 
-// Inicializar trial
-function initTrial() {
-    const trialData = localStorage.getItem(TRIAL_KEY);
-    
-    if (!trialData) {
-        const startDate = new Date();
-        localStorage.setItem(TRIAL_KEY, JSON.stringify({
-            startDate: startDate.toISOString(),
-            isPro: false
-        }));
-    }
-    
-    updateTrialBanner();
-}
 function pdfSafe(texto) {
     return texto
         .normalize("NFD")
