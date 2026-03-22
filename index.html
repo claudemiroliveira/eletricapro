@@ -1,4 +1,4 @@
-2<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8" />
@@ -2383,43 +2383,143 @@ function dimensionarCondutor(){
         line('Fator de Potencia',r.fp); line('Rendimento',r.eta);
         line('Tipo',r.tipo==='tri'?'Trifasico':'Monofasico');
         line('Corrente estimada',r.I+' A'); line('Disjuntor sugerido',r.disj+' A');
-      } else if(tipo==='Correção de FP'&&lastCalcResults.capacitores){
-        const r=lastCalcResults.capacitores;
-        line('Potencia ativa',r.PkW+' kW');
-        line('FP atual',r.fp1); line('FP desejado',r.fp2);
-        line('kVAr necessario',r.kvar+' kVAr');
-      } else if(tipo==='Perdas no Cabo'&&lastCalcResults.caboPerdas){
-        const r=lastCalcResults.caboPerdas;
-        line('Material',r.mat==='al'?'Aluminio':'Cobre');
-        line('Secao',r.A+' mm2'); line('Comprimento (ida)',r.L+' m');
-        line('Corrente',r.I+' A'); line('Tensao',r.V+' V');
-        line('Resistencia total',r.R+' ohm');
-        line('Queda de tensao',r.dV+' V ('+r.dVperc+'%)');
-        line('Perdas no cabo',r.perdasW+' W');
-      } else if(tipo==='BTU'&&lastCalcResults.btu){
-        const r=lastCalcResults.btu;
-        line('Valor entrada',r.val+' '+(r.tipo==='btu2w'?'BTU/h':'W'));
-        line('Resultado',r.out+' '+r.unit);
-      } else if(tipo==='Bitola Motor'&&lastCalcResults.motor){
-        const r=lastCalcResults.motor;
-        line('Potencia',r.cv+' cv'); line('Tensao',r.V+' V');
-        line('Corrente nominal',r.I+' A');
-        line('Corrente de partida',r.Ipartida+' A');
-        line('Disjuntor/Protetor',r.disjMotor+' A');
-        line('Secao do condutor',r.sec+' mm2');
-      } else if(tipo==='Queda Trifásico'&&lastCalcResults.quedaTri){
-        const r=lastCalcResults.quedaTri;
-        line('Potencia',r.Pkw+' kW'); line('Tensao de linha',r.V+' V');
-        line('Fator de Potencia',r.fp); line('Comprimento',r.L+' m');
-        line('Secao',r.s+' mm2'); line('Corrente de linha',r.I+' A');
-        line('Queda de tensao',r.dV+' V ('+r.pct+'%)');
-        line('Status',r.ok?'OK - Dentro do limite NBR':'ATENCAO - Acima do limite - aumentar secao');
-      } else {
-        doc.text(pdfSafe('Realize o calculo primeiro para gerar o PDF.'),20,y);
-      }
-      pdfFooter(doc);
-      doc.save('calculo_'+tipo.replace(/ /g,'_')+'_'+Date.now()+'.pdf');
-    }
+
+function gerarPDFCalc(tipo){
+  if(!requirePro('Gerar PDF')) return;
+  const {jsPDF}=window.jspdf;
+  const doc=new jsPDF();
+  pdfHeader(doc,'Relatório: '+pdfSafe(tipo));
+  doc.setFontSize(14); doc.setFont(undefined,'bold');
+  doc.text(pdfSafe('Cálculo: '+tipo),20,58);
+  doc.setFontSize(10); doc.setFont(undefined,'normal');
+  let y=70;
+  const line=(l,v)=>{ doc.text(pdfSafe(l+': '+v),20,y); y+=8; };
+
+  if(tipo==='Lei de Ohm'&&lastCalcResults.leiOhm){
+    const r=lastCalcResults.leiOhm;
+    line('Tensão (V)',r.v+' V'); line('Corrente (I)',r.i+' A'); line('Resistência (R)',r.r+' Ohm');
+
+  } else if(tipo==='Potência'&&lastCalcResults.potencia){
+    const r=lastCalcResults.potencia;
+    line('Tipo',r.tipo==='monofasico'?'Monofásico':'Trifásico');
+    line('Tensão',r.V+' V'); line('Corrente',r.I+' A');
+    line('Fator de Potência',r.fp);
+    line('Potência Ativa',r.P+' W'); line('Potência Aparente',r.S+' VA'); line('Potência Reativa',r.Q+' VAr');
+
+  } else if(tipo==='Queda de Tensão'&&lastCalcResults.quedaTensao){
+    const r=lastCalcResults.quedaTensao;
+    line('Corrente',r.I+' A'); line('Distância',r.L+' m'); line('Seção',r.s+' mm²');
+    line('Tensão',r.V+' V'); line('Queda de Tensão',r.dV+' V'); line('Percentual',r.pct+'%');
+    line('Status',r.ok?'OK - Dentro do limite':'ATENÇÃO - Acima do limite');
+
+  } else if(tipo==='Dimensionamento'&&lastCalcResults.condutor){
+    const r=lastCalcResults.condutor;
+    line('Potência',r.P+' W'); line('Tensão',r.V+' V'); line('Corrente calculada',r.I+' A');
+    line('Seção recomendada',r.sec+' mm²'); line('Disjuntor recomendado',r.disj+' A');
+    line('Queda de tensão',r.pct+'%');
+
+  } else if(tipo==='Iluminação'&&lastCalcResults.iluminacao){
+    const r=lastCalcResults.iluminacao;
+    line('Ambiente',r.nome); line('Área',r.area+' m²'); line('Iluminância',r.E+' lux');
+    line('Nº lâmpadas',r.nLampadas+' lâmpadas'); line('Nº luminárias',r.nLuminarias+' luminárias');
+    line('Iluminância real',r.iluminanciaReal+' lux');
+
+  } else if(tipo==='Curto-Circuito'&&lastCalcResults.curtoCircuito){
+    const r=lastCalcResults.curtoCircuito;
+    line('Tipo',r.nomeCC); line('Icc',r.resultado.toFixed(0)+' A');
+    line('Icc (kA)',(r.resultado/1000).toFixed(2)+' kA');
+    line('Poder de corte mín.',r.podInterr+' kA');
+
+  // ✅ NOVO: Custo de Energia Mensal (era 'Consumo')
+  } else if(tipo==='Custo Energia'&&lastCalcResults.energiaMes){
+    const r=lastCalcResults.energiaMes;
+    line('Consumo total mensal',r.total.toFixed(1)+' kWh/mês');
+    line('Tarifa utilizada','R$ '+r.tarifa.toFixed(4)+'/kWh');
+    line('Custo estimado mensal','R$ '+r.custoTotal);
+
+  // Compatibilidade retroativa com 'Consumo'
+  } else if(tipo==='Consumo'&&lastCalcResults.consumo){
+    const r=lastCalcResults.consumo;
+    line('Consumo total mensal',r.totalKwh.toFixed(1)+' kWh/mês');
+    line('Custo estimado','R$ '+r.custo);
+
+  } else if((tipo==='Fator de Demanda'||tipo==='fator de demanda')&&lastCalcResults.fatorDemanda){
+    const r=lastCalcResults.fatorDemanda;
+    line('Potência instalada',(r.potenciaInstalada/1000).toFixed(2)+' kW');
+    line('Demanda máxima',(r.demandaMaxima/1000).toFixed(2)+' kW');
+    line('Fator de demanda global',r.fdGlobal.toFixed(1)+'%');
+    line('Seção recomendada',r.secaoRec+' mm²');
+    line('Disjuntor recomendado',r.disjRec+' A');
+
+  } else if(tipo==='conversão'&&lastCalcResults.conversao){
+    const r=lastCalcResults.conversao;
+    line('Valor original',r.valor+' '+r.unidade);
+    if(r.resultados) r.resultados.forEach(([u,v])=>line(u,v));
+
+  // ✅ NOVO: Bitola Motor
+  } else if(tipo==='Bitola Motor'&&lastCalcResults.motor){
+    const r=lastCalcResults.motor;
+    line('Motor',r.cv+' cv');
+    line('Tensão',r.V+' V');
+    line('Corrente nominal',r.I+' A');
+    line('Corrente de partida',r.Ipartida+' A');
+    line('Disjuntor/Protetor',r.disjMotor+' A');
+    line('Seção do condutor',r.sec+' mm²');
+    line('Tipo de partida',r.partida);
+
+  // ✅ NOVO: Queda Trifásico
+  } else if(tipo==='Queda Trifásico'&&lastCalcResults.quedaTri){
+    const r=lastCalcResults.quedaTri;
+    line('Potência',r.Pkw+' kW');
+    line('Corrente de linha',r.I+' A');
+    line('Queda de tensão (ΔU)',r.dV+' V');
+    line('Percentual',r.pct+'%');
+    line('Status',r.ok?'OK - Dentro do limite NBR':'ATENÇÃO - Acima do limite');
+
+  // ✅ NOVO: Corrente do Circuito
+  } else if(tipo==='Corrente do Circuito'&&lastCalcResults.corrente){
+    const r=lastCalcResults.corrente;
+    line('Potência',r.PkW+' kW');
+    line('Tensão',r.V+' V');
+    line('Fator de Potência',r.fp);
+    line('Rendimento (η)',r.eta);
+    line('Tipo',r.tipo==='tri'?'Trifásico':'Monofásico');
+    line('Corrente estimada',r.I+' A');
+    line('Disjuntor sugerido',r.disj+' A');
+
+  // ✅ NOVO: Correção de FP / Banco de Capacitores
+  } else if(tipo==='Correção de FP'&&lastCalcResults.capacitores){
+    const r=lastCalcResults.capacitores;
+    line('Potência ativa',r.PkW+' kW');
+    line('FP atual (cos φ1)',r.fp1);
+    line('FP desejado (cos φ2)',r.fp2);
+    line('Reativo necessário',r.kvar.toFixed(2)+' kVAr');
+
+  // ✅ NOVO: Perdas no Cabo
+  } else if(tipo==='Perdas no Cabo'&&lastCalcResults.caboPerdas){
+    const r=lastCalcResults.caboPerdas;
+    line('Material',r.mat==='al'?'Alumínio':'Cobre');
+    line('Seção',r.A+' mm²');
+    line('Comprimento (ida)',r.L+' m');
+    line('Corrente',r.I+' A');
+    line('Tensão do circuito',r.V+' V');
+    line('Resistência (ida+volta)',r.R.toFixed(4)+' Ω');
+    line('Queda de tensão',r.dV.toFixed(2)+' V ('+r.dVperc.toFixed(2)+'%)');
+    line('Perdas',r.perdasW.toFixed(1)+' W');
+
+  // ✅ NOVO: BTU ↔ W
+  } else if(tipo==='BTU ↔ W'&&lastCalcResults.btu){
+    const r=lastCalcResults.btu;
+    line('Valor original',r.val+' '+(r.tipo==='btu2w'?'BTU/h':'W'));
+    line('Resultado',r.out.toFixed(2)+' '+(r.tipo==='btu2w'?'W':'BTU/h'));
+
+  } else {
+    doc.text(pdfSafe('Realize o cálculo primeiro para gerar o PDF.'),20,y);
+  }
+
+  pdfFooter(doc);
+  doc.save('calculo_'+tipo.replace(/ /g,'_')+'_'+Date.now()+'.pdf');
+}
 
     function gerarPDFTabela(tipo){
       if(!requirePro('Gerar PDF')) return;
@@ -3153,119 +3253,128 @@ function dimensionarCondutor(){
     // ─────────────────────────────────────────────────────────
     // NOVAS CALCULADORAS (2026)
     // ─────────────────────────────────────────────────────────
+    
+function calcularCorrenteCircuito(){
+  const PkW = parseFloat(document.getElementById('potKwCorr').value);
+  const V   = parseFloat(document.getElementById('tensaoCorr').value);
+  const fp  = parseFloat(document.getElementById('fpCorr').value || '1');
+  const eta = parseFloat(document.getElementById('etaCorr').value || '1');
+  const tipo= document.getElementById('tipoCorr').value;
 
-    function calcularCorrenteCircuito(){
-      const PkW = parseFloat(document.getElementById('potKwCorr').value);
-      const V   = parseFloat(document.getElementById('tensaoCorr').value);
-      const fp  = parseFloat(document.getElementById('fpCorr').value || '1');
-      const eta = parseFloat(document.getElementById('etaCorr').value || '1');
-      const tipo= document.getElementById('tipoCorr').value;
+  if(!PkW || !V){
+    document.getElementById('resultCorrente').innerHTML = `<div class="result-box err">⚠️ Informe pelo menos Potência e Tensão.</div>`;
+    return;
+  }
 
-      if(!PkW || !V){
-        document.getElementById('resultCorrente').innerHTML = `<div class="result-box err">⚠️ Informe pelo menos Potência e Tensão.</div>`;
-        return;
-      }
+  const P = PkW * 1000;
+  const denom = (tipo === 'tri') ? (Math.sqrt(3) * V * fp * eta) : (V * fp * eta);
+  const I = P / denom;
 
-      const P = PkW * 1000;
-      const denom = (tipo === 'tri') ? (Math.sqrt(3) * V * fp * eta) : (V * fp * eta);
-      const I = P / denom;
+  // ✅ CORRIGIDO: usar lista de valores comerciais (NBR IEC 60898)
+  const disjComerciais = [6, 10, 16, 20, 25, 32, 40, 50, 63, 70, 80, 100];
+  const disj = disjComerciais.find(d => d >= I * 1.25) || 100;
 
-      // BUG #6 CORRIGIDO: usa valores comerciais NBR IEC 60898
-      const disjComerciais = [6,10,16,20,25,32,40,50,63,70,80,100];
-      const disj = disjComerciais.find(d => d >= I * 1.25) || 100;
-      // BUG #4 CORRIGIDO: salva resultado em lastCalcResults.corrente para PDF
-      lastCalcResults.corrente = { PkW, V, fp, eta, tipo, I: I.toFixed(2), disj };
-      document.getElementById('resultCorrente').innerHTML = `
-        <div class="result-box ok">
-          <strong>Corrente estimada:</strong> ${I.toFixed(2)} A<br/>
-          <span style="opacity:.85">Sugestão de disjuntor (valores comerciais NBR):</span> ${disj} A
-        </div>`;
-      salvarCalculoHistorico('Corrente do Circuito', `I ≈ ${I.toFixed(2)} A | Sug. disj.: ${disj} A`);
-    }
+  lastCalcResults.corrente = { PkW, V, fp, eta, tipo, I: I.toFixed(2), disj };
 
+  document.getElementById('resultCorrente').innerHTML = `
+    <div class="result-box ok">
+      <div class="result-item"><span>Corrente estimada</span><strong>${I.toFixed(2)} A</strong></div>
+      <div class="result-item"><span>Disjuntor sugerido (I × 1,25)</span><strong>${disj} A</strong></div>
+      <div class="result-item"><span>Tipo de circuito</span><strong>${tipo === 'tri' ? 'Trifásico' : 'Monofásico'}</strong></div>
+    </div>`;
+  salvarCalculoHistorico('Corrente do Circuito', `I ≈ ${I.toFixed(2)} A | Disj.: ${disj} A`);
+}
     function calcularBancoCapacitores(){
-      const PkW = parseFloat(document.getElementById('potKwCap').value);
-      const fp1 = parseFloat(document.getElementById('fpAtualCap').value);
-      const fp2 = parseFloat(document.getElementById('fpDesejCap').value);
+  const PkW = parseFloat(document.getElementById('potKwCap').value);
+  const fp1 = parseFloat(document.getElementById('fpAtualCap').value);
+  const fp2 = parseFloat(document.getElementById('fpDesejCap').value);
 
-      if(!PkW || !fp1 || !fp2){
-        document.getElementById('resultCapacitores').innerHTML = `<div class="result-box err">⚠️ Preencha todos os campos.</div>`;
-        return;
-      }
-      if(fp1 >= 1 || fp2 >= 1 || fp1 <= 0 || fp2 <= 0){
-        document.getElementById('resultCapacitores').innerHTML = `<div class="result-box err">⚠️ FP deve estar entre 0 e 1.</div>`;
-        return;
-      }
-      if(fp2 <= fp1){
-        document.getElementById('resultCapacitores').innerHTML = `<div class="result-box err">⚠️ O FP desejado deve ser maior que o atual.</div>`;
-        return;
-      }
+  if(!PkW || !fp1 || !fp2){
+    document.getElementById('resultCapacitores').innerHTML = `<div class="result-box err">⚠️ Preencha todos os campos.</div>`;
+    return;
+  }
+  if(fp1 >= 1 || fp2 >= 1 || fp1 <= 0 || fp2 <= 0){
+    document.getElementById('resultCapacitores').innerHTML = `<div class="result-box err">⚠️ FP deve estar entre 0 e 1.</div>`;
+    return;
+  }
+  if(fp2 <= fp1){
+    document.getElementById('resultCapacitores').innerHTML = `<div class="result-box err">⚠️ O FP desejado deve ser maior que o atual.</div>`;
+    return;
+  }
 
-      const phi1 = Math.acos(fp1);
-      const phi2 = Math.acos(fp2);
-      const kvar = PkW * (Math.tan(phi1) - Math.tan(phi2));
+  const phi1 = Math.acos(fp1);
+  const phi2 = Math.acos(fp2);
+  const kvar = PkW * (Math.tan(phi1) - Math.tan(phi2));
 
-      // BUG #4 CORRIGIDO: salva resultado em lastCalcResults.capacitores para PDF
-      lastCalcResults.capacitores = { PkW, fp1, fp2, kvar: kvar.toFixed(2) };
-      document.getElementById('resultCapacitores').innerHTML = `
-        <div class="result-box ok">
-          <strong>Reativo necessário:</strong> ${kvar.toFixed(2)} kVAr<br/>
-          <span style="opacity:.85">(Valor aproximado para correção de FP)</span>
-        </div>`;
-      salvarCalculoHistorico('Correção de FP', `kVAr ≈ ${kvar.toFixed(2)}`);
-    }
+  // ✅ CORRIGIDO: salvar em lastCalcResults.capacitores
+  lastCalcResults.capacitores = { PkW, fp1, fp2, kvar };
+
+  document.getElementById('resultCapacitores').innerHTML = `
+    <div class="result-box ok">
+      <div class="result-item"><span>Potência ativa</span><strong>${PkW} kW</strong></div>
+      <div class="result-item"><span>FP atual → desejado</span><strong>${fp1} → ${fp2}</strong></div>
+      <div class="result-item"><span>Reativo necessário</span><strong>${kvar.toFixed(2)} kVAr</strong></div>
+    </div>`;
+  salvarCalculoHistorico('Correção de FP', `kVAr ≈ ${kvar.toFixed(2)}`);
+}
 
     function calcularPerdasCabo(){
-      const mat = document.getElementById('matCabo').value;
-      const A   = parseFloat(document.getElementById('secCabo').value);
-      const L   = parseFloat(document.getElementById('lenCabo').value);
-      const I   = parseFloat(document.getElementById('iCabo').value);
-      const V   = parseFloat(document.getElementById('vCabo').value);
+  const mat = document.getElementById('matCabo').value;
+  const A   = parseFloat(document.getElementById('secCabo').value);
+  const L   = parseFloat(document.getElementById('lenCabo').value);
+  const I   = parseFloat(document.getElementById('iCabo').value);
+  const V   = parseFloat(document.getElementById('vCabo').value);
 
-      if(!A || !L || !I || !V){
-        document.getElementById('resultCaboPerdas').innerHTML = `<div class="result-box err">⚠️ Preencha seção, comprimento, corrente e tensão.</div>`;
-        return;
-      }
+  if(!A || !L || !I || !V){
+    document.getElementById('resultCaboPerdas').innerHTML = `<div class="result-box err">⚠️ Preencha seção, comprimento, corrente e tensão.</div>`;
+    return;
+  }
 
-      // Resistividade típica (Ω·mm²/m)
-      const rho = (mat === 'al') ? 0.0282 : 0.0172;
-      const R = rho * (2*L) / A; // ida e volta
-      const dV = I * R;
-      const dVperc = (dV / V) * 100;
-      const perdasW = (I**2) * R;
+  const rho = (mat === 'al') ? 0.0282 : 0.0172;
+  const R = rho * (2*L) / A;
+  const dV = I * R;
+  const dVperc = (dV / V) * 100;
+  const perdasW = (I**2) * R;
 
-      // BUG #4 CORRIGIDO: salva resultado em lastCalcResults.caboPerdas para PDF
-      lastCalcResults.caboPerdas = { mat, A, L, I, V, R: R.toFixed(4), dV: dV.toFixed(2), dVperc: dVperc.toFixed(2), perdasW: perdasW.toFixed(1) };
-      document.getElementById('resultCaboPerdas').innerHTML = `
-        <div class="result-box ok">
-          <strong>Resistência do trecho (ida+volta):</strong> ${R.toFixed(4)} Ω<br/>
-          <strong>Queda de tensão:</strong> ${dV.toFixed(2)} V (${dVperc.toFixed(2)}%)<br/>
-          <strong>Perdas:</strong> ${perdasW.toFixed(1)} W
-        </div>`;
-      salvarCalculoHistorico('Perdas no Cabo', `ΔV ≈ ${dV.toFixed(2)} V (${dVperc.toFixed(2)}%) | P≈${perdasW.toFixed(1)}W`);
-    }
+  // ✅ CORRIGIDO: salvar em lastCalcResults.caboPerdas
+  lastCalcResults.caboPerdas = { mat, A, L, I, V, R, dV, dVperc, perdasW };
 
-    function calcularBTU(){
-      const val = parseFloat(document.getElementById('valorBtu').value);
-      const tipo = document.getElementById('tipoBtu').value;
-      if(!val){
-        document.getElementById('resultBtu').innerHTML = `<div class="result-box err">⚠️ Informe um valor.</div>`;
-        return;
-      }
-      // 1 BTU/h ≈ 0,29307107 W
-      let out, unit;
-      if(tipo === 'btu2w'){
-        out = val * 0.29307107;
-        unit = 'W';
-      } else {
-        out = val / 0.29307107;
-        unit = 'BTU/h';
-      }
-      // BUG #4 CORRIGIDO: salva resultado em lastCalcResults.btu para PDF
-      lastCalcResults.btu = { val, tipo, out: out.toFixed(2), unit };
-      document.getElementById('resultBtu').innerHTML = `<div class="result-box ok"><strong>Resultado:</strong> ${out.toFixed(2)} ${unit}</div>`;
-      salvarCalculoHistorico('BTU ↔ W', `${out.toFixed(2)} ${unit}`);
-    }
+  document.getElementById('resultCaboPerdas').innerHTML = `
+    <div class="result-box ok">
+      <div class="result-item"><span>Resistência (ida+volta)</span><strong>${R.toFixed(4)} Ω</strong></div>
+      <div class="result-item"><span>Queda de tensão</span><strong>${dV.toFixed(2)} V (${dVperc.toFixed(2)}%)</strong></div>
+      <div class="result-item"><span>Perdas no cabo</span><strong>${perdasW.toFixed(1)} W</strong></div>
+    </div>`;
+  salvarCalculoHistorico('Perdas no Cabo', `ΔV ≈ ${dV.toFixed(2)} V (${dVperc.toFixed(2)}%) | P≈${perdasW.toFixed(1)}W`);
+}
+
+function calcularBTU(){
+  const val = parseFloat(document.getElementById('valorBtu').value);
+  const tipo = document.getElementById('tipoBtu').value;
+  if(!val){
+    document.getElementById('resultBtu').innerHTML = `<div class="result-box err">⚠️ Informe um valor.</div>`;
+    return;
+  }
+  const fator = 0.29307107;
+  let out;
+  if(tipo === 'btu2w'){
+    out = val * fator;
+  } else {
+    out = val / fator;
+  }
+  const unit = (tipo === 'btu2w') ? 'W' : 'BTU/h';
+
+  // ✅ CORRIGIDO: salvar em lastCalcResults.btu
+  lastCalcResults.btu = { val, tipo, out };
+
+  document.getElementById('resultBtu').innerHTML = `
+    <div class="result-box ok">
+      <div class="result-item"><span>Valor original</span><strong>${val} ${tipo === 'btu2w' ? 'BTU/h' : 'W'}</strong></div>
+      <div class="result-item"><span>Resultado</span><strong>${out.toFixed(2)} ${unit}</strong></div>
+    </div>`;
+  salvarCalculoHistorico('BTU ↔ W', `${val} ${tipo === 'btu2w' ? 'BTU/h' : 'W'} = ${out.toFixed(2)} ${unit}`);
+}
+
     /* ======================== INIT ======================== */
     window.addEventListener('load', () => {
       initTheme();
