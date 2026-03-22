@@ -3455,6 +3455,14 @@ setLockedUI();
 function setProBadge(isPro, proType){
   const btn = document.getElementById('upgradeBtnHome');
   if(!btn) return;
+  // Adicionar logo no início de setProBadge():
+try {
+  const trial = JSON.parse(localStorage.getItem('eletricapro_trial') || '{}');
+  trial.isPro = !!isPro;
+  if(isPro && proType) trial.proType = proType;
+  localStorage.setItem('eletricapro_trial', JSON.stringify(trial));
+} catch(e) {}
+
   if(isPro){
     const label = ({monthly:'Mensal', annual:'Anual', lifetime:'Vitalício'})[proType] || 'PRO';
     btn.style.background = 'linear-gradient(135deg, #f5c518 0%, #f59e0b 55%, #ffe29a 100%)';
