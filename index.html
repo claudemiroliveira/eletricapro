@@ -310,6 +310,18 @@
       border: 1px solid rgba(33,150,243,0.4);
       border-radius: 10px; padding: 1.2rem;
     }
+    .result-box.ok {
+      background: rgba(21,101,192,0.18);
+      border: 1px solid rgba(33,150,243,0.5);
+      border-radius: 10px; padding: 1.2rem;
+      font-size: 0.92rem; line-height: 1.7;
+    }
+    .result-box.err {
+      background: rgba(244,67,54,0.12);
+      border: 1px solid rgba(244,67,54,0.45);
+      border-radius: 10px; padding: 1.0rem;
+      color: #ff8a80; font-size: 0.92rem;
+    }
     .result-box h4 { color: var(--yellow-soft); margin-bottom: 0.8rem; font-size:0.9rem; }
     .result-item {
       display: flex; justify-content: space-between; align-items: center;
@@ -574,7 +586,7 @@
 
       <!-- Botão PRO (apenas leva ao login.html) -->
       <div style="margin-top:1.5rem;" id="proBtnHome">
-        <button id="upgradeBtnHome" class="btn-pro-upgrade" onclick="window.location.href='login.html?planos1'">
+        <button id="upgradeBtnHome" class="btn-pro-upgrade" onclick="window.location.href='login.html?planos=1'">
           <span class="pro-badge">PRO</span>
           <span class="pro-btn-text">
             <strong>Ativar Versão PRO</strong>
@@ -3120,7 +3132,7 @@
           <strong>Corrente estimada:</strong> ${I.toFixed(2)} A<br/>
           <span style="opacity:.85">Sugestão rápida de disjuntor (aprox.):</span> ${disj} A
         </div>`;
-      salvarHistorico('Corrente do Circuito', `I ≈ ${I.toFixed(2)} A | Sug. disj.: ${disj} A`);
+      salvarCalculoHistorico('Corrente do Circuito', `I ≈ ${I.toFixed(2)} A | Sug. disj.: ${disj} A`);
     }
 
     function calcularBancoCapacitores(){
@@ -3150,7 +3162,7 @@
           <strong>Reativo necessário:</strong> ${kvar.toFixed(2)} kVAr<br/>
           <span style="opacity:.85">(Valor aproximado para correção de FP)</span>
         </div>`;
-      salvarHistorico('Correção de FP', `kVAr ≈ ${kvar.toFixed(2)}`);
+      salvarCalculoHistorico('Correção de FP', `kVAr ≈ ${kvar.toFixed(2)}`);
     }
 
     function calcularPerdasCabo(){
@@ -3178,7 +3190,7 @@
           <strong>Queda de tensão:</strong> ${dV.toFixed(2)} V (${dVperc.toFixed(2)}%)<br/>
           <strong>Perdas:</strong> ${perdasW.toFixed(1)} W
         </div>`;
-      salvarHistorico('Perdas no Cabo', `ΔV ≈ ${dV.toFixed(2)} V (${dVperc.toFixed(2)}%) | P≈${perdasW.toFixed(1)}W`);
+      salvarCalculoHistorico('Perdas no Cabo', `ΔV ≈ ${dV.toFixed(2)} V (${dVperc.toFixed(2)}%) | P≈${perdasW.toFixed(1)}W`);
     }
 
     function calcularBTU(){
@@ -3198,7 +3210,7 @@
         unit = 'BTU/h';
       }
       document.getElementById('resultBtu').innerHTML = `<div class="result-box ok"><strong>Resultado:</strong> ${out.toFixed(2)} ${unit}</div>`;
-      salvarHistorico('BTU ↔ W', `${out.toFixed(2)} ${unit}`);
+      salvarCalculoHistorico('BTU ↔ W', `${out.toFixed(2)} ${unit}`);
     }
     /* ======================== INIT ======================== */
     window.addEventListener('load', () => {
@@ -3403,6 +3415,7 @@ setTimeout(() => {
 </footer>
 
 <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script defer src="https://static.cloudflareinsights.com/beacon.min.js/v8c78df7c7c0f484497ecbca7046644da1771523124516" integrity="sha512-8DS7rgIrAmghBFwoOTujcf6D9rXvH8xm8JQ1Ja01h9QX8EzXldiszufYa4IFfKdLUKTTrnSFXLDkUEOTrZQ8Qg==" data-cf-beacon='{"version":"2024.11.0","token":"4edd5f8ec12a48cfa682ab8261b80a79","server_timing":{"name":{"cfCacheStatus":true,"cfEdge":true,"cfExtPri":true,"cfL4":true,"cfOrigin":true,"cfSpeedBrain":true},"location_startswith":null}}' crossorigin="anonymous"></script>
+
 <script defer src="https://static.cloudflareinsights.com/beacon.min.js/v8c78df7c7c0f484497ecbca7046644da1771523124516" integrity="sha512-8DS7rgIrAmghBFwoOTujcf6D9rXvH8xm8JQ1Ja01h9QX8EzXldiszufYa4IFfKdLUKTTrnSFXLDkUEOTrZQ8Qg==" data-cf-beacon='{"version":"2024.11.0","token":"4edd5f8ec12a48cfa682ab8261b80a79","server_timing":{"name":{"cfCacheStatus":true,"cfEdge":true,"cfExtPri":true,"cfL4":true,"cfOrigin":true,"cfSpeedBrain":true},"location_startswith":null}}' crossorigin="anonymous"></script>
 </body>
 </html>
