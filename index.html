@@ -3120,28 +3120,27 @@
       }
     }
 
-    function initTheme() {
-      const savedTheme = localStorage.getItem('eletricapro_theme');
-      if (savedTheme === 'light') {
-        document.documentElement.setAttribute('data-theme', 'light');
-        // BUG #1 CORRIGIDO: aplica variáveis CSS diretamente, sem chamar toggleDarkMode()
-        document.documentElement.style.setProperty('--blue-deep',  '#f0f4f8');
-        document.documentElement.style.setProperty('--blue-mid',   '#dde6f0');
-        document.documentElement.style.setProperty('--blue-bright','#1565c0');
-        document.documentElement.style.setProperty('--blue-light', '#1976d2');
-        document.documentElement.style.setProperty('--card-bg',    'rgba(255,255,255,0.90)');
-        document.documentElement.style.setProperty('--card-border','rgba(21,101,192,0.25)');
-        document.documentElement.style.setProperty('--text-muted', 'rgba(0,0,0,0.55)');
-        document.documentElement.style.setProperty('--white',      '#0a1628');
-        const btn = document.getElementById('btnTheme');
-        if(btn) btn.textContent = '☀️';
-      } else {
-        document.documentElement.setAttribute('data-theme', 'dark');
-      }
-    }
-
-
-
+   function initTheme() {
+  const savedTheme = localStorage.getItem('eletricapro_theme');
+  if (savedTheme === 'light') {
+    const root = document.documentElement;
+    const btn  = document.getElementById('darkModeBtn');
+    root.style.setProperty('--blue-deep',  '#f0f4f8');
+    root.style.setProperty('--blue-mid',   '#e2ecf7');
+    root.style.setProperty('--blue-bright','#1565c0');
+    root.style.setProperty('--card-bg',    'rgba(255,255,255,0.92)');
+    root.style.setProperty('--card-border','rgba(21,101,192,0.25)');
+    root.style.setProperty('--text-muted', 'rgba(10,22,40,0.6)');
+    document.body.style.color = '#0a1628';
+    if (btn) btn.textContent = '🌙 Modo Escuro';
+    root.setAttribute('data-theme', 'light');
+  } else {
+    document.documentElement.setAttribute('data-theme', 'dark');
+    const btn = document.getElementById('darkModeBtn');
+    if (btn) btn.textContent = '☀️ Modo Claro';
+  }
+}
+ 
     // ─────────────────────────────────────────────────────────
     // NOVAS CALCULADORAS (2026)
     // ─────────────────────────────────────────────────────────
