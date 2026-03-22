@@ -2208,7 +2208,9 @@
       const ro=0.0172, dV=I*(ro*2*L)/sec, pct=(dV/V)*100;
       if(pct>4){
         const sMin=(ro*2*L*I)/(V*0.04);
-        [1.5,2.5,4,6,10,16,25,35,50,70,95].forEach(sx=>{ if(sx>=sMin&&sx>sec) sec=sx; });
+        // BUG #5 CORRIGIDO: usa find() para parar no primeiro valor suficiente
+        const secCorrigida = [1.5,2.5,4,6,10,16,25,35,50,70,95].find(sx => sx >= sMin && sx >= sec);
+        if(secCorrigida) sec = secCorrigida;
       }
 
       const disj=[10,16,20,25,32,40,50,63,70].find(d=>d>=I)||63;
@@ -2226,13 +2228,15 @@
     /* ======================== CONSUMO ======================== */
     let consumoRowCount = 1;
     function addConsumoRow(){
-      const container = document.getElementById('consumoItens');
+      // BUG #2 CORRIGIDO: ID atualizado de 'consumoItens' para 'energiaItens'
+      const container = document.getElementById('energiaItens');
       const div = document.createElement('div');
       div.className = 'consumo-item-row'; div.id='consumoRow'+consumoRowCount;
       div.innerHTML=`
-        <div class="form-group"><label>Aparelho</label><input type="text" placeholder="Ex: TV"></div>
+        <div class="form-group"><label>Equipamento</label><input type="text" placeholder="Ex: TV"></div>
         <div class="form-group"><label>Potência (W)</label><input type="number" placeholder="Ex: 100"></div>
         <div class="form-group"><label>Horas/dia</label><input type="number" placeholder="Ex: 5" step="0.5"></div>
+        <div class="form-group"><label>Dias/mês</label><input type="number" placeholder="30" value="30"></div>
         <div style="padding-bottom:0.9rem;display:flex;align-items:flex-end;">
           <button class="btn btn-red" onclick="this.closest('.consumo-item-row').remove()">🗑️</button>
         </div>`;
@@ -2240,34 +2244,8 @@
     }
 
     function calcularConsumo(){
-      if(!canUseFree('consumo', 'Consumo')) return;
-      const rows = document.querySelectorAll('.consumo-item-row');
-      let totalKwh=0, items=[];
-      rows.forEach(row=>{
-        const inputs=row.querySelectorAll('input');
-        const nome=inputs[0].value||'Aparelho';
-        const W=parseFloat(inputs[1].value)||0;
-        const h=parseFloat(inputs[2].value)||0;
-        if(W&&h){
-          const kwh=(W*h*30)/1000;
-          totalKwh+=kwh;
-          items.push({nome,W,h,kwh:kwh.toFixed(2)});
-        }
-      });
-      if(!items.length){ alert('Preencha pelo menos um aparelho!'); return; }
-
-      const custo=(totalKwh*0.75).toFixed(2);
-      let html=`<div class="consumo-result-summary">
-        <h4>⚡ Consumo Mensal Estimado</h4>
-        <div class="consumo-big">${totalKwh.toFixed(1)} <span>kWh/mês</span></div>
-        <div class="result-item"><span>💸 Custo estimado (R$ 0,75/kWh)</span><strong>R$ ${custo}</strong></div>`;
-      items.forEach(it=>{
-        html+=`<div class="result-item"><span>${it.nome} (${it.W}W × ${it.h}h/dia)</span><strong>${it.kwh} kWh</strong></div>`;
-      });
-      html+=`</div>`;
-      lastCalcResults.consumo = {totalKwh, custo};
-      document.getElementById('resultConsumo').innerHTML=html;
-      salvarCalculoHistorico('Consumo', `${totalKwh.toFixed(1)}kWh/mês · R$${custo}`);
+      // BUG #2 CORRIGIDO: função redirecionada para calcularEnergiaMensal() (IDs atualizados)
+      calcularEnergiaMensal();
     }
 
     /* ======================== ORÇAMENTOS ======================== */
@@ -2383,6 +2361,50 @@
         const r=lastCalcResults.conversao;
         line('Valor original',r.valor+' '+r.unidade);
         r.resultados.forEach(([u,v])=>line(u,v));
+      // BUG #3 CORRIGIDO: case 'Custo Energia' agora lê lastCalcResults.energiaMes
+      } else if(tipo==='Custo Energia'&&lastCalcResults.energiaMes){
+        const r=lastCalcResults.energiaMes;
+        line('Consumo total mensal',r.total.toFixed(1)+' kWh/mes');
+        line('Custo estimado','R$ '+r.custoTotal);
+        line('Tarifa utilizada','R$ '+r.tarifa.toFixed(4)+'/kWh');
+      // BUG #4 CORRIGIDO: cases para calculadoras novas
+      } else if(tipo==='Corrente do Circuito'&&lastCalcResults.corrente){
+        const r=lastCalcResults.corrente;
+        line('Potencia',r.PkW+' kW'); line('Tensao',r.V+' V');
+        line('Fator de Potencia',r.fp); line('Rendimento',r.eta);
+        line('Tipo',r.tipo==='tri'?'Trifasico':'Monofasico');
+        line('Corrente estimada',r.I+' A'); line('Disjuntor sugerido',r.disj+' A');
+      } else if(tipo==='Correção de FP'&&lastCalcResults.capacitores){
+        const r=lastCalcResults.capacitores;
+        line('Potencia ativa',r.PkW+' kW');
+        line('FP atual',r.fp1); line('FP desejado',r.fp2);
+        line('kVAr necessario',r.kvar+' kVAr');
+      } else if(tipo==='Perdas no Cabo'&&lastCalcResults.caboPerdas){
+        const r=lastCalcResults.caboPerdas;
+        line('Material',r.mat==='al'?'Aluminio':'Cobre');
+        line('Secao',r.A+' mm2'); line('Comprimento (ida)',r.L+' m');
+        line('Corrente',r.I+' A'); line('Tensao',r.V+' V');
+        line('Resistencia total',r.R+' ohm');
+        line('Queda de tensao',r.dV+' V ('+r.dVperc+'%)');
+        line('Perdas no cabo',r.perdasW+' W');
+      } else if(tipo==='BTU'&&lastCalcResults.btu){
+        const r=lastCalcResults.btu;
+        line('Valor entrada',r.val+' '+(r.tipo==='btu2w'?'BTU/h':'W'));
+        line('Resultado',r.out+' '+r.unit);
+      } else if(tipo==='Bitola Motor'&&lastCalcResults.motor){
+        const r=lastCalcResults.motor;
+        line('Potencia',r.cv+' cv'); line('Tensao',r.V+' V');
+        line('Corrente nominal',r.I+' A');
+        line('Corrente de partida',r.Ipartida+' A');
+        line('Disjuntor/Protetor',r.disjMotor+' A');
+        line('Secao do condutor',r.sec+' mm2');
+      } else if(tipo==='Queda Trifásico'&&lastCalcResults.quedaTri){
+        const r=lastCalcResults.quedaTri;
+        line('Potencia',r.Pkw+' kW'); line('Tensao de linha',r.V+' V');
+        line('Fator de Potencia',r.fp); line('Comprimento',r.L+' m');
+        line('Secao',r.s+' mm2'); line('Corrente de linha',r.I+' A');
+        line('Queda de tensao',r.dV+' V ('+r.pct+'%)');
+        line('Status',r.ok?'OK - Dentro do limite NBR':'ATENCAO - Acima do limite - aumentar secao');
       } else {
         doc.text(pdfSafe('Realize o calculo primeiro para gerar o PDF.'),20,y);
       }
@@ -2878,6 +2900,10 @@
 
         lastCalcResults.conversao = { valor, unidade, resultados };
         salvarCalculoHistorico('Conversão', `${valor} ${unidade}`);
+      } else {
+        // BUG #7 CORRIGIDO: salva resultado de conversão de bitola para PDF
+        lastCalcResults.conversao = { valor, unidade, resultados: [] };
+        salvarCalculoHistorico('Conversão Bitola', `${valor} ${unidade}`);
       }
 
       html += '</div>';
@@ -3098,7 +3124,17 @@
       const savedTheme = localStorage.getItem('eletricapro_theme');
       if (savedTheme === 'light') {
         document.documentElement.setAttribute('data-theme', 'light');
-        toggleDarkMode();
+        // BUG #1 CORRIGIDO: aplica variáveis CSS diretamente, sem chamar toggleDarkMode()
+        document.documentElement.style.setProperty('--blue-deep',  '#f0f4f8');
+        document.documentElement.style.setProperty('--blue-mid',   '#dde6f0');
+        document.documentElement.style.setProperty('--blue-bright','#1565c0');
+        document.documentElement.style.setProperty('--blue-light', '#1976d2');
+        document.documentElement.style.setProperty('--card-bg',    'rgba(255,255,255,0.90)');
+        document.documentElement.style.setProperty('--card-border','rgba(21,101,192,0.25)');
+        document.documentElement.style.setProperty('--text-muted', 'rgba(0,0,0,0.55)');
+        document.documentElement.style.setProperty('--white',      '#0a1628');
+        const btn = document.getElementById('btnTheme');
+        if(btn) btn.textContent = '☀️';
       } else {
         document.documentElement.setAttribute('data-theme', 'dark');
       }
@@ -3126,11 +3162,15 @@
       const denom = (tipo === 'tri') ? (Math.sqrt(3) * V * fp * eta) : (V * fp * eta);
       const I = P / denom;
 
-      const disj = Math.ceil(I/5)*5; // arredonda p/ múltiplo de 5A
+      // BUG #6 CORRIGIDO: usa valores comerciais NBR IEC 60898
+      const disjComerciais = [6,10,16,20,25,32,40,50,63,70,80,100];
+      const disj = disjComerciais.find(d => d >= I * 1.25) || 100;
+      // BUG #4 CORRIGIDO: salva resultado em lastCalcResults.corrente para PDF
+      lastCalcResults.corrente = { PkW, V, fp, eta, tipo, I: I.toFixed(2), disj };
       document.getElementById('resultCorrente').innerHTML = `
         <div class="result-box ok">
           <strong>Corrente estimada:</strong> ${I.toFixed(2)} A<br/>
-          <span style="opacity:.85">Sugestão rápida de disjuntor (aprox.):</span> ${disj} A
+          <span style="opacity:.85">Sugestão de disjuntor (valores comerciais NBR):</span> ${disj} A
         </div>`;
       salvarCalculoHistorico('Corrente do Circuito', `I ≈ ${I.toFixed(2)} A | Sug. disj.: ${disj} A`);
     }
@@ -3157,6 +3197,8 @@
       const phi2 = Math.acos(fp2);
       const kvar = PkW * (Math.tan(phi1) - Math.tan(phi2));
 
+      // BUG #4 CORRIGIDO: salva resultado em lastCalcResults.capacitores para PDF
+      lastCalcResults.capacitores = { PkW, fp1, fp2, kvar: kvar.toFixed(2) };
       document.getElementById('resultCapacitores').innerHTML = `
         <div class="result-box ok">
           <strong>Reativo necessário:</strong> ${kvar.toFixed(2)} kVAr<br/>
@@ -3184,6 +3226,8 @@
       const dVperc = (dV / V) * 100;
       const perdasW = (I**2) * R;
 
+      // BUG #4 CORRIGIDO: salva resultado em lastCalcResults.caboPerdas para PDF
+      lastCalcResults.caboPerdas = { mat, A, L, I, V, R: R.toFixed(4), dV: dV.toFixed(2), dVperc: dVperc.toFixed(2), perdasW: perdasW.toFixed(1) };
       document.getElementById('resultCaboPerdas').innerHTML = `
         <div class="result-box ok">
           <strong>Resistência do trecho (ida+volta):</strong> ${R.toFixed(4)} Ω<br/>
@@ -3209,6 +3253,8 @@
         out = val / 0.29307107;
         unit = 'BTU/h';
       }
+      // BUG #4 CORRIGIDO: salva resultado em lastCalcResults.btu para PDF
+      lastCalcResults.btu = { val, tipo, out: out.toFixed(2), unit };
       document.getElementById('resultBtu').innerHTML = `<div class="result-box ok"><strong>Resultado:</strong> ${out.toFixed(2)} ${unit}</div>`;
       salvarCalculoHistorico('BTU ↔ W', `${out.toFixed(2)} ${unit}`);
     }
@@ -3407,14 +3453,14 @@ setTimeout(() => {
     <a href="politica-de-privacidade.html">🔒 Política de Privacidade</a>
     <a href="termos-de-uso.html">📋 Termos de Uso</a>
     <a href="etica-e-conformidade.html">🤝 Ética &amp; Conformidade</a>
-   <a href="mailto:seuemail@gmail.com">✉ Suporte</a> 
+   <a href="/cdn-cgi/l/email-protection#97e4f2e2f2faf6fefbd7f0faf6fefbb9f4f8fa">✉ Suporte</a> 
   </div>
   <div class="ep-legal-copy">
     © 2026 COFservicos · CNPJ 31.577.846/0001-12 · Iguape/SP
   </div>
 </footer>
 
-<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script defer src="https://static.cloudflareinsights.com/beacon.min.js/v8c78df7c7c0f484497ecbca7046644da1771523124516" integrity="sha512-8DS7rgIrAmghBFwoOTujcf6D9rXvH8xm8JQ1Ja01h9QX8EzXldiszufYa4IFfKdLUKTTrnSFXLDkUEOTrZQ8Qg==" data-cf-beacon='{"version":"2024.11.0","token":"4edd5f8ec12a48cfa682ab8261b80a79","server_timing":{"name":{"cfCacheStatus":true,"cfEdge":true,"cfExtPri":true,"cfL4":true,"cfOrigin":true,"cfSpeedBrain":true},"location_startswith":null}}' crossorigin="anonymous"></script>
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script defer src="https://static.cloudflareinsights.com/beacon.min.js/v8c78df7c7c0f484497ecbca7046644da1771523124516" integrity="sha512-8DS7rgIrAmghBFwoOTujcf6D9rXvH8xm8JQ1Ja01h9QX8EzXldiszufYa4IFfKdLUKTTrnSFXLDkUEOTrZQ8Qg==" data-cf-beacon='{"version":"2024.11.0","token":"4edd5f8ec12a48cfa682ab8261b80a79","server_timing":{"name":{"cfCacheStatus":true,"cfEdge":true,"cfExtPri":true,"cfL4":true,"cfOrigin":true,"cfSpeedBrain":true},"location_startswith":null}}' crossorigin="anonymous"></script>
 
 
 <script>
@@ -3437,5 +3483,6 @@ setTimeout(() => {
     }
   });
 </script>
+<script defer src="https://static.cloudflareinsights.com/beacon.min.js/v8c78df7c7c0f484497ecbca7046644da1771523124516" integrity="sha512-8DS7rgIrAmghBFwoOTujcf6D9rXvH8xm8JQ1Ja01h9QX8EzXldiszufYa4IFfKdLUKTTrnSFXLDkUEOTrZQ8Qg==" data-cf-beacon='{"version":"2024.11.0","token":"4edd5f8ec12a48cfa682ab8261b80a79","server_timing":{"name":{"cfCacheStatus":true,"cfEdge":true,"cfExtPri":true,"cfL4":true,"cfOrigin":true,"cfSpeedBrain":true},"location_startswith":null}}' crossorigin="anonymous"></script>
 </body>
 </html>
