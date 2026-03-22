@@ -694,7 +694,14 @@ function openScreen(screenId) {
 /* TORNA GLOBAL (IMPORTANTE) */
 window.openScreen = openScreen;
 
+function abrirTela(id) {
+  document.querySelectorAll('.screen').forEach(s => {
+    s.style.display = 'none';
+  });
 
+  const tela = document.getElementById(id);
+  if (tela) tela.style.display = 'block';
+}
 /* =========================
    INICIALIZAÇÃO DO APP
 ========================= */
