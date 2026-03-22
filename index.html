@@ -49,8 +49,6 @@
       color: var(--white);
       min-height: 100vh;
       overflow-x: hidden;
-      display: flex;
-      flex-direction: column;
     }
 
     /* Animated starfield */
@@ -105,37 +103,20 @@
     /* ===== MAIN CONTAINER ===== */
     .container {
       position: relative; z-index: 10;
-      background: var(--blue-deep);
       max-width: 960px; margin: 0 auto; padding: 1.5rem 1rem 4rem;
-      width: 100%;
-      flex: 1 0 auto;
     }
 
     /* ===== SCREENS ===== */
-   /* ✅ DEPOIS — sem flash entre telas */
-.screen {
-  display: none;
-  opacity: 0;
-  pointer-events: none;
-}
-.screen.active {
-  display: block;
-  opacity: 1;
-  pointer-events: auto;
-  animation: slideUp 0.35s ease-out forwards;
-}
-@keyframes slideUp {
-  from { opacity: 0; transform: translateY(20px); }
-  to   { opacity: 1; transform: translateY(0); }
-}
-@media (prefers-reduced-motion: reduce) {
-  .screen.active {
-    animation: none;
-    opacity: 1;
-    transform: none;
-  }
-}
- 
+    .screen { display: none; }
+    .screen.active {
+      display: block;
+      animation: slideUp 0.35s ease-out;
+    }
+    @keyframes slideUp {
+      from { opacity:0; transform:translateY(20px); }
+      to   { opacity:1; transform:translateY(0); }
+    }
+
     /* ===== HERO ===== */
     .hero { text-align: center; padding: 2rem 1rem 1.5rem; }
     .hero-logo {
@@ -319,18 +300,6 @@
       background: rgba(21,101,192,0.18);
       border: 1px solid rgba(33,150,243,0.4);
       border-radius: 10px; padding: 1.2rem;
-    }
-    .result-box.ok {
-      background: rgba(21,101,192,0.18);
-      border: 1px solid rgba(33,150,243,0.5);
-      border-radius: 10px; padding: 1.2rem;
-      font-size: 0.92rem; line-height: 1.7;
-    }
-    .result-box.err {
-      background: rgba(244,67,54,0.12);
-      border: 1px solid rgba(244,67,54,0.45);
-      border-radius: 10px; padding: 1.0rem;
-      color: #ff8a80; font-size: 0.92rem;
     }
     .result-box h4 { color: var(--yellow-soft); margin-bottom: 0.8rem; font-size:0.9rem; }
     .result-item {
@@ -536,7 +505,7 @@
     </div>
 
     <div id="userAreaBtn"
-      onclick="window.location.href='login.html?planos=1'"
+      onclick="window.location.href='login.html'"
       style="display:flex;align-items:center;gap:.5rem;padding:.45rem .8rem;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);border-radius:10px;cursor:pointer;font-size:.8rem;transition:.3s ease;white-space:nowrap;"
       title="Login / Minha Conta">
       <span id="userAvatarIcon">👤</span>
@@ -596,7 +565,7 @@
 
       <!-- Botão PRO (apenas leva ao login.html) -->
       <div style="margin-top:1.5rem;" id="proBtnHome">
-        <button id="upgradeBtnHome" class="btn-pro-upgrade" onclick="window.location.href='login.html?planos=1'">
+        <button id="upgradeBtnHome" class="btn-pro-upgrade" onclick="window.location.href='login.html'">
           <span class="pro-badge">PRO</span>
           <span class="pro-btn-text">
             <strong>Ativar Versão PRO</strong>
@@ -604,7 +573,7 @@
           </span>
           <span class="pro-arrow">→</span>
         </button>
-        <a href="etica-e-conformidade.html" style="display:block;margin-top:0.9rem;text-align:center;color:rgba(255,255,255,0.85);text-decoration:underline;font-size:0.9rem;">
+        <a href="etica.html" style="display:block;margin-top:0.9rem;text-align:center;color:rgba(255,255,255,0.85);text-decoration:underline;font-size:0.9rem;">
           Ética, privacidade e termos
         </a>
       </div>
@@ -668,105 +637,9 @@
           <div class="s-icon">💡</div>
           <div class="s-text"><strong>Custo Energia</strong><span>Estimativa mensal</span></div>
         </div>
-
-        <!-- Novas calculadoras (2026) -->
-        <div class="sub-tile" onclick="openScreen('calcCorrente','Corrente do Circuito')">
-          <div class="s-icon">🧷</div>
-          <div class="s-text"><strong>Corrente</strong><span>Monofásico / Trifásico</span></div>
-        </div>
-        <div class="sub-tile" onclick="openScreen('calcCapacitores','Correção de FP')">
-          <div class="s-icon">🟦</div>
-          <div class="s-text"><strong>Banco de Capacitores</strong><span>kVAr necessário</span></div>
-        </div>
-        <div class="sub-tile" onclick="openScreen('calcCaboPerdas','Perdas no Cabo')">
-          <div class="s-icon">🔥</div>
-          <div class="s-text"><strong>Perdas</strong><span>ΔV + W no cabo</span></div>
-        </div>
-        <div class="sub-tile" onclick="openScreen('calcBtu','BTU ↔ W')">
-          <div class="s-icon">🌡️</div>
-          <div class="s-text"><strong>BTU/h</strong><span>Conversão para W</span></div>
-        </div>
       </div>
     </div>
 
-
-
-    <!-- ========== CALC: CORRENTE (NOVO) ========== -->
-    <div id="calcCorrente" class="screen">
-      <div class="screen-title"><div class="dot"></div>Corrente do Circuito</div>
-      <div class="calc-card">
-        <h3>🧷 Corrente (I)</h3>
-        <p style="font-size:0.82rem;color:var(--text-muted);margin-bottom:1rem;">Útil para estimar a corrente do circuito e auxiliar no dimensionamento do disjuntor.</p>
-        <div class="form-group"><label>Potência (kW):</label><input type="number" id="potKwCorr" placeholder="Ex: 5.5" step="0.01"></div>
-        <div class="form-group"><label>Tensão (V):</label><input type="number" id="tensaoCorr" placeholder="Ex: 220" value="220"></div>
-        <div class="form-group"><label>Fator de Potência (cos φ):</label><input type="number" id="fpCorr" placeholder="Ex: 0.92" step="0.01" value="0.92"></div>
-        <div class="form-group"><label>Rendimento (η) (opcional):</label><input type="number" id="etaCorr" placeholder="Ex: 0.90" step="0.01" value="1"></div>
-        <div class="form-group"><label>Tipo de Circuito:</label>
-          <select id="tipoCorr">
-            <option value="mono">Monofásico</option>
-            <option value="tri">Trifásico</option>
-          </select>
-        </div>
-        <button class="btn" onclick="calcularCorrenteCircuito()">⚡ Calcular</button>
-        <button class="btn btn-yellow" onclick="gerarPDFCalc('Corrente do Circuito')">📄 PDF</button>
-        <div id="resultCorrente"></div>
-      </div>
-    </div>
-
-    <!-- ========== CALC: BANCO DE CAPACITORES (NOVO) ========== -->
-    <div id="calcCapacitores" class="screen">
-      <div class="screen-title"><div class="dot"></div>Correção de Fator de Potência</div>
-      <div class="calc-card">
-        <h3>🟦 Banco de Capacitores (kVAr)</h3>
-        <p style="font-size:0.82rem;color:var(--text-muted);margin-bottom:1rem;">Calcula o reativo (kVAr) aproximado para elevar o FP de um valor atual para um desejado.</p>
-        <div class="form-group"><label>Potência ativa (kW):</label><input type="number" id="potKwCap" placeholder="Ex: 10" step="0.01"></div>
-        <div class="form-group"><label>FP atual (cos φ1):</label><input type="number" id="fpAtualCap" placeholder="Ex: 0.72" step="0.01" value="0.72"></div>
-        <div class="form-group"><label>FP desejado (cos φ2):</label><input type="number" id="fpDesejCap" placeholder="Ex: 0.92" step="0.01" value="0.92"></div>
-        <button class="btn" onclick="calcularBancoCapacitores()">⚡ Calcular</button>
-        <button class="btn btn-yellow" onclick="gerarPDFCalc('Correção de FP')">📄 PDF</button>
-        <div id="resultCapacitores"></div>
-      </div>
-    </div>
-
-    <!-- ========== CALC: PERDAS NO CABO (NOVO) ========== -->
-    <div id="calcCaboPerdas" class="screen">
-      <div class="screen-title"><div class="dot"></div>Perdas no Cabo</div>
-      <div class="calc-card">
-        <h3>🔥 Perdas (ΔV e W) no cabo</h3>
-        <p style="font-size:0.82rem;color:var(--text-muted);margin-bottom:1rem;">Estimativa rápida com resistividade típica (20°C). Para projetos críticos, use dados do fabricante e correções de temperatura.</p>
-        <div class="form-group"><label>Material:</label>
-          <select id="matCabo">
-            <option value="cu">Cobre</option>
-            <option value="al">Alumínio</option>
-          </select>
-        </div>
-        <div class="form-group"><label>Seção (mm²):</label><input type="number" id="secCabo" placeholder="Ex: 6" step="0.1" value="6"></div>
-        <div class="form-group"><label>Comprimento (m) (ida):</label><input type="number" id="lenCabo" placeholder="Ex: 30" value="30"></div>
-        <div class="form-group"><label>Corrente (A):</label><input type="number" id="iCabo" placeholder="Ex: 25" value="25"></div>
-        <div class="form-group"><label>Tensão do circuito (V):</label><input type="number" id="vCabo" placeholder="Ex: 220" value="220"></div>
-        <button class="btn" onclick="calcularPerdasCabo()">⚡ Calcular</button>
-        <button class="btn btn-yellow" onclick="gerarPDFCalc('Perdas no Cabo')">📄 PDF</button>
-        <div id="resultCaboPerdas"></div>
-      </div>
-    </div>
-
-    <!-- ========== CALC: BTU ↔ W (NOVO) ========== -->
-    <div id="calcBtu" class="screen">
-      <div class="screen-title"><div class="dot"></div>BTU/h ↔ W</div>
-      <div class="calc-card">
-        <h3>🌡️ Conversor BTU/h ↔ W</h3>
-        <div class="form-group"><label>Valor:</label><input type="number" id="valorBtu" placeholder="Ex: 9000" step="1"></div>
-        <div class="form-group"><label>Converter:</label>
-          <select id="tipoBtu">
-            <option value="btu2w">BTU/h → W</option>
-            <option value="w2btu">W → BTU/h</option>
-          </select>
-        </div>
-        <button class="btn" onclick="calcularBTU()">⚡ Converter</button>
-        <button class="btn btn-yellow" onclick="gerarPDFCalc('BTU ↔ W')">📄 PDF</button>
-        <div id="resultBtu"></div>
-      </div>
-    </div>
     <!-- ========== CALC: LEI DE OHM ========== -->
     <div id="calcLeiOhm" class="screen">
       <div class="screen-title"><div class="dot"></div>Lei de Ohm</div>
@@ -2197,65 +2070,52 @@
       salvarCalculoHistorico('Queda de Tensão', `${pct.toFixed(2)}% · ${s}mm²`);
     }
 
+    function dimensionarCondutor(){
+      if(!canUseFree('dimensionamento', 'Dimensionamento')) return;
+      const P=parseFloat(document.getElementById('potenciaCondutor').value);
+      const V=parseFloat(document.getElementById('tensaoCondutor').value);
+      const L=parseFloat(document.getElementById('distanciaCondutor').value);
+      const tipo=document.getElementById('tipoInstalacao').value;
+      if(!P||!V||!L){ alert('Preencha todos os campos!'); return; }
+      const I=P/V;
 
+      const cap={
+        B1:[{s:1.5,c:15.5},{s:2.5,c:21},{s:4,c:28},{s:6,c:36},{s:10,c:50},{s:16,c:68},{s:25,c:89},{s:35,c:110},{s:50,c:134}],
+        B2:[{s:1.5,c:17.5},{s:2.5,c:24},{s:4,c:32},{s:6,c:41},{s:10,c:57},{s:16,c:76},{s:25,c:101},{s:35,c:125},{s:50,c:151}],
+        C: [{s:1.5,c:19.5},{s:2.5,c:27},{s:4,c:36},{s:6,c:46},{s:10,c:63},{s:16,c:85},{s:25,c:112},{s:35,c:138},{s:50,c:168}]
+      };
 
+      let sec=50;
+      for(let x of cap[tipo]) if(x.c>=I*1.25){ sec=x.s; break; }
 
-/* ============================================================
- * BUG #5 — dimensionarCondutor: forEach substitui sec pelo
- *           maior valor ao invés do menor suficiente
- * CORREÇÃO: usar find() para pegar a PRIMEIRA seção suficiente
- * ============================================================ */
-function dimensionarCondutor(){
-  if(!canUseFree('dimensionamento', 'Dimensionamento')) return;
-  const P=parseFloat(document.getElementById('potenciaCondutor').value);
-  const V=parseFloat(document.getElementById('tensaoCondutor').value);
-  const L=parseFloat(document.getElementById('distanciaCondutor').value);
-  const tipo=document.getElementById('tipoInstalacao').value;
-  if(!P||!V||!L){ alert('Preencha todos os campos!'); return; }
-  const I=P/V;
+      const ro=0.0172, dV=I*(ro*2*L)/sec, pct=(dV/V)*100;
+      if(pct>4){
+        const sMin=(ro*2*L*I)/(V*0.04);
+        [1.5,2.5,4,6,10,16,25,35,50,70,95].forEach(sx=>{ if(sx>=sMin&&sx>sec) sec=sx; });
+      }
 
-  const cap={
-    B1:[{s:1.5,c:15.5},{s:2.5,c:21},{s:4,c:28},{s:6,c:36},{s:10,c:50},{s:16,c:68},{s:25,c:89},{s:35,c:110},{s:50,c:134}],
-    B2:[{s:1.5,c:17.5},{s:2.5,c:24},{s:4,c:32},{s:6,c:41},{s:10,c:57},{s:16,c:76},{s:25,c:101},{s:35,c:125},{s:50,c:151}],
-    C: [{s:1.5,c:19.5},{s:2.5,c:27},{s:4,c:36},{s:6,c:46},{s:10,c:63},{s:16,c:85},{s:25,c:112},{s:35,c:138},{s:50,c:168}]
-  };
+      const disj=[10,16,20,25,32,40,50,63,70].find(d=>d>=I)||63;
 
-  let sec=50;
-  for(let x of cap[tipo]) if(x.c>=I*1.25){ sec=x.s; break; }
-
-  const ro=0.0172, dV=I*(ro*2*L)/sec, pct=(dV/V)*100;
-  if(pct>4){
-    const sMin=(ro*2*L*I)/(V*0.04);
-    // ✅ CORRIGIDO: usar find() para pegar a MENOR seção suficiente
-    const secCorrigida = [1.5,2.5,4,6,10,16,25,35,50,70,95].find(sx => sx >= sMin && sx >= sec);
-    if(secCorrigida) sec = secCorrigida;
-  }
-
-  const disj=[10,16,20,25,32,40,50,63,70].find(d=>d>=I)||63;
-
-  lastCalcResults.condutor={P,V,I:I.toFixed(2),sec,disj,pct:pct.toFixed(2)};
-  showResult('resultCondutor', resultBox('Dimensionamento',[
-    ['Corrente calculada',`${I.toFixed(2)} A`],
-    ['Seção recomendada',`${sec} mm²`],
-    ['Disjuntor recomendado',`${disj} A`],
-    ['Queda de tensão',`${pct.toFixed(2)}%`],
-  ]));
-  salvarCalculoHistorico('Dimensionamento', `${sec}mm² · DJ ${disj}A · ${pct.toFixed(2)}%`);
-}
-
+      lastCalcResults.condutor={P,V,I:I.toFixed(2),sec,disj,pct:pct.toFixed(2)};
+      showResult('resultCondutor', resultBox('Dimensionamento',[
+        ['Corrente calculada',`${I.toFixed(2)} A`],
+        ['Seção recomendada',`${sec} mm²`],
+        ['Disjuntor recomendado',`${disj} A`],
+        ['Queda de tensão',`${pct.toFixed(2)}%`],
+      ]));
+      salvarCalculoHistorico('Dimensionamento', `${sec}mm² · DJ ${disj}A · ${pct.toFixed(2)}%`);
+    }
 
     /* ======================== CONSUMO ======================== */
     let consumoRowCount = 1;
     function addConsumoRow(){
-      // BUG #2 CORRIGIDO: ID atualizado de 'consumoItens' para 'energiaItens'
-      const container = document.getElementById('energiaItens');
+      const container = document.getElementById('consumoItens');
       const div = document.createElement('div');
       div.className = 'consumo-item-row'; div.id='consumoRow'+consumoRowCount;
       div.innerHTML=`
-        <div class="form-group"><label>Equipamento</label><input type="text" placeholder="Ex: TV"></div>
+        <div class="form-group"><label>Aparelho</label><input type="text" placeholder="Ex: TV"></div>
         <div class="form-group"><label>Potência (W)</label><input type="number" placeholder="Ex: 100"></div>
         <div class="form-group"><label>Horas/dia</label><input type="number" placeholder="Ex: 5" step="0.5"></div>
-        <div class="form-group"><label>Dias/mês</label><input type="number" placeholder="30" value="30"></div>
         <div style="padding-bottom:0.9rem;display:flex;align-items:flex-end;">
           <button class="btn btn-red" onclick="this.closest('.consumo-item-row').remove()">🗑️</button>
         </div>`;
@@ -2263,8 +2123,34 @@ function dimensionarCondutor(){
     }
 
     function calcularConsumo(){
-      // BUG #2 CORRIGIDO: função redirecionada para calcularEnergiaMensal() (IDs atualizados)
-      calcularEnergiaMensal();
+      if(!canUseFree('consumo', 'Consumo')) return;
+      const rows = document.querySelectorAll('.consumo-item-row');
+      let totalKwh=0, items=[];
+      rows.forEach(row=>{
+        const inputs=row.querySelectorAll('input');
+        const nome=inputs[0].value||'Aparelho';
+        const W=parseFloat(inputs[1].value)||0;
+        const h=parseFloat(inputs[2].value)||0;
+        if(W&&h){
+          const kwh=(W*h*30)/1000;
+          totalKwh+=kwh;
+          items.push({nome,W,h,kwh:kwh.toFixed(2)});
+        }
+      });
+      if(!items.length){ alert('Preencha pelo menos um aparelho!'); return; }
+
+      const custo=(totalKwh*0.75).toFixed(2);
+      let html=`<div class="consumo-result-summary">
+        <h4>⚡ Consumo Mensal Estimado</h4>
+        <div class="consumo-big">${totalKwh.toFixed(1)} <span>kWh/mês</span></div>
+        <div class="result-item"><span>💸 Custo estimado (R$ 0,75/kWh)</span><strong>R$ ${custo}</strong></div>`;
+      items.forEach(it=>{
+        html+=`<div class="result-item"><span>${it.nome} (${it.W}W × ${it.h}h/dia)</span><strong>${it.kwh} kWh</strong></div>`;
+      });
+      html+=`</div>`;
+      lastCalcResults.consumo = {totalKwh, custo};
+      document.getElementById('resultConsumo').innerHTML=html;
+      salvarCalculoHistorico('Consumo', `${totalKwh.toFixed(1)}kWh/mês · R$${custo}`);
     }
 
     /* ======================== ORÇAMENTOS ======================== */
@@ -2380,156 +2266,12 @@ function dimensionarCondutor(){
         const r=lastCalcResults.conversao;
         line('Valor original',r.valor+' '+r.unidade);
         r.resultados.forEach(([u,v])=>line(u,v));
-      // BUG #3 CORRIGIDO: case 'Custo Energia' agora lê lastCalcResults.energiaMes
-      } else if(tipo==='Custo Energia'&&lastCalcResults.energiaMes){
-        const r=lastCalcResults.energiaMes;
-        line('Consumo total mensal',r.total.toFixed(1)+' kWh/mes');
-        line('Custo estimado','R$ '+r.custoTotal);
-        line('Tarifa utilizada','R$ '+r.tarifa.toFixed(4)+'/kWh');
-      // BUG #4 CORRIGIDO: cases para calculadoras novas
-      } else if(tipo==='Corrente do Circuito'&&lastCalcResults.corrente){
-        const r=lastCalcResults.corrente;
-        line('Potencia',r.PkW+' kW'); line('Tensao',r.V+' V');
-        line('Fator de Potencia',r.fp); line('Rendimento',r.eta);
-        line('Tipo',r.tipo==='tri'?'Trifasico':'Monofasico');
-        line('Corrente estimada',r.I+' A'); line('Disjuntor sugerido',r.disj+' A');
-
-function gerarPDFCalc(tipo){
-  if(!requirePro('Gerar PDF')) return;
-  const {jsPDF}=window.jspdf;
-  const doc=new jsPDF();
-  pdfHeader(doc,'Relatório: '+pdfSafe(tipo));
-  doc.setFontSize(14); doc.setFont(undefined,'bold');
-  doc.text(pdfSafe('Cálculo: '+tipo),20,58);
-  doc.setFontSize(10); doc.setFont(undefined,'normal');
-  let y=70;
-  const line=(l,v)=>{ doc.text(pdfSafe(l+': '+v),20,y); y+=8; };
-
-  if(tipo==='Lei de Ohm'&&lastCalcResults.leiOhm){
-    const r=lastCalcResults.leiOhm;
-    line('Tensão (V)',r.v+' V'); line('Corrente (I)',r.i+' A'); line('Resistência (R)',r.r+' Ohm');
-
-  } else if(tipo==='Potência'&&lastCalcResults.potencia){
-    const r=lastCalcResults.potencia;
-    line('Tipo',r.tipo==='monofasico'?'Monofásico':'Trifásico');
-    line('Tensão',r.V+' V'); line('Corrente',r.I+' A');
-    line('Fator de Potência',r.fp);
-    line('Potência Ativa',r.P+' W'); line('Potência Aparente',r.S+' VA'); line('Potência Reativa',r.Q+' VAr');
-
-  } else if(tipo==='Queda de Tensão'&&lastCalcResults.quedaTensao){
-    const r=lastCalcResults.quedaTensao;
-    line('Corrente',r.I+' A'); line('Distância',r.L+' m'); line('Seção',r.s+' mm²');
-    line('Tensão',r.V+' V'); line('Queda de Tensão',r.dV+' V'); line('Percentual',r.pct+'%');
-    line('Status',r.ok?'OK - Dentro do limite':'ATENÇÃO - Acima do limite');
-
-  } else if(tipo==='Dimensionamento'&&lastCalcResults.condutor){
-    const r=lastCalcResults.condutor;
-    line('Potência',r.P+' W'); line('Tensão',r.V+' V'); line('Corrente calculada',r.I+' A');
-    line('Seção recomendada',r.sec+' mm²'); line('Disjuntor recomendado',r.disj+' A');
-    line('Queda de tensão',r.pct+'%');
-
-  } else if(tipo==='Iluminação'&&lastCalcResults.iluminacao){
-    const r=lastCalcResults.iluminacao;
-    line('Ambiente',r.nome); line('Área',r.area+' m²'); line('Iluminância',r.E+' lux');
-    line('Nº lâmpadas',r.nLampadas+' lâmpadas'); line('Nº luminárias',r.nLuminarias+' luminárias');
-    line('Iluminância real',r.iluminanciaReal+' lux');
-
-  } else if(tipo==='Curto-Circuito'&&lastCalcResults.curtoCircuito){
-    const r=lastCalcResults.curtoCircuito;
-    line('Tipo',r.nomeCC); line('Icc',r.resultado.toFixed(0)+' A');
-    line('Icc (kA)',(r.resultado/1000).toFixed(2)+' kA');
-    line('Poder de corte mín.',r.podInterr+' kA');
-
-  // ✅ NOVO: Custo de Energia Mensal (era 'Consumo')
-  } else if(tipo==='Custo Energia'&&lastCalcResults.energiaMes){
-    const r=lastCalcResults.energiaMes;
-    line('Consumo total mensal',r.total.toFixed(1)+' kWh/mês');
-    line('Tarifa utilizada','R$ '+r.tarifa.toFixed(4)+'/kWh');
-    line('Custo estimado mensal','R$ '+r.custoTotal);
-
-  // Compatibilidade retroativa com 'Consumo'
-  } else if(tipo==='Consumo'&&lastCalcResults.consumo){
-    const r=lastCalcResults.consumo;
-    line('Consumo total mensal',r.totalKwh.toFixed(1)+' kWh/mês');
-    line('Custo estimado','R$ '+r.custo);
-
-  } else if((tipo==='Fator de Demanda'||tipo==='fator de demanda')&&lastCalcResults.fatorDemanda){
-    const r=lastCalcResults.fatorDemanda;
-    line('Potência instalada',(r.potenciaInstalada/1000).toFixed(2)+' kW');
-    line('Demanda máxima',(r.demandaMaxima/1000).toFixed(2)+' kW');
-    line('Fator de demanda global',r.fdGlobal.toFixed(1)+'%');
-    line('Seção recomendada',r.secaoRec+' mm²');
-    line('Disjuntor recomendado',r.disjRec+' A');
-
-  } else if(tipo==='conversão'&&lastCalcResults.conversao){
-    const r=lastCalcResults.conversao;
-    line('Valor original',r.valor+' '+r.unidade);
-    if(r.resultados) r.resultados.forEach(([u,v])=>line(u,v));
-
-  // ✅ NOVO: Bitola Motor
-  } else if(tipo==='Bitola Motor'&&lastCalcResults.motor){
-    const r=lastCalcResults.motor;
-    line('Motor',r.cv+' cv');
-    line('Tensão',r.V+' V');
-    line('Corrente nominal',r.I+' A');
-    line('Corrente de partida',r.Ipartida+' A');
-    line('Disjuntor/Protetor',r.disjMotor+' A');
-    line('Seção do condutor',r.sec+' mm²');
-    line('Tipo de partida',r.partida);
-
-  // ✅ NOVO: Queda Trifásico
-  } else if(tipo==='Queda Trifásico'&&lastCalcResults.quedaTri){
-    const r=lastCalcResults.quedaTri;
-    line('Potência',r.Pkw+' kW');
-    line('Corrente de linha',r.I+' A');
-    line('Queda de tensão (ΔU)',r.dV+' V');
-    line('Percentual',r.pct+'%');
-    line('Status',r.ok?'OK - Dentro do limite NBR':'ATENÇÃO - Acima do limite');
-
-  // ✅ NOVO: Corrente do Circuito
-  } else if(tipo==='Corrente do Circuito'&&lastCalcResults.corrente){
-    const r=lastCalcResults.corrente;
-    line('Potência',r.PkW+' kW');
-    line('Tensão',r.V+' V');
-    line('Fator de Potência',r.fp);
-    line('Rendimento (η)',r.eta);
-    line('Tipo',r.tipo==='tri'?'Trifásico':'Monofásico');
-    line('Corrente estimada',r.I+' A');
-    line('Disjuntor sugerido',r.disj+' A');
-
-  // ✅ NOVO: Correção de FP / Banco de Capacitores
-  } else if(tipo==='Correção de FP'&&lastCalcResults.capacitores){
-    const r=lastCalcResults.capacitores;
-    line('Potência ativa',r.PkW+' kW');
-    line('FP atual (cos φ1)',r.fp1);
-    line('FP desejado (cos φ2)',r.fp2);
-    line('Reativo necessário',r.kvar.toFixed(2)+' kVAr');
-
-  // ✅ NOVO: Perdas no Cabo
-  } else if(tipo==='Perdas no Cabo'&&lastCalcResults.caboPerdas){
-    const r=lastCalcResults.caboPerdas;
-    line('Material',r.mat==='al'?'Alumínio':'Cobre');
-    line('Seção',r.A+' mm²');
-    line('Comprimento (ida)',r.L+' m');
-    line('Corrente',r.I+' A');
-    line('Tensão do circuito',r.V+' V');
-    line('Resistência (ida+volta)',r.R.toFixed(4)+' Ω');
-    line('Queda de tensão',r.dV.toFixed(2)+' V ('+r.dVperc.toFixed(2)+'%)');
-    line('Perdas',r.perdasW.toFixed(1)+' W');
-
-  // ✅ NOVO: BTU ↔ W
-  } else if(tipo==='BTU ↔ W'&&lastCalcResults.btu){
-    const r=lastCalcResults.btu;
-    line('Valor original',r.val+' '+(r.tipo==='btu2w'?'BTU/h':'W'));
-    line('Resultado',r.out.toFixed(2)+' '+(r.tipo==='btu2w'?'W':'BTU/h'));
-
-  } else {
-    doc.text(pdfSafe('Realize o cálculo primeiro para gerar o PDF.'),20,y);
-  }
-
-  pdfFooter(doc);
-  doc.save('calculo_'+tipo.replace(/ /g,'_')+'_'+Date.now()+'.pdf');
-}
+      } else {
+        doc.text(pdfSafe('Realize o calculo primeiro para gerar o PDF.'),20,y);
+      }
+      pdfFooter(doc);
+      doc.save('calculo_'+tipo.replace(/ /g,'_')+'_'+Date.now()+'.pdf');
+    }
 
     function gerarPDFTabela(tipo){
       if(!requirePro('Gerar PDF')) return;
@@ -2550,11 +2292,6 @@ function gerarPDFCalc(tipo){
       pdfFooter(doc);
       doc.save(`tabela_${tipo.replace(/ /g,'_')}_${Date.now()}.pdf`);
     }
-      itensOrcamento = item.itens || [];
-      renderItens();
-      openScreen('orcamentos','Orçamentos');
-    }
-
 
     function gerarPDFOrcamento(){
       if(!requirePro('Gerar PDF')) return;
@@ -2664,8 +2401,7 @@ function gerarPDFCalc(tipo){
         localStorage.removeItem(HIST_KEY);
         renderHistorico();
       }
-    }        ['DPS recomendado', dpsTipoRec],
-        ['Categoria', dpsCat],
+    }
 
     function carregarOrcamentoHistorico(id){
       if(!requirePro('Histórico')) return;
@@ -2675,6 +2411,11 @@ function gerarPDFCalc(tipo){
       document.getElementById('nomeCliente').value = item.cliente.nome;
       document.getElementById('telefoneCliente').value = item.cliente.tel || '';
       document.getElementById('enderecoCliente').value = item.cliente.end || '';
+      itensOrcamento = item.itens || [];
+      renderItens();
+      openScreen('orcamentos','Orçamentos');
+    }
+
     function excluirHistorico(id){
       if(!requirePro('Histórico')) return;
       const hist = getHistorico().filter(h=>h.id!==id);
@@ -2735,7 +2476,8 @@ function gerarPDFCalc(tipo){
       const html = resultBox('DR/DPS — Resultado',[
         ['Tipo de DR', `DR ${sensNom}`],
         ['Corrente do DR', `${correnteDR} A (padrão comercial)`],
-
+        ['DPS recomendado', dpsTipoRec],
+        ['Categoria', dpsCat],
         ['Tensão nominal DPS (Un)', tensaoDPS],
         ['Corrente de impulso mínima', nivelDPS >= 4 ? '12,5 kA (8/20 µs)' : '5 kA (8/20 µs)'],
       ]);
@@ -3019,10 +2761,6 @@ function gerarPDFCalc(tipo){
 
         lastCalcResults.conversao = { valor, unidade, resultados };
         salvarCalculoHistorico('Conversão', `${valor} ${unidade}`);
-      } else {
-        // BUG #7 CORRIGIDO: salva resultado de conversão de bitola para PDF
-        lastCalcResults.conversao = { valor, unidade, resultados: [] };
-        salvarCalculoHistorico('Conversão Bitola', `${valor} ${unidade}`);
       }
 
       html += '</div>';
@@ -3239,151 +2977,15 @@ function gerarPDFCalc(tipo){
       }
     }
 
-   function initTheme() {
-  const savedTheme = localStorage.getItem('eletricapro_theme');
-  if (savedTheme === 'light') {
-    const root = document.documentElement;
-    const btn  = document.getElementById('darkModeBtn');
-    root.style.setProperty('--blue-deep',  '#f0f4f8');
-    root.style.setProperty('--blue-mid',   '#e2ecf7');
-    root.style.setProperty('--blue-bright','#1565c0');
-    root.style.setProperty('--card-bg',    'rgba(255,255,255,0.92)');
-    root.style.setProperty('--card-border','rgba(21,101,192,0.25)');
-    root.style.setProperty('--text-muted', 'rgba(10,22,40,0.6)');
-    document.body.style.color = '#0a1628';
-    if (btn) btn.textContent = '🌙 Modo Escuro';
-    root.setAttribute('data-theme', 'light');
-  } else {
-    document.documentElement.setAttribute('data-theme', 'dark');
-    const btn = document.getElementById('darkModeBtn');
-    if (btn) btn.textContent = '☀️ Modo Claro';
-  }
-}
- 
-    // ─────────────────────────────────────────────────────────
-    // NOVAS CALCULADORAS (2026)
-    // ─────────────────────────────────────────────────────────
-    
-function calcularCorrenteCircuito(){
-  const PkW = parseFloat(document.getElementById('potKwCorr').value);
-  const V   = parseFloat(document.getElementById('tensaoCorr').value);
-  const fp  = parseFloat(document.getElementById('fpCorr').value || '1');
-  const eta = parseFloat(document.getElementById('etaCorr').value || '1');
-  const tipo= document.getElementById('tipoCorr').value;
-
-  if(!PkW || !V){
-    document.getElementById('resultCorrente').innerHTML = `<div class="result-box err">⚠️ Informe pelo menos Potência e Tensão.</div>`;
-    return;
-  }
-
-  const P = PkW * 1000;
-  const denom = (tipo === 'tri') ? (Math.sqrt(3) * V * fp * eta) : (V * fp * eta);
-  const I = P / denom;
-
-  // ✅ CORRIGIDO: usar lista de valores comerciais (NBR IEC 60898)
-  const disjComerciais = [6, 10, 16, 20, 25, 32, 40, 50, 63, 70, 80, 100];
-  const disj = disjComerciais.find(d => d >= I * 1.25) || 100;
-
-  lastCalcResults.corrente = { PkW, V, fp, eta, tipo, I: I.toFixed(2), disj };
-
-  document.getElementById('resultCorrente').innerHTML = `
-    <div class="result-box ok">
-      <div class="result-item"><span>Corrente estimada</span><strong>${I.toFixed(2)} A</strong></div>
-      <div class="result-item"><span>Disjuntor sugerido (I × 1,25)</span><strong>${disj} A</strong></div>
-      <div class="result-item"><span>Tipo de circuito</span><strong>${tipo === 'tri' ? 'Trifásico' : 'Monofásico'}</strong></div>
-    </div>`;
-  salvarCalculoHistorico('Corrente do Circuito', `I ≈ ${I.toFixed(2)} A | Disj.: ${disj} A`);
-}
-    function calcularBancoCapacitores(){
-  const PkW = parseFloat(document.getElementById('potKwCap').value);
-  const fp1 = parseFloat(document.getElementById('fpAtualCap').value);
-  const fp2 = parseFloat(document.getElementById('fpDesejCap').value);
-
-  if(!PkW || !fp1 || !fp2){
-    document.getElementById('resultCapacitores').innerHTML = `<div class="result-box err">⚠️ Preencha todos os campos.</div>`;
-    return;
-  }
-  if(fp1 >= 1 || fp2 >= 1 || fp1 <= 0 || fp2 <= 0){
-    document.getElementById('resultCapacitores').innerHTML = `<div class="result-box err">⚠️ FP deve estar entre 0 e 1.</div>`;
-    return;
-  }
-  if(fp2 <= fp1){
-    document.getElementById('resultCapacitores').innerHTML = `<div class="result-box err">⚠️ O FP desejado deve ser maior que o atual.</div>`;
-    return;
-  }
-
-  const phi1 = Math.acos(fp1);
-  const phi2 = Math.acos(fp2);
-  const kvar = PkW * (Math.tan(phi1) - Math.tan(phi2));
-
-  // ✅ CORRIGIDO: salvar em lastCalcResults.capacitores
-  lastCalcResults.capacitores = { PkW, fp1, fp2, kvar };
-
-  document.getElementById('resultCapacitores').innerHTML = `
-    <div class="result-box ok">
-      <div class="result-item"><span>Potência ativa</span><strong>${PkW} kW</strong></div>
-      <div class="result-item"><span>FP atual → desejado</span><strong>${fp1} → ${fp2}</strong></div>
-      <div class="result-item"><span>Reativo necessário</span><strong>${kvar.toFixed(2)} kVAr</strong></div>
-    </div>`;
-  salvarCalculoHistorico('Correção de FP', `kVAr ≈ ${kvar.toFixed(2)}`);
-}
-
-    function calcularPerdasCabo(){
-  const mat = document.getElementById('matCabo').value;
-  const A   = parseFloat(document.getElementById('secCabo').value);
-  const L   = parseFloat(document.getElementById('lenCabo').value);
-  const I   = parseFloat(document.getElementById('iCabo').value);
-  const V   = parseFloat(document.getElementById('vCabo').value);
-
-  if(!A || !L || !I || !V){
-    document.getElementById('resultCaboPerdas').innerHTML = `<div class="result-box err">⚠️ Preencha seção, comprimento, corrente e tensão.</div>`;
-    return;
-  }
-
-  const rho = (mat === 'al') ? 0.0282 : 0.0172;
-  const R = rho * (2*L) / A;
-  const dV = I * R;
-  const dVperc = (dV / V) * 100;
-  const perdasW = (I**2) * R;
-
-  // ✅ CORRIGIDO: salvar em lastCalcResults.caboPerdas
-  lastCalcResults.caboPerdas = { mat, A, L, I, V, R, dV, dVperc, perdasW };
-
-  document.getElementById('resultCaboPerdas').innerHTML = `
-    <div class="result-box ok">
-      <div class="result-item"><span>Resistência (ida+volta)</span><strong>${R.toFixed(4)} Ω</strong></div>
-      <div class="result-item"><span>Queda de tensão</span><strong>${dV.toFixed(2)} V (${dVperc.toFixed(2)}%)</strong></div>
-      <div class="result-item"><span>Perdas no cabo</span><strong>${perdasW.toFixed(1)} W</strong></div>
-    </div>`;
-  salvarCalculoHistorico('Perdas no Cabo', `ΔV ≈ ${dV.toFixed(2)} V (${dVperc.toFixed(2)}%) | P≈${perdasW.toFixed(1)}W`);
-}
-
-function calcularBTU(){
-  const val = parseFloat(document.getElementById('valorBtu').value);
-  const tipo = document.getElementById('tipoBtu').value;
-  if(!val){
-    document.getElementById('resultBtu').innerHTML = `<div class="result-box err">⚠️ Informe um valor.</div>`;
-    return;
-  }
-  const fator = 0.29307107;
-  let out;
-  if(tipo === 'btu2w'){
-    out = val * fator;
-  } else {
-    out = val / fator;
-  }
-  const unit = (tipo === 'btu2w') ? 'W' : 'BTU/h';
-
-  // ✅ CORRIGIDO: salvar em lastCalcResults.btu
-  lastCalcResults.btu = { val, tipo, out };
-
-  document.getElementById('resultBtu').innerHTML = `
-    <div class="result-box ok">
-      <div class="result-item"><span>Valor original</span><strong>${val} ${tipo === 'btu2w' ? 'BTU/h' : 'W'}</strong></div>
-      <div class="result-item"><span>Resultado</span><strong>${out.toFixed(2)} ${unit}</strong></div>
-    </div>`;
-  salvarCalculoHistorico('BTU ↔ W', `${val} ${tipo === 'btu2w' ? 'BTU/h' : 'W'} = ${out.toFixed(2)} ${unit}`);
-}
+    function initTheme() {
+      const savedTheme = localStorage.getItem('eletricapro_theme');
+      if (savedTheme === 'light') {
+        document.documentElement.setAttribute('data-theme', 'light');
+        toggleDarkMode();
+      } else {
+        document.documentElement.setAttribute('data-theme', 'dark');
+      }
+    }
 
     /* ======================== INIT ======================== */
     window.addEventListener('load', () => {
@@ -3415,9 +3017,8 @@ function calcularBTU(){
     
   </script>
   <script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js";
-import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-auth.js";
-import { getFirestore, doc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js";
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-app.js";
+import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-auth.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyCibrDhAmeTg-2W9TiXhomotfLEM5EqwgE",
@@ -3430,93 +3031,14 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
-const db = getFirestore(app);
-
-// ── Guard: app só abre logado ──────────────────────────────────
-const container = document.querySelector('.container');
-const header = document.getElementById('appHeader');
-const footer = document.querySelector('.ep-legal-footer');
-
-function setLockedUI(){
-  // evita tela vazia com footer solto antes do redirect
-  if(container) container.style.display = 'none';
-  if(header) header.style.display = 'none';
-  if(footer) footer.style.display = 'none';
-}
-
-function setUnlockedUI(){
-  if(container) container.style.display = '';
-  if(header) header.style.display = '';
-  if(footer) footer.style.display = '';
-}
-
-setLockedUI();
-
-function setProBadge(isPro, proType){
-  const btn = document.getElementById('upgradeBtnHome');
-  if(!btn) return;
-  // Adicionar logo no início de setProBadge():
-try {
-  const trial = JSON.parse(localStorage.getItem('eletricapro_trial') || '{}');
-  trial.isPro = !!isPro;
-  if(isPro && proType) trial.proType = proType;
-  localStorage.setItem('eletricapro_trial', JSON.stringify(trial));
-} catch(e) {}
-
-  if(isPro){
-    const label = ({monthly:'Mensal', annual:'Anual', lifetime:'Vitalício'})[proType] || 'PRO';
-    btn.style.background = 'linear-gradient(135deg, #f5c518 0%, #f59e0b 55%, #ffe29a 100%)';
-    btn.style.borderColor = '#f5c518';
-    btn.querySelector('.pro-badge').textContent = 'PRO';
-    btn.querySelector('.pro-btn-text strong').textContent = `👑 PRO Ativo — ${label}`;
-    btn.querySelector('.pro-btn-text small').textContent = 'Acesso liberado nesta conta';
-    btn.querySelector('.pro-arrow').textContent = '✓';
-  } else {
-    btn.removeAttribute('style');
-    btn.querySelector('.pro-badge').textContent = 'PRO';
-    btn.querySelector('.pro-btn-text strong').textContent = 'Ativar Versão PRO';
-    btn.querySelector('.pro-btn-text small').textContent = 'Mensal R$19,90 · Anual R$59,90 · Vitalício R$99,90';
-    btn.querySelector('.pro-arrow').textContent = '→';
-  }
-}
-
-function setUserChip(user){
-  const nameEl = document.getElementById('userNameShort');
-  const avatar = document.getElementById('userAvatarIcon');
-  if(!nameEl || !avatar) return;
-  const name = (user.displayName || user.email || 'Conta');
-  nameEl.textContent = name.length > 14 ? name.slice(0, 14) + '…' : name;
-  avatar.textContent = '✅';
-}
-
-// ── Proteção contra cold start / redirect prematuro (Fix #4) ──
-let authResolved = false;
 
 onAuthStateChanged(auth, (user) => {
-  authResolved = true;
-  if(!user){
-    setLockedUI();
-    // abre sempre no login
-    window.location.replace('login.html?start=1');
-    return;
+  if(user){
+    console.log("Usuário logado:", user.email);
+  }else{
+    console.log("Usuário não logado");
   }
-
-  setUserChip(user);
-  setUnlockedUI();
-
-  // acompanha status PRO em tempo real
-  const ref = doc(db, 'users', user.uid);
-  onSnapshot(ref, (snap) => {
-    if(!snap.exists()) { setProBadge(false); return; }
-    const data = snap.data() || {};
-    setProBadge(!!data.pro, data.proType);
-  });
 });
-
-// Segurança: se Firebase não responder em 5s, redireciona para login
-setTimeout(() => {
-  if(!authResolved) window.location.replace('login.html?start=1');
-}, 5000);
 </script>
   <!-- ============================================================
      snippet-footer-links.html
@@ -3536,7 +3058,6 @@ setTimeout(() => {
     padding: 1.25rem 1.5rem;
     text-align: center;
     margin-top: auto;
-    width: 100%;
   }
   .ep-legal-footer .ep-legal-brand {
     font-size: 0.8rem;
@@ -3564,21 +3085,7 @@ setTimeout(() => {
   }
   .ep-legal-footer .ep-legal-copy {
     font-size: 0.72rem;
-    color: #94a3b8;
-  }
-
-  @media (max-width: 640px) {
-    .ep-legal-footer {
-      padding: 1rem 0.9rem 1.1rem;
-    }
-    .ep-legal-footer .ep-legal-links {
-      gap: 0.45rem 0.9rem;
-    }
-    .ep-legal-footer .ep-legal-links a,
-    .ep-legal-footer .ep-legal-copy {
-      font-size: 0.78rem;
-      line-height: 1.6;
-    }
+    color: #475569;
   }
 </style>
 
@@ -3588,38 +3095,12 @@ setTimeout(() => {
     <a href="politica-de-privacidade.html">🔒 Política de Privacidade</a>
     <a href="termos-de-uso.html">📋 Termos de Uso</a>
     <a href="etica-e-conformidade.html">🤝 Ética &amp; Conformidade</a>
-   <a href="/cdn-cgi/l/email-protection#97e4f2e2f2faf6fefbd7f0faf6fefbb9f4f8fa">✉ Suporte</a> 
+    <a href="mailto:eletricaproapp@gmail.com">✉ Suporte</a>
   </div>
   <div class="ep-legal-copy">
     © 2026 COFservicos · CNPJ 31.577.846/0001-12 · Iguape/SP
   </div>
 </footer>
 
-<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script>
-
-
-<script>
-  document.addEventListener("DOMContentLoaded", function () {
-    const params = new URLSearchParams(window.location.search);
-    const abrirPlanos = params.get("planos");
-
-    if (abrirPlanos === "1") {
-      const plans = document.getElementById("plansSection");
-      const loginBox = document.getElementById("loginBox");
-
-      if (plans) {
-        plans.style.display = "block";
-        plans.scrollIntoView({ behavior: "smooth" });
-      }
-
-      if (loginBox) {
-        loginBox.style.display = "none";
-      }
-    }
-  });
-</script>
-<script defer src="https://static.cloudflareinsights.com/beacon.min.js/v8c78df7c7c0f484497ecbca7046644da1771523124516" integrity="sha512-8DS7rgIrAmghBFwoOTujcf6D9rXvH8xm8JQ1Ja01h9QX8EzXldiszufYa4IFfKdLUKTTrnSFXLDkUEOTrZQ8Qg==" data-cf-beacon='{"version":"2024.11.0","token":"4edd5f8ec12a48cfa682ab8261b80a79","server_timing":{"name":{"cfCacheStatus":true,"cfEdge":true,"cfExtPri":true,"cfL4":true,"cfOrigin":true,"cfSpeedBrain":true},"location_startswith":null}}' crossorigin="anonymous"></script>
-<script src="/eletricapro/app.js"></script>
-
 </body>
-</html>
+  </html>
