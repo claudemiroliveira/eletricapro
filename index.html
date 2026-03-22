@@ -2550,6 +2550,11 @@ function gerarPDFCalc(tipo){
       pdfFooter(doc);
       doc.save(`tabela_${tipo.replace(/ /g,'_')}_${Date.now()}.pdf`);
     }
+      itensOrcamento = item.itens || [];
+      renderItens();
+      openScreen('orcamentos','Orçamentos');
+    }
+
 
     function gerarPDFOrcamento(){
       if(!requirePro('Gerar PDF')) return;
@@ -2659,7 +2664,8 @@ function gerarPDFCalc(tipo){
         localStorage.removeItem(HIST_KEY);
         renderHistorico();
       }
-    }
+    }        ['DPS recomendado', dpsTipoRec],
+        ['Categoria', dpsCat],
 
     function carregarOrcamentoHistorico(id){
       if(!requirePro('Histórico')) return;
@@ -2669,11 +2675,6 @@ function gerarPDFCalc(tipo){
       document.getElementById('nomeCliente').value = item.cliente.nome;
       document.getElementById('telefoneCliente').value = item.cliente.tel || '';
       document.getElementById('enderecoCliente').value = item.cliente.end || '';
-      itensOrcamento = item.itens || [];
-      renderItens();
-      openScreen('orcamentos','Orçamentos');
-    }
-
     function excluirHistorico(id){
       if(!requirePro('Histórico')) return;
       const hist = getHistorico().filter(h=>h.id!==id);
@@ -2734,8 +2735,7 @@ function gerarPDFCalc(tipo){
       const html = resultBox('DR/DPS — Resultado',[
         ['Tipo de DR', `DR ${sensNom}`],
         ['Corrente do DR', `${correnteDR} A (padrão comercial)`],
-        ['DPS recomendado', dpsTipoRec],
-        ['Categoria', dpsCat],
+
         ['Tensão nominal DPS (Un)', tensaoDPS],
         ['Corrente de impulso mínima', nivelDPS >= 4 ? '12,5 kA (8/20 µs)' : '5 kA (8/20 µs)'],
       ]);
@@ -3619,6 +3619,7 @@ setTimeout(() => {
   });
 </script>
 <script defer src="https://static.cloudflareinsights.com/beacon.min.js/v8c78df7c7c0f484497ecbca7046644da1771523124516" integrity="sha512-8DS7rgIrAmghBFwoOTujcf6D9rXvH8xm8JQ1Ja01h9QX8EzXldiszufYa4IFfKdLUKTTrnSFXLDkUEOTrZQ8Qg==" data-cf-beacon='{"version":"2024.11.0","token":"4edd5f8ec12a48cfa682ab8261b80a79","server_timing":{"name":{"cfCacheStatus":true,"cfEdge":true,"cfExtPri":true,"cfL4":true,"cfOrigin":true,"cfSpeedBrain":true},"location_startswith":null}}' crossorigin="anonymous"></script>
-<script defer src="https://static.cloudflareinsights.com/beacon.min.js/v8c78df7c7c0f484497ecbca7046644da1771523124516" integrity="sha512-8DS7rgIrAmghBFwoOTujcf6D9rXvH8xm8JQ1Ja01h9QX8EzXldiszufYa4IFfKdLUKTTrnSFXLDkUEOTrZQ8Qg==" data-cf-beacon='{"version":"2024.11.0","token":"4edd5f8ec12a48cfa682ab8261b80a79","server_timing":{"name":{"cfCacheStatus":true,"cfEdge":true,"cfExtPri":true,"cfL4":true,"cfOrigin":true,"cfSpeedBrain":true},"location_startswith":null}}' crossorigin="anonymous"></script>
+<script src="/eletricapro/app.js"></script>
+
 </body>
 </html>
