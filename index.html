@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+2<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8" />
@@ -2187,43 +2187,52 @@
       salvarCalculoHistorico('Queda de Tensão', `${pct.toFixed(2)}% · ${s}mm²`);
     }
 
-    function dimensionarCondutor(){
-      if(!canUseFree('dimensionamento', 'Dimensionamento')) return;
-      const P=parseFloat(document.getElementById('potenciaCondutor').value);
-      const V=parseFloat(document.getElementById('tensaoCondutor').value);
-      const L=parseFloat(document.getElementById('distanciaCondutor').value);
-      const tipo=document.getElementById('tipoInstalacao').value;
-      if(!P||!V||!L){ alert('Preencha todos os campos!'); return; }
-      const I=P/V;
 
-      const cap={
-        B1:[{s:1.5,c:15.5},{s:2.5,c:21},{s:4,c:28},{s:6,c:36},{s:10,c:50},{s:16,c:68},{s:25,c:89},{s:35,c:110},{s:50,c:134}],
-        B2:[{s:1.5,c:17.5},{s:2.5,c:24},{s:4,c:32},{s:6,c:41},{s:10,c:57},{s:16,c:76},{s:25,c:101},{s:35,c:125},{s:50,c:151}],
-        C: [{s:1.5,c:19.5},{s:2.5,c:27},{s:4,c:36},{s:6,c:46},{s:10,c:63},{s:16,c:85},{s:25,c:112},{s:35,c:138},{s:50,c:168}]
-      };
 
-      let sec=50;
-      for(let x of cap[tipo]) if(x.c>=I*1.25){ sec=x.s; break; }
 
-      const ro=0.0172, dV=I*(ro*2*L)/sec, pct=(dV/V)*100;
-      if(pct>4){
-        const sMin=(ro*2*L*I)/(V*0.04);
-        // BUG #5 CORRIGIDO: usa find() para parar no primeiro valor suficiente
-        const secCorrigida = [1.5,2.5,4,6,10,16,25,35,50,70,95].find(sx => sx >= sMin && sx >= sec);
-        if(secCorrigida) sec = secCorrigida;
-      }
+/* ============================================================
+ * BUG #5 — dimensionarCondutor: forEach substitui sec pelo
+ *           maior valor ao invés do menor suficiente
+ * CORREÇÃO: usar find() para pegar a PRIMEIRA seção suficiente
+ * ============================================================ */
+function dimensionarCondutor(){
+  if(!canUseFree('dimensionamento', 'Dimensionamento')) return;
+  const P=parseFloat(document.getElementById('potenciaCondutor').value);
+  const V=parseFloat(document.getElementById('tensaoCondutor').value);
+  const L=parseFloat(document.getElementById('distanciaCondutor').value);
+  const tipo=document.getElementById('tipoInstalacao').value;
+  if(!P||!V||!L){ alert('Preencha todos os campos!'); return; }
+  const I=P/V;
 
-      const disj=[10,16,20,25,32,40,50,63,70].find(d=>d>=I)||63;
+  const cap={
+    B1:[{s:1.5,c:15.5},{s:2.5,c:21},{s:4,c:28},{s:6,c:36},{s:10,c:50},{s:16,c:68},{s:25,c:89},{s:35,c:110},{s:50,c:134}],
+    B2:[{s:1.5,c:17.5},{s:2.5,c:24},{s:4,c:32},{s:6,c:41},{s:10,c:57},{s:16,c:76},{s:25,c:101},{s:35,c:125},{s:50,c:151}],
+    C: [{s:1.5,c:19.5},{s:2.5,c:27},{s:4,c:36},{s:6,c:46},{s:10,c:63},{s:16,c:85},{s:25,c:112},{s:35,c:138},{s:50,c:168}]
+  };
 
-      lastCalcResults.condutor={P,V,I:I.toFixed(2),sec,disj,pct:pct.toFixed(2)};
-      showResult('resultCondutor', resultBox('Dimensionamento',[
-        ['Corrente calculada',`${I.toFixed(2)} A`],
-        ['Seção recomendada',`${sec} mm²`],
-        ['Disjuntor recomendado',`${disj} A`],
-        ['Queda de tensão',`${pct.toFixed(2)}%`],
-      ]));
-      salvarCalculoHistorico('Dimensionamento', `${sec}mm² · DJ ${disj}A · ${pct.toFixed(2)}%`);
-    }
+  let sec=50;
+  for(let x of cap[tipo]) if(x.c>=I*1.25){ sec=x.s; break; }
+
+  const ro=0.0172, dV=I*(ro*2*L)/sec, pct=(dV/V)*100;
+  if(pct>4){
+    const sMin=(ro*2*L*I)/(V*0.04);
+    // ✅ CORRIGIDO: usar find() para pegar a MENOR seção suficiente
+    const secCorrigida = [1.5,2.5,4,6,10,16,25,35,50,70,95].find(sx => sx >= sMin && sx >= sec);
+    if(secCorrigida) sec = secCorrigida;
+  }
+
+  const disj=[10,16,20,25,32,40,50,63,70].find(d=>d>=I)||63;
+
+  lastCalcResults.condutor={P,V,I:I.toFixed(2),sec,disj,pct:pct.toFixed(2)};
+  showResult('resultCondutor', resultBox('Dimensionamento',[
+    ['Corrente calculada',`${I.toFixed(2)} A`],
+    ['Seção recomendada',`${sec} mm²`],
+    ['Disjuntor recomendado',`${disj} A`],
+    ['Queda de tensão',`${pct.toFixed(2)}%`],
+  ]));
+  salvarCalculoHistorico('Dimensionamento', `${sec}mm² · DJ ${disj}A · ${pct.toFixed(2)}%`);
+}
+
 
     /* ======================== CONSUMO ======================== */
     let consumoRowCount = 1;
