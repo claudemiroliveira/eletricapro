@@ -3416,25 +3416,26 @@ setTimeout(() => {
 
 <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script defer src="https://static.cloudflareinsights.com/beacon.min.js/v8c78df7c7c0f484497ecbca7046644da1771523124516" integrity="sha512-8DS7rgIrAmghBFwoOTujcf6D9rXvH8xm8JQ1Ja01h9QX8EzXldiszufYa4IFfKdLUKTTrnSFXLDkUEOTrZQ8Qg==" data-cf-beacon='{"version":"2024.11.0","token":"4edd5f8ec12a48cfa682ab8261b80a79","server_timing":{"name":{"cfCacheStatus":true,"cfEdge":true,"cfExtPri":true,"cfL4":true,"cfOrigin":true,"cfSpeedBrain":true},"location_startswith":null}}' crossorigin="anonymous"></script>
 
-<script defer src="https://static.cloudflareinsights.com/beacon.min.js/v8c78df7c7c0f484497ecbca7046644da1771523124516" integrity="sha512-8DS7rgIrAmghBFwoOTujcf6D9rXvH8xm8JQ1Ja01h9QX8EzXldiszufYa4IFfKdLUKTTrnSFXLDkUEOTrZQ8Qg==" data-cf-beacon='{"version":"2024.11.0","token":"4edd5f8ec12a48cfa682ab8261b80a79","server_timing":{"name":{"cfCacheStatus":true,"cfEdge":true,"cfExtPri":true,"cfL4":true,"cfOrigin":true,"cfSpeedBrain":true},"location_startswith":null}}' crossorigin="anonymous"></script>
 
 <script>
-  const params = new URLSearchParams(window.location.search);
-  const abrirPlanos = params.get("planos");
+  document.addEventListener("DOMContentLoaded", function () {
+    const params = new URLSearchParams(window.location.search);
+    const abrirPlanos = params.get("planos");
 
-  if (abrirPlanos === "1") {
-    document.getElementById("plansSection").style.display = "block";
+    if (abrirPlanos === "1") {
+      const plans = document.getElementById("plansSection");
+      const loginBox = document.getElementById("loginBox");
 
-    // esconder outras partes (ajuste os IDs)
-    const loginBox = document.getElementById("loginBox");
-    if (loginBox) loginBox.style.display = "none";
+      if (plans) {
+        plans.style.display = "block";
+        plans.scrollIntoView({ behavior: "smooth" });
+      }
 
-    document.getElementById("plansSection").scrollIntoView({
-      behavior: "smooth"
-    });
-  }
+      if (loginBox) {
+        loginBox.style.display = "none";
+      }
+    }
+  });
 </script>
-
-
 </body>
 </html>
