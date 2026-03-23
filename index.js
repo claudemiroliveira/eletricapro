@@ -92,7 +92,8 @@ exports.approvePro = functions.https.onCall(async (data, context) => {
     return { success: true, message: "Já estava aprovado." };
   }
 
-  const plan      = req.plan || "lifetime";
+  const allowedPlans = ["monthly", "annual", "lifetime"];
+const plan = allowedPlans.includes(req.plan) ? req.plan : "monthly";
   const uid       = req.uid;
   const proUntil  = calcProUntil(plan);
   const now       = admin.firestore.FieldValue.serverTimestamp();
