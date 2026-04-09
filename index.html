@@ -595,28 +595,7 @@
     <li><span class="check">✓</span>  em até 4x no cartão de crédito</li>
     
     </div>
-    <!-- ANUAL -->
-    <div class="plan-card best-value" id="card-annual">
-      <div class="best-label">⭐ MELHOR CUSTO-BENEFÍCIO</div>
-      <div class="plan-icon">📆</div>
-      <div class="plan-name">Anual</div>
-      <div class="plan-desc">12 meses de acesso completo</div>
-      <div class="plan-price">
-        <div class="amount"><span>R$</span> 59<span>,90</span></div>
-        <div class="period">por ano</div>
-        <div class="economy">💰 Economize R$ 178,90 vs. mensal</div>
-      </div>
-      <ul class="plan-features">
-        <li><span class="check">✓</span> Todos os recursos PRO</li>
-        <li><span class="check">✓</span> Calculadoras avançadas </li>
-        <li><span class="check">✓</span> Acesso em múltiplos dispositivos</li>
-        <li><span class="check">✓</span> suporte</li>
-      
-      </ul>
-      <button class="plan-btn annual" id="btnAnnual">⭐ Pagar R$ 59,90</button>
- <li><span class="check">✓</span>  em até 8x no cartão de crédito</li>
-     
-    </div>
+    
     <!-- VITALÍCIO -->
     <div class="plan-card" id="card-lifetime">
       <div class="plan-icon">♾️</div>
@@ -843,7 +822,7 @@ function renderProStatus(userData) {
     $("loginSection").style.display     = "none";
 
     const chipClass = `plan-chip chip-${proType}`;
-    const chipLabel = { monthly:"📅 Mensal", annual:"📆 Anual", lifetime:"♾ Vitalício" }[proType] || proType;
+    const chipLabel = { monthly:"📅 Mensal", lifetime:"♾ Vitalício" }[proType] || proType;
     $("proChip").className   = chipClass;
     $("proChip").textContent = chipLabel;
     $("proExpiry").textContent = until ? `Válido até ${until}` : "Sem expiração — vitalício";
