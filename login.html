@@ -682,7 +682,7 @@
     const inp = document.getElementById(inputId);
     const show = inp.type === 'password';
     inp.type = show ? 'text' : 'password';
-    btn.textContent = show ? '🙈' : '👁';
+    btn.textContent = show ? '' : '👁';
   }
   function clearMsgs() {
     ['loginMsg','registerMsg'].forEach(id => {
