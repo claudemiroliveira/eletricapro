@@ -816,7 +816,7 @@ function renderProStatus(userData) {
   } else {
     box.className = "status-box not-pro";
     box.innerHTML = `
-      <div class="icon">🔒</div>
+     / <div class="icon">🔒</div>
       <div>
         <strong>Sem plano PRO</strong>
         <span>Escolha um plano abaixo para desbloquear</span>
@@ -860,7 +860,7 @@ async function checkPendingRequest() {
     if (!snap || snap.empty) { $("pendingSection").style.display = "none"; return; }
     const req = snap.docs[0].data();
     $("pendingSection").style.display = "block";
-    const labels = { monthly:"Mensal (R$ 19,90)", annual:"Anual (R$ 59,90)", lifetime:"Vitalício (R$ 89,90)" };
+    const labels = { monthly:"Mensal (R$ 14,90)","Vitalício (R$ 29,90)" };
     $("pendingPlan").textContent = `Plano solicitado: ${labels[req.plan] || req.plan}`;
   } catch(e) { console.log("Pending check:", e.message); }
 }
@@ -881,7 +881,7 @@ async function requestPro(plan) {
     });
     btn.innerHTML = orig; btn.disabled = false;
     $("pendingSection").style.display = "block";
-    const labels = { monthly:"Mensal (R$ 19,90)", annual:"Anual (R$ 59,90)", lifetime:"Vitalício (R$ 89,90)" };
+    const labels = { monthly:"Mensal (R$ 14,90)", lifetime:"Vitalício (R$ 29,90)" };
     $("pendingPlan").textContent = `Plano solicitado: ${labels[plan]}`;
     toast("✅ Solicitação enviada! Aguarde a confirmação.");
   } catch(e) {
