@@ -2020,7 +2020,7 @@
       const I=parseFloat(document.getElementById('correnteOhm').value)||0;
       const R=parseFloat(document.getElementById('resistenciaOhm').value)||0;
       let v=V,i=I,r=R;
-      if(V&&I&&!R) r=(V/I).toFixed(3);
+      if(V&&I&&!R) r=(V/I),toFixed(2);
       else if(V&&R&&!I) i=(V/R).toFixed(3);
       else if(I&&R&&!V) v=(I*R).toFixed(3);
       else { alert('Preencha exatamente 2 dos 3 campos!'); return; }
