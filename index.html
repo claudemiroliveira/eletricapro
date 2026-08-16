@@ -4,9 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="theme-color" content="#0a1628" />
-  <meta name="description" content="App profissional para cálculos elétricos, tabelas técnicas, instalações e orçamentos" />
-
-  <!-- PWA -->
+  <meta name="description" content="PWA profissional para cálculos elétricos, tabelas técnicas e orçamentos" />
   <meta name="mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
@@ -15,52 +13,57 @@
   <link rel="manifest" href="manifest.json" />
   <link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png" />
   <link rel="icon" type="image/png" sizes="512x512" href="icons/icon-512.png" />
-  <link rel="apple-touch-icon" sizes="192x192" href="icons/icon-192.png" />
-  <link rel="apple-touch-icon" sizes="512x512" href="icons/icon-512.png" />
-
-  <title>Elétrica Pro</title>
-
-      <!-- ElétricaPro · LGPD Consent Script -->
-<script src="consentimento-li-e-aceito.js" defer></script>
-<meta name="referrer" content="strict-origin-when-cross-origin">
-
+  <link rel="apple-touch-icon" sizes="180x180" href="icons/apple-touch-icon.png" />
+  <link rel="stylesheet" href="styles.css" />
+  <title>Elétrica Pro · Calculadoras para Eletricistas</title>
 </head>
-
 <body>
   <canvas id="stars-canvas"></canvas>
 
-  <!-- Header -->
-  <header class="app-header" id="appHeader">
+  <header class="app-header" id="appHeader" style="display:none;">
     <div id="headerBack" style="display:none;">
-      <button class="btn-back" onclick="goHome()">← Voltar</button>
+      <button class="btn-back" type="button" onclick="goHome()">← Voltar</button>
     </div>
-
     <div class="logo-circle">
       <svg viewBox="0 0 24 24" fill="none">
         <polygon points="13,2 4.5,13.5 11,13.5 11,22 19.5,10.5 13,10.5" fill="#FFD600"/>
       </svg>
     </div>
-
     <div class="header-text" style="flex:1;">
       <h1>Elétrica<span>Pro</span></h1>
-      <p id="headerSubtitle">Calculadoras, Tabelas e Instalações</p>
+      <p id="headerSubtitle">Calculadoras, Tabelas e Orçamentos</p>
     </div>
-
-    <div id="userAreaBtn"
-      onclick="window.location.href='login.html'"
-      style="display:flex;align-items:center;gap:.5rem;padding:.45rem .8rem;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);border-radius:10px;cursor:pointer;font-size:.8rem;transition:.3s ease;white-space:nowrap;"
-      title="Login / Minha Conta">
-      <span id="userAvatarIcon">👤</span>
-      <span id="userNameShort">Entrar</span>
+    <div id="userAreaBtn" onclick="logout()" title="Sair"
+      style="display:flex;align-items:center;gap:.5rem;padding:.45rem .8rem;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);border-radius:10px;cursor:pointer;font-size:.8rem;transition:.3s ease;white-space:nowrap;">
+      <span>👤</span>
+      <span id="userNameShort">Sair</span>
     </div>
-
-    <button id="darkModeBtn" onclick="toggleDarkMode()"
+    <button id="darkModeBtn" onclick="toggleDarkMode()" type="button"
       style="background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.2);color:white;padding:0.4rem 0.8rem;border-radius:8px;cursor:pointer;font-size:0.8rem;white-space:nowrap;">
-      ☀️ Modo Claro
+      ☀️ Claro
     </button>
   </header>
 
-  <div class="container">
+  <!-- Tela de bloqueio / login-required -->
+  <div id="lockScreen" class="lock-screen">
+    <div class="hero-logo">
+      <svg viewBox="0 0 24 24" fill="none">
+        <circle cx="12" cy="12" r="11" stroke="#FFD600" stroke-width="1.5"/>
+        <polygon points="13,2 4.5,13.5 11,13.5 11,22 19.5,10.5 13,10.5" fill="#FFD600"/>
+      </svg>
+    </div>
+    <h2>Elétrica<span style="color:#FFD600;">Pro</span></h2>
+    <p>Você precisa estar logado para usar todas as calculadoras, tabelas e orçamentos.</p>
+    <button class="btn" onclick="window.location.href='login.html'" style="font-size:1rem;padding:0.9rem 1.4rem;">
+      🔐 Entrar / Criar conta
+    </button>
+    <p style="margin-top:1rem;font-size:.82rem;">
+      <a href="#" onclick="enterGuestMode()" style="color:#94a3b8;">Continuar como visitante (modo leitura)</a>
+    </p>
+  </div>
+
+  <div class="container" id="mainApp" style="display:none;">
+
     <!-- ========== TELA INICIAL ========== -->
     <div id="homeScreen" class="screen active">
       <div class="hero">
@@ -75,49 +78,34 @@
       </div>
 
       <div class="icon-grid">
-        <div class="icon-tile" onclick="openScreen('calculadorasHome', 'Calculadoras')">
+        <div class="icon-tile" onclick="openScreen('calculadorasHome','Calculadoras')">
           <div class="tile-icon">🧮</div>
           <div class="tile-label">Calculadoras</div>
         </div>
-        <div class="icon-tile" onclick="openScreen('tabelasHome', 'Tabelas')">
+        <div class="icon-tile" onclick="openScreen('tabelasHome','Tabelas')">
           <div class="tile-icon">📊</div>
           <div class="tile-label">Tabelas</div>
         </div>
-        <div class="icon-tile" onclick="openScreen('instalacoes', 'Instalações')">
+        <div class="icon-tile" onclick="openScreen('instalacoes','Instalações')">
           <div class="tile-icon">🔌</div>
           <div class="tile-label">Instalações</div>
         </div>
-        <div class="icon-tile" onclick="openScreen('curiosidades', 'Curiosidades')">
+        <div class="icon-tile" onclick="openScreen('curiosidades','Curiosidades')">
           <div class="tile-icon">🧠</div>
           <div class="tile-label">Curiosidades</div>
         </div>
-        <div class="icon-tile" onclick="openScreen('orcamentos', 'Orçamentos')">
+        <div class="icon-tile" onclick="openScreen('orcamentos','Orçamentos')">
           <div class="tile-icon">💰</div>
           <div class="tile-label">Orçamentos</div>
         </div>
-        <div class="icon-tile" onclick="openScreen('normas', 'Normas')">
+        <div class="icon-tile" onclick="openScreen('normas','Normas')">
           <div class="tile-icon">📋</div>
           <div class="tile-label">Normas</div>
         </div>
-        <div class="icon-tile" onclick="openScreen('historico', 'Histórico')">
+        <div class="icon-tile" onclick="openScreen('historico','Histórico')">
           <div class="tile-icon">📂</div>
           <div class="tile-label">Histórico</div>
         </div>
-      </div>
-
-      <!-- Botão PRO (apenas leva ao login.html) -->
-      <div style="margin-top:1.5rem;" id="proBtnHome">
-        <button id="upgradeBtnHome" class="btn-pro-upgrade" onclick="window.location.href='login.html'">
-          <span class="pro-badge">PRO</span>
-          <span class="pro-btn-text">
-            <strong>Ativar Versão PRO</strong>
-            <small>Mensal R$14,90 ·  Vitalício R$29,90</small>
-          </span>
-          <span class="pro-arrow">→</span>
-        </button>
-        <a href="etica.html" style="display:block;margin-top:0.9rem;text-align:center;color:rgba(255,255,255,0.85);text-decoration:underline;font-size:0.9rem;">
-          Ética, privacidade e termos
-        </a>
       </div>
     </div>
 
@@ -125,60 +113,19 @@
     <div id="calculadorasHome" class="screen">
       <div class="screen-title"><div class="dot"></div>Calculadoras</div>
       <div class="sub-grid">
-        <div class="sub-tile" onclick="openScreen('calcLeiOhm','Lei de Ohm')">
-          <div class="s-icon">🔌</div>
-          <div class="s-text"><strong>Lei de Ohm</strong><span>V = I × R</span></div>
-        </div>
-        <div class="sub-tile" onclick="openScreen('calcPotencia','Potência')">
-          <div class="s-icon">⚡</div>
-          <div class="s-text"><strong>Potência</strong><span>P, Q, S</span></div>
-        </div>
-        <div class="sub-tile" onclick="openScreen('calcQueda','Queda de Tensão')">
-          <div class="s-icon">📉</div>
-          <div class="s-text"><strong>Queda de Tensão</strong><span>Máx 4%</span></div>
-        </div>
-        <div class="sub-tile" onclick="openScreen('calcCondutor','Dimensionamento')">
-          <div class="s-icon">📏</div>
-          <div class="s-text"><strong>Dimensionamento</strong><span>Condutor & Disjuntor</span></div>
-        </div>
-        <div class="sub-tile" onclick="openScreen('calcConversao','Conversão de Unidades'); updateUnidades();">
-          <div class="s-icon">🔄</div>
-          <div class="s-text"><strong>Conversão</strong><span>W, kW, CV, V, A...</span></div>
-        </div>
-        <div class="sub-tile" onclick="openScreen('calcIluminacao','Iluminação')">
-          <div class="s-icon">💡</div>
-          <div class="s-text"><strong>Iluminação</strong><span>Lux, Luminárias</span></div>
-        </div>
-        <div class="sub-tile" onclick="openScreen('calcCurtoCircuito','Curto-Circuito')">
-          <div class="s-icon">⚡</div>
-          <div class="s-text"><strong>Curto-Circuito</strong><span>Icc, Poder de Corte</span></div>
-        </div>
-        <div class="sub-tile" onclick="openScreen('calcFatorDemanda','Fator de Demanda')">
-          <div class="s-icon">📊</div>
-          <div class="s-text"><strong>Fator de Demanda</strong><span>Demanda Máxima</span></div>
-        </div>
-
-        <!-- Antes eram “PRO/FREE 2x”; agora estão totalmente liberadas -->
-        <div class="sub-tile" onclick="openScreen('calcDrDps','DR/DPS — Dimensionamento')">
-          <div class="s-icon">🔐</div>
-          <div class="s-text"><strong>DR / DPS</strong><span>Dimensionamento</span></div>
-        </div>
-        <div class="sub-tile" onclick="openScreen('calcEletroduto','Eletroduto — Condutores')">
-          <div class="s-icon">🪣</div>
-          <div class="s-text"><strong>Eletroduto</strong><span>Qtd condutores</span></div>
-        </div>
-        <div class="sub-tile" onclick="openScreen('calcQuedaTri','Queda de Tensão Trifásico')">
-          <div class="s-icon">📉</div>
-          <div class="s-text"><strong>Queda Trifásico</strong><span>3 fases</span></div>
-        </div>
-        <div class="sub-tile" onclick="openScreen('calcMotor','Bitola para Motor')">
-          <div class="s-icon">⚙️</div>
-          <div class="s-text"><strong>Bitola Motor</strong><span>Partida direta/Y-Δ</span></div>
-        </div>
-        <div class="sub-tile" onclick="openScreen('calcEnergiaMes','Custo de Energia Mensal')">
-          <div class="s-icon">💡</div>
-          <div class="s-text"><strong>Custo Energia</strong><span>Estimativa mensal</span></div>
-        </div>
+        <div class="sub-tile" onclick="openScreen('calcLeiOhm','Lei de Ohm')"><div class="s-icon">🔌</div><div class="s-text"><strong>Lei de Ohm</strong><span>V = I × R</span></div></div>
+        <div class="sub-tile" onclick="openScreen('calcPotencia','Potência')"><div class="s-icon">⚡</div><div class="s-text"><strong>Potência</strong><span>P, Q, S</span></div></div>
+        <div class="sub-tile" onclick="openScreen('calcQueda','Queda de Tensão')"><div class="s-icon">📉</div><div class="s-text"><strong>Queda de Tensão</strong><span>Máx 4%</span></div></div>
+        <div class="sub-tile" onclick="openScreen('calcCondutor','Dimensionamento')"><div class="s-icon">📏</div><div class="s-text"><strong>Dimensionamento</strong><span>Condutor & Disjuntor</span></div></div>
+        <div class="sub-tile" onclick="openScreen('calcConversao','Conversão'); updateUnidades();"><div class="s-icon">🔄</div><div class="s-text"><strong>Conversão</strong><span>W, kW, CV, V, A...</span></div></div>
+        <div class="sub-tile" onclick="openScreen('calcIluminacao','Iluminação')"><div class="s-icon">💡</div><div class="s-text"><strong>Iluminação</strong><span>Lux, Luminárias</span></div></div>
+        <div class="sub-tile" onclick="openScreen('calcCurtoCircuito','Curto-Circuito')"><div class="s-icon">⚡</div><div class="s-text"><strong>Curto-Circuito</strong><span>Icc, Poder de Corte</span></div></div>
+        <div class="sub-tile" onclick="openScreen('calcFatorDemanda','Fator de Demanda')"><div class="s-icon">📊</div><div class="s-text"><strong>Fator de Demanda</strong><span>Demanda Máxima</span></div></div>
+        <div class="sub-tile" onclick="openScreen('calcDrDps','DR/DPS — Dimensionamento')"><div class="s-icon">🔐</div><div class="s-text"><strong>DR / DPS</strong><span>Dimensionamento</span></div></div>
+        <div class="sub-tile" onclick="openScreen('calcEletroduto','Eletroduto — Condutores')"><div class="s-icon">🪣</div><div class="s-text"><strong>Eletroduto</strong><span>Qtd condutores</span></div></div>
+        <div class="sub-tile" onclick="openScreen('calcQuedaTri','Queda de Tensão Trifásico')"><div class="s-icon">📉</div><div class="s-text"><strong>Queda Trifásico</strong><span>3 fases</span></div></div>
+        <div class="sub-tile" onclick="openScreen('calcMotor','Bitola para Motor')"><div class="s-icon">⚙️</div><div class="s-text"><strong>Bitola Motor</strong><span>Partida direta/Y-Δ</span></div></div>
+        <div class="sub-tile" onclick="openScreen('calcEnergiaMes','Custo de Energia Mensal')"><div class="s-icon">💡</div><div class="s-text"><strong>Custo Energia</strong><span>Estimativa mensal</span></div></div>
       </div>
     </div>
 
@@ -191,8 +138,8 @@
         <div class="form-group"><label>Tensão (V — Volts):</label><input type="number" id="tensaoOhm" placeholder="Ex: 220"></div>
         <div class="form-group"><label>Corrente (I — Amperes):</label><input type="number" id="correnteOhm" placeholder="Ex: 10"></div>
         <div class="form-group"><label>Resistência (R — Ohms):</label><input type="number" id="resistenciaOhm" placeholder="Ex: 22"></div>
-        <button class="btn" onclick="calcularLeiOhm()">⚡ Calcular</button>
-        <button class="btn btn-yellow" onclick="gerarPDFCalc('Lei de Ohm')">📄 PDF</button>
+        <button class="btn" type="button" onclick="calcularLeiOhm()">⚡ Calcular</button>
+        <button class="btn btn-yellow" type="button" onclick="gerarPDFCalc('Lei de Ohm')">📄 PDF</button>
         <div id="resultLeiOhm"></div>
       </div>
     </div>
@@ -202,17 +149,17 @@
       <div class="screen-title"><div class="dot"></div>Potência Elétrica</div>
       <div class="calc-card">
         <h3>⚡ Cálculo de Potência</h3>
-        <div class="form-group"><label>Tensão (V — Volts):</label><input type="number" id="tensaoPot" placeholder="Ex: 220"></div>
-        <div class="form-group"><label>Corrente (A — Amperes):</label><input type="number" id="correntePot" placeholder="Ex: 10"></div>
-        <div class="form-group"><label>Fator de Potência (cos φ):</label><input type="number" id="fatorPot" placeholder="Ex: 0.92" step="0.01" value="0.92"></div>
+        <div class="form-group"><label>Tensão (V):</label><input type="number" id="tensaoPot" placeholder="Ex: 220"></div>
+        <div class="form-group"><label>Corrente (A):</label><input type="number" id="correntePot" placeholder="Ex: 10"></div>
+        <div class="form-group"><label>Fator de Potência (cos φ):</label><input type="number" id="fatorPot" placeholder="0.92" step="0.01" value="0.92"></div>
         <div class="form-group"><label>Tipo de Circuito:</label>
           <select id="tipoCircuito">
             <option value="monofasico">Monofásico</option>
             <option value="trifasico">Trifásico</option>
           </select>
         </div>
-        <button class="btn" onclick="calcularPotencia()">⚡ Calcular</button>
-        <button class="btn btn-yellow" onclick="gerarPDFCalc('Potência')">📄 PDF</button>
+        <button class="btn" type="button" onclick="calcularPotencia()">⚡ Calcular</button>
+        <button class="btn btn-yellow" type="button" onclick="gerarPDFCalc('Potência')">📄 PDF</button>
         <div id="resultPotencia"></div>
       </div>
     </div>
@@ -233,9 +180,9 @@
             <option value="50">50 mm²</option>
           </select>
         </div>
-        <div class="form-group"><label>Tensão do circuito (V):</label><input type="number" id="tensaoQueda" placeholder="Ex: 220" value="220"></div>
-        <button class="btn" onclick="calcularQuedaTensao()">⚡ Calcular</button>
-        <button class="btn btn-yellow" onclick="gerarPDFCalc('Queda de Tensão')">📄 PDF</button>
+        <div class="form-group"><label>Tensão do circuito (V):</label><input type="number" id="tensaoQueda" placeholder="220" value="220"></div>
+        <button class="btn" type="button" onclick="calcularQuedaTensao()">⚡ Calcular</button>
+        <button class="btn btn-yellow" type="button" onclick="gerarPDFCalc('Queda de Tensão')">📄 PDF</button>
         <div id="resultQuedaTensao"></div>
       </div>
     </div>
@@ -246,7 +193,7 @@
       <div class="calc-card">
         <h3>📏 Dimensionamento de Condutor</h3>
         <div class="form-group"><label>Potência (W):</label><input type="number" id="potenciaCondutor" placeholder="Ex: 5500"></div>
-        <div class="form-group"><label>Tensão (V):</label><input type="number" id="tensaoCondutor" placeholder="Ex: 220" value="220"></div>
+        <div class="form-group"><label>Tensão (V):</label><input type="number" id="tensaoCondutor" placeholder="220" value="220"></div>
         <div class="form-group"><label>Distância (m):</label><input type="number" id="distanciaCondutor" placeholder="Ex: 30"></div>
         <div class="form-group"><label>Tipo de instalação:</label>
           <select id="tipoInstalacao">
@@ -255,8 +202,8 @@
             <option value="C">C — Cabo multipolar ao ar livre</option>
           </select>
         </div>
-        <button class="btn" onclick="dimensionarCondutor()">⚡ Dimensionar</button>
-        <button class="btn btn-yellow" onclick="gerarPDFCalc('Dimensionamento')">📄 PDF</button>
+        <button class="btn" type="button" onclick="dimensionarCondutor()">⚡ Dimensionar</button>
+        <button class="btn btn-yellow" type="button" onclick="gerarPDFCalc('Dimensionamento')">📄 PDF</button>
         <div id="resultCondutor"></div>
       </div>
     </div>
@@ -266,9 +213,7 @@
       <div class="screen-title"><div class="dot"></div>Conversões Elétricas</div>
       <div class="calc-card">
         <h3>🔄 Conversor de Unidades</h3>
-
-        <div class="form-group">
-          <label>Tipo de Conversão:</label>
+        <div class="form-group"><label>Tipo de Conversão:</label>
           <select id="tipoConversao" onchange="updateUnidades()">
             <option value="potencia">Potência (W / kW / CV / MW)</option>
             <option value="tensao">Tensão (V / kV / mV / µV)</option>
@@ -278,19 +223,10 @@
             <option value="bitola">Bitola (mm² ↔ AWG)</option>
           </select>
         </div>
-
-        <div class="form-group">
-          <label>Valor:</label>
-          <input type="number" id="valorConversao" placeholder="Digite o valor" />
-        </div>
-
-        <div class="form-group">
-          <label>Unidade:</label>
-          <select id="unidadeConversao"></select>
-        </div>
-
-        <button class="btn" onclick="calcularConversao()">⚡ Converter</button>
-        <button class="btn btn-yellow" onclick="gerarPDFCalc('conversão')">📄 PDF</button>
+        <div class="form-group"><label>Valor:</label><input type="number" id="valorConversao" placeholder="Digite o valor"></div>
+        <div class="form-group"><label>Unidade:</label><select id="unidadeConversao"></select></div>
+        <button class="btn" type="button" onclick="calcularConversao()">⚡ Converter</button>
+        <button class="btn btn-yellow" type="button" onclick="gerarPDFCalc('Conversão')">📄 PDF</button>
         <div id="resultConversao"></div>
       </div>
     </div>
@@ -299,19 +235,12 @@
     <div id="calcIluminacao" class="screen">
       <div class="screen-title"><div class="dot"></div>Cálculo de Iluminação</div>
       <div class="calc-card">
-        <h3>💡 Dimensionamento de Iluminação (NBR ISO/CIE 8995-1)</h3>
+        <h3>💡 Dimensionamento de Iluminação</h3>
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.8rem;">
-          <div class="form-group">
-            <label>Área do ambiente (m²):</label>
-            <input type="number" id="areaIlum" placeholder="Ex: 20" />
-          </div>
-          <div class="form-group">
-            <label>Altura do teto (m):</label>
-            <input type="number" id="alturaIlum" placeholder="Ex: 2.80" step="0.1" />
-          </div>
+          <div class="form-group"><label>Área do ambiente (m²):</label><input type="number" id="areaIlum" placeholder="20"></div>
+          <div class="form-group"><label>Altura do teto (m):</label><input type="number" id="alturaIlum" placeholder="2.80" step="0.1"></div>
         </div>
-        <div class="form-group">
-          <label>Tipo de Ambiente:</label>
+        <div class="form-group"><label>Tipo de Ambiente:</label>
           <select id="tipoAmbienteIlum">
             <option value="sala">Sala de Estar (200 lux)</option>
             <option value="quarto">Quarto (100 lux)</option>
@@ -324,24 +253,12 @@
           </select>
         </div>
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.8rem;">
-          <div class="form-group">
-            <label>Fluxo luminoso da lâmpada (lm):</label>
-            <input type="number" id="fluxoLamp" placeholder="Ex: 800 (LED 9W)" />
-          </div>
-          <div class="form-group">
-            <label>Plano de trabalho (m):</label>
-            <input type="number" id="planoTrabalho" placeholder="0.75" value="0.75" step="0.05" />
-          </div>
+          <div class="form-group"><label>Fluxo luminoso da lâmpada (lm):</label><input type="number" id="fluxoLamp" placeholder="800"></div>
+          <div class="form-group"><label>Plano de trabalho (m):</label><input type="number" id="planoTrabalho" value="0.75" step="0.05"></div>
         </div>
-        <div class="form-group">
-          <label>Eficiência da luminária (Fu estimado 0,5–0,9):</label>
-          <input type="number" id="efLuminaria" placeholder="0.70" value="0.70" step="0.05" min="0.1" max="1" />
-        </div>
-        <p style="font-size:0.78rem;color:var(--text-muted);margin-bottom:0.8rem;">
-          💡 Lâmpadas comuns: LED 9W ≈ 800 lm | LED 12W ≈ 1100 lm | LED 15W ≈ 1500 lm | Fluorescente 32W ≈ 2400 lm
-        </p>
-        <button class="btn" onclick="calcularIluminacao()">💡 Calcular</button>
-        <button class="btn btn-yellow" onclick="gerarPDFCalc('Iluminação')">📄 PDF</button>
+        <div class="form-group"><label>Eficiência da luminária (Fu):</label><input type="number" id="efLuminaria" value="0.70" step="0.05" min="0.1" max="1"></div>
+        <button class="btn" type="button" onclick="calcularIluminacao()">💡 Calcular</button>
+        <button class="btn btn-yellow" type="button" onclick="gerarPDFCalc('Iluminação')">📄 PDF</button>
         <div id="resultIluminacao"></div>
       </div>
     </div>
@@ -352,22 +269,12 @@
       <div class="calc-card">
         <h3>⚡ Cálculo de Corrente de Curto-Circuito</h3>
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.8rem;">
-          <div class="form-group">
-            <label>Tensão do sistema (V):</label>
-            <input type="number" id="tensaoCC" placeholder="Ex: 220" value="220" />
-          </div>
-          <div class="form-group">
-            <label>Potência do transformador (kVA):</label>
-            <input type="number" id="potTrafo" placeholder="Ex: 75" />
-          </div>
+          <div class="form-group"><label>Tensão do sistema (V):</label><input type="number" id="tensaoCC" value="220"></div>
+          <div class="form-group"><label>Potência do transformador (kVA):</label><input type="number" id="potTrafo" placeholder="Ex: 75"></div>
         </div>
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.8rem;">
-          <div class="form-group">
-            <label>Impedância do trafo (% — padrão 4%):</label>
-            <input type="number" id="impedTrafo" placeholder="4" value="4" step="0.1" />
-          </div>
-          <div class="form-group">
-            <label>Tipo de curto:</label>
+          <div class="form-group"><label>Impedância do trafo (%):</label><input type="number" id="impedTrafo" value="4" step="0.1"></div>
+          <div class="form-group"><label>Tipo de curto:</label>
             <select id="tipoCC">
               <option value="trifasico">Trifásico (3φ — mais severo)</option>
               <option value="bifasico">Bifásico (2φ)</option>
@@ -376,17 +283,11 @@
           </div>
         </div>
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.8rem;">
-          <div class="form-group">
-            <label>Seção do cabo (mm²):</label>
-            <input type="number" id="secCaboCC" placeholder="Ex: 10" />
-          </div>
-          <div class="form-group">
-            <label>Comprimento do cabo (m):</label>
-            <input type="number" id="distCaboCC" placeholder="Ex: 50" />
-          </div>
+          <div class="form-group"><label>Seção do cabo (mm²):</label><input type="number" id="secCaboCC" placeholder="10"></div>
+          <div class="form-group"><label>Comprimento do cabo (m):</label><input type="number" id="distCaboCC" placeholder="50"></div>
         </div>
-        <button class="btn" onclick="calcularCurtoCircuito()">⚡ Calcular</button>
-        <button class="btn btn-yellow" onclick="gerarPDFCalc('Curto-Circuito')">📄 PDF</button>
+        <button class="btn" type="button" onclick="calcularCurtoCircuito()">⚡ Calcular</button>
+        <button class="btn btn-yellow" type="button" onclick="gerarPDFCalc('Curto-Circuito')">📄 PDF</button>
         <div id="resultCurtoCircuito"></div>
       </div>
     </div>
@@ -396,25 +297,210 @@
       <div class="screen-title"><div class="dot"></div>Fator de Demanda</div>
       <div class="calc-card">
         <h3>📊 Calculadora de Fator de Demanda</h3>
-        <div class="form-group">
-          <label>Tensão do sistema (V):</label>
-          <input type="number" id="tensaoFD" placeholder="220" value="220" />
-        </div>
+        <div class="form-group"><label>Tensão do sistema (V):</label><input type="number" id="tensaoFD" value="220"></div>
         <div id="cargasFD">
-          <div class="carga-fd-row consumo-item-row">
-            <div class="form-group"><label>Carga</label><input type="text" placeholder="Ex: Ar-cond. 9000 BTU" /></div>
-            <div class="form-group"><label>Potência (W)</label><input type="number" placeholder="Ex: 900" /></div>
-            <div class="form-group"><label>Qtd</label><input type="number" placeholder="1" value="1" min="1" /></div>
-            <div class="form-group"><label>FD (%)</label><input type="number" placeholder="75" value="75" min="1" max="100" /></div>
+          <div class="consumo-item-row">
+            <div class="form-group"><label>Carga</label><input type="text" placeholder="Ex: Ar-cond. 9000 BTU"></div>
+            <div class="form-group"><label>Potência (W)</label><input type="number" placeholder="900"></div>
+            <div class="form-group"><label>Qtd</label><input type="number" value="1" min="1"></div>
+            <div class="form-group"><label>FD (%)</label><input type="number" value="75" min="1" max="100"></div>
           </div>
         </div>
         <p style="font-size:0.78rem;color:var(--text-muted);margin-top:0.5rem;">
           FD típico: Iluminação 75% | Tomadas 50% | Motores 65% | AR cond. 80%
         </p>
-        <button class="btn" onclick="adicionarCargaFD()">➕ Adicionar Carga</button>
-        <button class="btn btn-yellow" onclick="calcularFatorDemanda()">📊 Calcular Demanda</button>
-        <button class="btn btn-yellow" onclick="gerarPDFCalc('fator de demanda')">📄 PDF</button>
+        <button class="btn" type="button" onclick="adicionarCargaFD()">➕ Adicionar Carga</button>
+        <button class="btn btn-yellow" type="button" onclick="calcularFatorDemanda()">📊 Calcular</button>
+        <button class="btn btn-yellow" type="button" onclick="gerarPDFCalc('Fator de Demanda')">📄 PDF</button>
         <div id="resultFatorDemanda"></div>
+      </div>
+    </div>
+
+    <!-- ========== CALC: DR/DPS ========== -->
+    <div id="calcDrDps" class="screen">
+      <div class="screen-title"><div class="dot"></div>DR/DPS — Dimensionamento</div>
+      <div class="calc-card">
+        <h3>🔐 Dimensionamento de DR e DPS</h3>
+        <div class="form-group"><label>Corrente do circuito (A):</label><input type="number" id="correnteDR" placeholder="25"></div>
+        <div class="form-group"><label>Tipo de DR:</label>
+          <select id="tipoDR">
+            <option value="residual">DR Residencial (30 mA)</option>
+            <option value="industrial">DR Industrial (100 mA)</option>
+            <option value="10ma">DR Alta Sensibilidade (10 mA)</option>
+          </select>
+        </div>
+        <div class="form-group"><label>Tensão do sistema (V):</label>
+          <select id="tensaoDR">
+            <option value="127">127 V (monofásico)</option>
+            <option value="220">220 V (monofásico)</option>
+            <option value="220t">220/380 V (trifásico)</option>
+          </select>
+        </div>
+        <div class="form-group"><label>Nível de sobretensão (kV):</label>
+          <select id="nivelDPS">
+            <option value="6">Categoria IV — 6 kV (entrada geral)</option>
+            <option value="4">Categoria III — 4 kV (quadro)</option>
+            <option value="2.5">Categoria II — 2,5 kV (tomada)</option>
+            <option value="1.5">Categoria I — 1,5 kV (equipamentos)</option>
+          </select>
+        </div>
+        <button class="btn" type="button" onclick="calcularDrDps()">⚡ Calcular</button>
+        <button class="btn btn-yellow" type="button" onclick="gerarPDFCalc('DR/DPS')">📄 PDF</button>
+        <div id="resultDrDps"></div>
+      </div>
+    </div>
+
+    <!-- ========== CALC: ELETRODUTO ========== -->
+    <div id="calcEletroduto" class="screen">
+      <div class="screen-title"><div class="dot"></div>Eletroduto — Quantos condutores cabem</div>
+      <div class="calc-card">
+        <h3>🪣 Cálculo de Eletroduto (NBR 5410)</h3>
+        <p style="font-size:.82rem;color:var(--text-muted);margin-bottom:1rem;">
+          Taxa de ocupação máx. 53% (1 cabo) / 31% (2 cabos) / 40% (3+ cabos)
+        </p>
+        <div class="form-group"><label>Diâmetro do eletroduto (mm):</label>
+          <select id="diaEletroduto">
+            <option value="16">Ø 16 mm (1/2")</option>
+            <option value="20">Ø 20 mm (3/4")</option>
+            <option value="25">Ø 25 mm (1")</option>
+            <option value="32">Ø 32 mm (1¼")</option>
+            <option value="40">Ø 40 mm (1½")</option>
+            <option value="50">Ø 50 mm (2")</option>
+            <option value="63">Ø 63 mm (2½")</option>
+            <option value="75">Ø 75 mm (3")</option>
+          </select>
+        </div>
+        <div class="form-group"><label>Seção do condutor (mm²):</label>
+          <select id="secaoEletroduto">
+            <option value="1.5">1,5 mm²</option>
+            <option value="2.5">2,5 mm²</option>
+            <option value="4">4 mm²</option>
+            <option value="6">6 mm²</option>
+            <option value="10">10 mm²</option>
+            <option value="16">16 mm²</option>
+            <option value="25">25 mm²</option>
+            <option value="35">35 mm²</option>
+            <option value="50">50 mm²</option>
+          </select>
+        </div>
+        <button class="btn" type="button" onclick="calcularEletroduto()">⚡ Calcular</button>
+        <button class="btn btn-yellow" type="button" onclick="gerarPDFCalc('Eletroduto')">📄 PDF</button>
+        <div id="resultEletroduto"></div>
+      </div>
+    </div>
+
+    <!-- ========== CALC: QUEDA TRIFÁSICO ========== -->
+    <div id="calcQuedaTri" class="screen">
+      <div class="screen-title"><div class="dot"></div>Queda de Tensão — Trifásico</div>
+      <div class="calc-card">
+        <h3>📉 Queda de Tensão Trifásico</h3>
+        <div class="form-group"><label>Potência total (kW):</label><input type="number" id="potQuedaTri" placeholder="30"></div>
+        <div class="form-group"><label>Tensão de linha (V):</label><input type="number" id="tensaoQuedaTri" value="380"></div>
+        <div class="form-group"><label>Fator de potência (cos φ):</label><input type="number" id="fpQuedaTri" value="0.92" step="0.01"></div>
+        <div class="form-group"><label>Comprimento do cabo (m):</label><input type="number" id="compQuedaTri" placeholder="100"></div>
+        <div class="form-group"><label>Seção do condutor (mm²):</label>
+          <select id="secaoQuedaTri">
+            <option value="2.5">2,5 mm²</option><option value="4">4 mm²</option>
+            <option value="6">6 mm²</option><option value="10">10 mm²</option>
+            <option value="16">16 mm²</option><option value="25">25 mm²</option>
+            <option value="35">35 mm²</option><option value="50">50 mm²</option>
+            <option value="70">70 mm²</option><option value="95">95 mm²</option>
+            <option value="120">120 mm²</option>
+          </select>
+        </div>
+        <button class="btn" type="button" onclick="calcularQuedaTrifasico()">⚡ Calcular</button>
+        <button class="btn btn-yellow" type="button" onclick="gerarPDFCalc('Queda Trifásico')">📄 PDF</button>
+        <div id="resultQuedaTri"></div>
+      </div>
+    </div>
+
+    <!-- ========== CALC: BITOLA MOTOR ========== -->
+    <div id="calcMotor" class="screen">
+      <div class="screen-title"><div class="dot"></div>Bitola para Motor</div>
+      <div class="calc-card">
+        <h3>⚙️ Dimensionamento para Motor Elétrico</h3>
+        <div class="form-group"><label>Potência do motor (cv/HP):</label><input type="number" id="potMotor" placeholder="10"></div>
+        <div class="form-group"><label>Tensão (V):</label>
+          <select id="tensaoMotor">
+            <option value="220">220 V Trifásico</option>
+            <option value="380">380 V Trifásico</option>
+            <option value="440">440 V Trifásico</option>
+            <option value="220m">220 V Monofásico</option>
+          </select>
+        </div>
+        <div class="form-group"><label>Tipo de partida:</label>
+          <select id="tipoPartidaMotor">
+            <option value="direta">Partida Direta</option>
+            <option value="estrela-triangulo">Estrela-Triângulo (Y-Δ)</option>
+            <option value="soft">Soft-Starter / Inversor</option>
+          </select>
+        </div>
+        <div class="form-group"><label>Fator de serviço (%):</label><input type="number" id="fsMotor" value="100"></div>
+        <button class="btn" type="button" onclick="calcularBitolaMotor()">⚡ Calcular</button>
+        <button class="btn btn-yellow" type="button" onclick="gerarPDFCalc('Bitola Motor')">📄 PDF</button>
+        <div id="resultMotor"></div>
+      </div>
+    </div>
+
+    <!-- ========== CALC: CUSTO ENERGIA MENSAL ========== -->
+    <div id="calcEnergiaMes" class="screen">
+      <div class="screen-title"><div class="dot"></div>Custo de Energia Mensal</div>
+      <div class="calc-card">
+        <h3>💡 Estimativa de Custo de Energia Mensal</h3>
+        <div class="form-group"><label>Tarifa de energia (R$/kWh):</label><input type="number" id="tarifaEnergia" value="0.85" step="0.01"></div>
+        <div class="form-group"><label>ICMS:</label>
+          <select id="icmsEnergia">
+            <option value="0">Sim, já incluso</option>
+            <option value="0.25">Não — adicionar 25% ICMS</option>
+            <option value="0.18">Não — adicionar 18% ICMS</option>
+          </select>
+        </div>
+        <div id="energiaItens">
+          <div class="consumo-item-row">
+            <div class="form-group"><label>Equipamento</label><input type="text" placeholder="Ar-condicionado"></div>
+            <div class="form-group"><label>Potência (W)</label><input type="number" placeholder="1200"></div>
+            <div class="form-group"><label>Horas/dia</label><input type="number" placeholder="8" step="0.5"></div>
+            <div class="form-group"><label>Dias/mês</label><input type="number" value="30"></div>
+          </div>
+        </div>
+        <button class="btn" type="button" onclick="addEnergiaRow()">➕ Adicionar</button>
+        <button class="btn btn-yellow" type="button" onclick="calcularEnergiaMensal()">💰 Calcular Custo</button>
+        <button class="btn btn-yellow" type="button" onclick="gerarPDFCalc('Custo Energia')">📄 PDF</button>
+        <div id="resultEnergiaMes"></div>
+      </div>
+
+      <div class="calc-card" style="margin-top:1.2rem;">
+        <h3>📋 Tabela de Referência — Potência dos Aparelhos</h3>
+        <div class="table-responsive">
+          <table>
+            <thead><tr><th>Aparelho</th><th>Potência Típica (W)</th><th>Observação</th></tr></thead>
+            <tbody>
+              <tr><td colspan="3" style="background:rgba(33,150,243,0.18);font-weight:700;color:#ffeb3b;">🌡️ CLIMATIZAÇÃO</td></tr>
+              <tr><td>Ar-condicionado 7.000 BTU</td><td>700 – 900 W</td><td></td></tr>
+              <tr><td>Ar-condicionado 9.000 BTU</td><td>900 – 1.100 W</td><td></td></tr>
+              <tr><td>Ar-condicionado 12.000 BTU</td><td>1.100 – 1.400 W</td><td></td></tr>
+              <tr><td>Ar-condicionado 18.000 BTU</td><td>1.600 – 2.000 W</td><td></td></tr>
+              <tr><td>Ventilador de teto</td><td>60 – 90 W</td><td></td></tr>
+              <tr><td colspan="3" style="background:rgba(33,150,243,0.18);font-weight:700;color:#ffeb3b;">🍳 COZINHA</td></tr>
+              <tr><td>Geladeira</td><td>100 – 350 W</td><td>⚠️ Compressor cicla — use 50% das horas</td></tr>
+              <tr><td>Micro-ondas</td><td>1.000 – 1.500 W</td><td>💡 15–30 min/dia</td></tr>
+              <tr><td>Forno elétrico / Air fryer</td><td>1.500 – 2.500 W</td><td></td></tr>
+              <tr><td>Cafeteira</td><td>800 – 1.200 W</td><td></td></tr>
+              <tr><td colspan="3" style="background:rgba(33,150,243,0.18);font-weight:700;color:#ffeb3b;">🚿 BANHO</td></tr>
+              <tr><td>Chuveiro elétrico</td><td>4.000 – 7.500 W</td><td>🔴 Circuito exclusivo 6 mm²</td></tr>
+              <tr><td>Bomba d'água</td><td>500 – 1.500 W</td><td>1–2h/dia</td></tr>
+              <tr><td colspan="3" style="background:rgba(33,150,243,0.18);font-weight:700;color:#ffeb3b;">📺 ELETRÔNICOS</td></tr>
+              <tr><td>TV LED 50"</td><td>80 – 130 W</td><td></td></tr>
+              <tr><td>Notebook</td><td>45 – 90 W</td><td></td></tr>
+              <tr><td>Desktop</td><td>150 – 400 W</td><td></td></tr>
+              <tr><td>Roteador Wi-Fi</td><td>5 – 15 W</td><td>24h ligado</td></tr>
+              <tr><td>PS5 / Xbox</td><td>100 – 200 W</td><td></td></tr>
+              <tr><td colspan="3" style="background:rgba(33,150,243,0.18);font-weight:700;color:#ffeb3b;">💡 ILUMINAÇÃO</td></tr>
+              <tr><td>LED bulbo 9W</td><td>9 W</td><td>Equivalente a 60W incandescente</td></tr>
+              <tr><td>LED bulbo 12W</td><td>12 W</td><td></td></tr>
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
 
@@ -422,27 +508,17 @@
     <div id="tabelasHome" class="screen">
       <div class="screen-title"><div class="dot"></div>Tabelas Técnicas</div>
       <div class="sub-grid">
-        <div class="sub-tile" onclick="openScreen('tabelaCondutores','Tabela — Condutores')">
-          <div class="s-icon">🔧</div>
-          <div class="s-text"><strong>Condutores</strong><span>Bitolas e specs</span></div>
-        </div>
-        <div class="sub-tile" onclick="openScreen('tabelaDisjuntores','Tabela — Disjuntores')">
-          <div class="s-icon">🔌</div>
-          <div class="s-text"><strong>Disjuntores</strong><span>Amperagem</span></div>
-        </div>
-        <div class="sub-tile" onclick="openScreen('tabelaCorrentes','Tabela — Capacidade')">
-          <div class="s-icon">📡</div>
-          <div class="s-text"><strong>Cap. Corrente</strong><span>B1, B2, C</span></div>
-        </div>
+        <div class="sub-tile" onclick="openScreen('tabelaCondutores','Condutores')"><div class="s-icon">🔧</div><div class="s-text"><strong>Condutores</strong><span>Bitolas e specs</span></div></div>
+        <div class="sub-tile" onclick="openScreen('tabelaDisjuntores','Disjuntores')"><div class="s-icon">🔌</div><div class="s-text"><strong>Disjuntores</strong><span>Amperagem</span></div></div>
+        <div class="sub-tile" onclick="openScreen('tabelaCorrentes','Capacidade')"><div class="s-icon">📡</div><div class="s-text"><strong>Capacidade</strong><span>B1, B2, C</span></div></div>
       </div>
     </div>
 
-    <!-- ========== TABELA CONDUTORES ========== -->
     <div id="tabelaCondutores" class="screen">
       <div class="screen-title"><div class="dot"></div>Condutores</div>
       <div class="calc-card">
         <h3>🔧 Tabela de Condutores</h3>
-        <button class="btn btn-yellow" onclick="gerarPDFTabela('Condutores')">📄 Gerar PDF</button>
+        <button class="btn btn-yellow" type="button" onclick="gerarPDFTabela('Condutores')">📄 Gerar PDF</button>
         <div class="table-responsive">
           <table>
             <thead><tr><th>Seção (mm²)</th><th>Diâmetro (mm)</th><th>Peso (kg/km)</th><th>Resistência (Ω/km)</th></tr></thead>
@@ -462,12 +538,11 @@
       </div>
     </div>
 
-    <!-- ========== TABELA DISJUNTORES ========== -->
     <div id="tabelaDisjuntores" class="screen">
       <div class="screen-title"><div class="dot"></div>Disjuntores</div>
       <div class="calc-card">
         <h3>🔌 Tabela de Disjuntores</h3>
-        <button class="btn btn-yellow" onclick="gerarPDFTabela('Disjuntores')">📄 Gerar PDF</button>
+        <button class="btn btn-yellow" type="button" onclick="gerarPDFTabela('Disjuntores')">📄 Gerar PDF</button>
         <div class="table-responsive">
           <table>
             <thead><tr><th>Corrente (A)</th><th>Condutor Mín. (mm²)</th><th>Potência 127V (W)</th><th>Potência 220V (W)</th></tr></thead>
@@ -487,12 +562,11 @@
       </div>
     </div>
 
-    <!-- ========== TABELA CAPACIDADE ========== -->
     <div id="tabelaCorrentes" class="screen">
       <div class="screen-title"><div class="dot"></div>Capacidade de Corrente</div>
       <div class="calc-card">
-        <h3>⚡ Capacidade de Corrente (ABNT NBR 5410)</h3>
-        <button class="btn btn-yellow" onclick="gerarPDFTabela('Capacidade de Corrente')">📄 Gerar PDF</button>
+        <h3>⚡ Capacidade de Corrente (NBR 5410)</h3>
+        <button class="btn btn-yellow" type="button" onclick="gerarPDFTabela('Capacidade de Corrente')">📄 Gerar PDF</button>
         <div class="table-responsive">
           <table>
             <thead><tr><th>Seção (mm²)</th><th>Método B1 (A)</th><th>Método B2 (A)</th><th>Método C (A)</th></tr></thead>
@@ -513,8 +587,163 @@
     </div>
 
     <!-- ========== INSTALAÇÕES ========== -->
-    
-      <!-- Glossário Rápido -->
+    <div id="instalacoes" class="screen">
+      <div class="screen-title"><div class="dot"></div>Instalações Elétricas</div>
+
+      <div class="install-item" id="inst1">
+        <div class="install-header" onclick="toggleInstall('inst1')">
+          <h4>🔌 Tomadas e Interruptores</h4><span class="install-chevron">▼</span>
+        </div>
+        <div class="install-body">
+          <h5>Altura padrão ABNT NBR 5410:</h5>
+          <ul>
+            <li>Tomadas de uso geral: <strong>0,30 m</strong> do piso (residencial)</li>
+            <li>Tomadas de uso geral: <strong>1,20 m</strong> do piso (para acessibilidade)</li>
+            <li>Interruptores: <strong>1,00 m</strong> do piso acabado</li>
+            <li>Tomadas em cozinhas e banheiros: <strong>1,20 m</strong></li>
+          </ul>
+          <h5>Circuitos dedicados:</h5>
+          <ul>
+            <li>Chuveiro elétrico: circuito exclusivo (6,0 mm²)</li>
+            <li>Ar-condicionado ≥ 1,5 TR: circuito exclusivo</li>
+            <li>Forno elétrico / micro-ondas: circuito exclusivo</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="install-item" id="inst2">
+        <div class="install-header" onclick="toggleInstall('inst2')">
+          <h4>🏠 Quadro de Distribuição</h4><span class="install-chevron">▼</span>
+        </div>
+        <div class="install-body">
+          <p>O quadro de distribuição (QD) deve ser instalado em local de fácil acesso, na entrada da edificação.</p>
+          <h5>Componentes essenciais:</h5>
+          <ul>
+            <li>Disjuntor geral (DR geral recomendado)</li>
+            <li>Disjuntores individuais por circuito</li>
+            <li>DR (diferencial-residual) para banheiros e cozinha</li>
+            <li>Barramento de neutro e terra</li>
+          </ul>
+          <h5>Distâncias mínimas:</h5>
+          <ul>
+            <li>Altura da parte inferior: mínimo <strong>1,20 m</strong> do piso</li>
+            <li>Parte superior: máximo <strong>2,00 m</strong></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="install-item" id="inst3">
+        <div class="install-header" onclick="toggleInstall('inst3')">
+          <h4>⚡ Aterramento (SPDA)</h4><span class="install-chevron">▼</span>
+        </div>
+        <div class="install-body">
+          <h5>Tipos de haste de aterramento:</h5>
+          <ul>
+            <li>Haste de aço cobreado: 5/8" × 2,4 m</li>
+            <li>Resistência máxima: <strong>≤ 10 Ω</strong> (residencial)</li>
+            <li>Resistência máxima: <strong>≤ 5 Ω</strong> (industrial)</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="install-item" id="inst4">
+        <div class="install-header" onclick="toggleInstall('inst4')">
+          <h4>💡 Iluminação</h4><span class="install-chevron">▼</span>
+        </div>
+        <div class="install-body">
+          <h5>Níveis de iluminamento:</h5>
+          <ul>
+            <li>Quarto / Dormitório: <strong>100 – 300 lux</strong></li>
+            <li>Sala de estar: <strong>100 – 300 lux</strong></li>
+            <li>Cozinha: <strong>200 – 500 lux</strong></li>
+            <li>Escritório: <strong>500 – 750 lux</strong></li>
+          </ul>
+          <h5>Dica de circuito:</h5>
+          <ul>
+            <li>Máximo 600 W por circuito de iluminação</li>
+            <li>Condutor mínimo: 1,5 mm² para iluminação</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="install-item" id="inst5">
+        <div class="install-header" onclick="toggleInstall('inst5')">
+          <h4>🚿 Banheiros e Áreas Molhadas</h4><span class="install-chevron">▼</span>
+        </div>
+        <div class="install-body">
+          <h5>Zonas de proteção:</h5>
+          <ul>
+            <li><strong>Zona 0:</strong> dentro do box — somente SELV 12 V</li>
+            <li><strong>Zona 1:</strong> até 0,60 m acima do box — mín. IPX4</li>
+            <li><strong>Zona 2:</strong> até 2,40 m altura e 0,60 m lateral — mín. IPX4</li>
+          </ul>
+          <h5>Obrigatório:</h5>
+          <ul>
+            <li>DR ≤ 30 mA</li>
+            <li>Ligação equipotencial em tubulações metálicas</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- ========== CURIOSIDADES ========== -->
+    <div id="curiosidades" class="screen">
+      <div class="screen-title"><div class="dot"></div>Curiosidades Elétricas</div>
+
+      <div class="calc-card">
+        <h3>⚡ Você sabia?</h3>
+        <div style="display:flex;flex-direction:column;gap:0.9rem;">
+          <div style="background:rgba(33,150,243,0.1);border-left:3px solid #2196f3;border-radius:8px;padding:0.9rem 1rem;">
+            <strong style="color:#ffeb3b;">🔦 A velocidade da eletricidade</strong>
+            <p style="font-size:0.87rem;color:rgba(255,255,255,0.82);margin-top:0.4rem;line-height:1.6;">
+              Os elétrons numa fiação doméstica se movem devagar — cerca de <strong>1 mm/s</strong>. O que viaja à velocidade da luz é o <em>campo elétrico</em>, não os elétrons em si.
+            </p>
+          </div>
+          <div style="background:rgba(33,150,243,0.1);border-left:3px solid #2196f3;border-radius:8px;padding:0.9rem 1rem;">
+            <strong style="color:#ffeb3b;">⚡ Por que 60 Hz no Brasil?</strong>
+            <p style="font-size:0.87rem;color:rgba(255,255,255,0.82);margin-top:0.4rem;line-height:1.6;">
+              A frequência de <strong>60 Hz</strong> foi adotada por influência norte-americana no início da eletrificação. A Europa usa 50 Hz.
+            </p>
+          </div>
+          <div style="background:rgba(33,150,243,0.1);border-left:3px solid #2196f3;border-radius:8px;padding:0.9rem 1rem;">
+            <strong style="color:#ffeb3b;">🌩️ Um raio tem quantos volts?</strong>
+            <p style="font-size:0.87rem;color:rgba(255,255,255,0.82);margin-top:0.4rem;line-height:1.6;">
+              Um raio pode atingir até <strong>1 bilhão de volts</strong> e liberar energia em apenas 1–2 milissegundos.
+            </p>
+          </div>
+          <div style="background:rgba(33,150,243,0.1);border-left:3px solid #2196f3;border-radius:8px;padding:0.9rem 1rem;">
+            <strong style="color:#ffeb3b;">🐟 Enguia elétrica: até 860 V!</strong>
+            <p style="font-size:0.87rem;color:rgba(255,255,255,0.82);margin-top:0.4rem;line-height:1.6;">
+              A <em>Electrophorus electricus</em> gera descargas de até <strong>860 volts</strong> usando órgãos especializados com milhares de eletrócitos.
+            </p>
+          </div>
+          <div style="background:rgba(33,150,243,0.1);border-left:3px solid #2196f3;border-radius:8px;padding:0.9rem 1rem;">
+            <strong style="color:#ffeb3b;">🧲 CA vs CC — a Guerra das Correntes</strong>
+            <p style="font-size:0.87rem;color:rgba(255,255,255,0.82);margin-top:0.4rem;line-height:1.6;">
+              No final do século XIX, <strong>Edison</strong> (CC) e <strong>Tesla/Westinghouse</strong> (CA) disputaram o padrão mundial. A CA venceu.
+            </p>
+          </div>
+          <div style="background:rgba(33,150,243,0.1);border-left:3px solid #2196f3;border-radius:8px;padding:0.9rem 1rem;">
+            <strong style="color:#ffeb3b;">🏠 Quanto custa 1 kWh no Brasil?</strong>
+            <p style="font-size:0.87rem;color:rgba(255,255,255,0.82);margin-top:0.4rem;line-height:1.6;">
+              Tarifa residencial gira em torno de <strong>R$ 0,75 a R$ 1,00/kWh</strong>. Um chuveiro de 6.500 W ligado 15 min/dia gasta ~49 kWh/mês.
+            </p>
+          </div>
+          <div style="background:rgba(33,150,243,0.1);border-left:3px solid #2196f3;border-radius:8px;padding:0.9rem 1rem;">
+            <strong style="color:#ffeb3b;">🔋 Por que pilhas AA têm 1,5 V?</strong>
+            <p style="font-size:0.87rem;color:rgba(255,255,255,0.82);margin-top:0.4rem;line-height:1.6;">
+              O valor é uma constante eletroquímica da reação entre zinco e dióxido de manganês.
+            </p>
+          </div>
+          <div style="background:rgba(33,150,243,0.1);border-left:3px solid #2196f3;border-radius:8px;padding:0.9rem 1rem;">
+            <strong style="color:#ffeb3b;">🌊 Hidrelétrica: como a água vira luz</strong>
+            <p style="font-size:0.87rem;color:rgba(255,255,255,0.82);margin-top:0.4rem;line-height:1.6;">
+              Cerca de <strong>63% da eletricidade</strong> gerada no Brasil vem de hidrelétricas. Itaipu sozinha abastece ~10% do país.
+            </p>
+          </div>
+        </div>
+      </div>
+
       <div class="calc-card">
         <h3>📖 Glossário Rápido</h3>
         <div class="table-responsive">
@@ -523,47 +752,41 @@
             <tbody>
               <tr><td><strong>Volt (V)</strong></td><td>Pressão que "empurra" os elétrons pelo fio</td></tr>
               <tr><td><strong>Ampere (A)</strong></td><td>Quantidade de elétrons passando por segundo</td></tr>
-              <tr><td><strong>Watt (W)</strong></td><td>Potência = Volt × Ampere (trabalho por segundo)</td></tr>
-              <tr><td><strong>kWh</strong></td><td>1.000 W consumidos por 1 hora (unidade da conta de luz)</td></tr>
-              <tr><td><strong>Ohm (Ω)</strong></td><td>Resistência que o fio oferece à passagem da corrente</td></tr>
-              <tr><td><strong>Hertz (Hz)</strong></td><td>Quantas vezes a corrente inverte de sentido por segundo</td></tr>
-              <tr><td><strong>Disjuntor</strong></td><td>Interruptor automático que corta a energia em sobrecarga</td></tr>
-              <tr><td><strong>DR (diferencial-residual)</strong></td><td>Detecta fuga de corrente e protege contra choques</td></tr>
-              <tr><td><strong>Aterramento</strong></td><td>Caminho seguro para correntes de fuga irem para o solo</td></tr>
-              <tr><td><strong>Fator de Potência</strong></td><td>Eficiência do uso da energia (1 = perfeito, <0,92 = ruim)</td></tr>
-              <tr><td><strong>Fase / Neutro / Terra</strong></td><td>Fase leva a energia, Neutro retorna, Terra protege</td></tr>
-              <tr><td><strong>Condutor</strong></td><td>Fio ou cabo que transporta a corrente elétrica</td></tr>
+              <tr><td><strong>Watt (W)</strong></td><td>Potência = Volt × Ampere</td></tr>
+              <tr><td><strong>kWh</strong></td><td>1.000 W consumidos por 1 hora</td></tr>
+              <tr><td><strong>Ohm (Ω)</strong></td><td>Resistência que o fio oferece</td></tr>
+              <tr><td><strong>Hertz (Hz)</strong></td><td>Vezes que a corrente inverte por segundo</td></tr>
+              <tr><td><strong>Disjuntor</strong></td><td>Corta energia em sobrecarga</td></tr>
+              <tr><td><strong>DR</strong></td><td>Detecta fuga de corrente — protege contra choques</td></tr>
+              <tr><td><strong>Aterramento</strong></td><td>Caminho seguro para correntes de fuga</td></tr>
+              <tr><td><strong>Fator de Potência</strong></td><td>Eficiência do uso da energia (1 = perfeito)</td></tr>
             </tbody>
           </table>
         </div>
       </div>
 
-      <!-- Perigos da eletricidade -->
       <div class="calc-card">
         <h3>⚠️ O Perigo da Corrente — Não da Tensão</h3>
         <p style="font-size:0.87rem;color:rgba(255,255,255,0.82);line-height:1.7;margin-bottom:0.8rem;">
-          Muita gente pensa que "voltagem alta = mais perigoso", mas o que mata é a <strong>corrente (Ampere)</strong>
-          que passa pelo corpo. Veja o efeito estimado no ser humano:
+          O que mata é a <strong>corrente (Ampere)</strong> que passa pelo corpo, não a tensão.
         </p>
         <div class="table-responsive">
           <table>
-            <thead><tr><th>Corrente</th><th>Efeito no corpo humano</th></tr></thead>
+            <thead><tr><th>Corrente</th><th>Efeito</th></tr></thead>
             <tbody>
-              <tr><td>1 mA</td><td>Formigamento leve, mal percebido</td></tr>
-              <tr><td>5 mA</td><td>Choque perceptível, desconfortável</td></tr>
-              <tr><td>10–20 mA</td><td>Contração muscular — pode travar a mão no fio!</td></tr>
+              <tr><td>1 mA</td><td>Formigamento leve</td></tr>
+              <tr><td>5 mA</td><td>Choque perceptível</td></tr>
+              <tr><td>10–20 mA</td><td>Contração — pode travar a mão no fio!</td></tr>
               <tr><td>50–100 mA</td><td>Fibrilação ventricular — risco de morte</td></tr>
               <tr><td>100–200 mA</td><td>Morte muito provável</td></tr>
-              <tr><td>> 200 mA</td><td>Queimaduras graves (paradoxalmente pode não fibrilar)</td></tr>
+              <tr><td>&gt; 200 mA</td><td>Queimaduras graves</td></tr>
             </tbody>
           </table>
         </div>
         <p style="font-size:0.82rem;color:var(--text-muted);margin-top:0.7rem;">
-          ⚡ O DR de 30 mA é obrigatório em banheiros exatamente por isso: ele desliga antes de a corrente
-          atingir níveis letais.
+          ⚡ O DR de 30 mA desliga antes da corrente atingir níveis letais.
         </p>
       </div>
-
     </div>
 
     <!-- ========== ORÇAMENTOS ========== -->
@@ -573,16 +796,16 @@
       <div class="calc-card">
         <h3>💼 Dados do Cliente</h3>
         <div class="form-group"><label>Nome do Cliente:</label><input type="text" id="nomeCliente" placeholder="Ex: João Silva"></div>
-        <div class="form-group"><label>Telefone:</label><input type="text" id="telefoneCliente" placeholder="Ex: (11) 99999-9999"></div>
-        <div class="form-group"><label>Endereço:</label><input type="text" id="enderecoCliente" placeholder="Ex: Rua das Flores, 123"></div>
+        <div class="form-group"><label>Telefone:</label><input type="text" id="telefoneCliente" placeholder="(11) 99999-9999"></div>
+        <div class="form-group"><label>Endereço:</label><input type="text" id="enderecoCliente" placeholder="Rua das Flores, 123"></div>
       </div>
 
       <div class="calc-card">
         <h3>🛠️ Adicionar Item</h3>
-        <div class="form-group"><label>Descrição:</label><input type="text" id="itemDescricao" placeholder="Ex: Instalação de tomada 220V"></div>
-        <div class="form-group"><label>Quantidade:</label><input type="number" id="itemQuantidade" placeholder="Ex: 5" value="1"></div>
-        <div class="form-group"><label>Valor Unitário (R$):</label><input type="number" id="itemValor" placeholder="Ex: 150.00" step="0.01"></div>
-        <button class="btn" onclick="adicionarItem()">➕ Adicionar Item</button>
+        <div class="form-group"><label>Descrição:</label><input type="text" id="itemDescricao" placeholder="Instalação de tomada 220V"></div>
+        <div class="form-group"><label>Quantidade:</label><input type="number" id="itemQuantidade" value="1"></div>
+        <div class="form-group"><label>Valor Unitário (R$):</label><input type="number" id="itemValor" step="0.01"></div>
+        <button class="btn" type="button" onclick="adicionarItem()">➕ Adicionar Item</button>
       </div>
 
       <div class="calc-card">
@@ -590,9 +813,9 @@
         <div id="listaItens"><p style="color:var(--text-muted);">Nenhum item adicionado</p></div>
         <div class="total-box" id="totalOrcamento">Total: R$ 0,00</div>
         <div style="display:flex;gap:.5rem;flex-wrap:wrap;margin-top:.8rem;">
-          <button class="btn btn-yellow" onclick="gerarPDFOrcamento()">📄 Gerar PDF</button>
-          <button class="btn-whatsapp" onclick="enviarWhatsApp()">📱 Enviar por WhatsApp</button>
-          <button class="btn btn-green" onclick="salvarOrcamentoHistorico()">💾 Salvar no Histórico</button>
+          <button class="btn btn-yellow" type="button" onclick="gerarPDFOrcamento()">📄 Gerar PDF</button>
+          <button class="btn-whatsapp" type="button" onclick="enviarWhatsApp()">📱 Enviar por WhatsApp</button>
+          <button class="btn btn-green" type="button" onclick="salvarOrcamentoHistorico()">💾 Salvar no Histórico</button>
         </div>
       </div>
     </div>
@@ -623,7 +846,7 @@
           <h4>⚡ ABNT NBR 5419 — SPDA (Para-raios)</h4><span class="install-chevron">▼</span>
         </div>
         <div class="install-body">
-          <p>Norma para Sistemas de Proteção contra Descargas Atmosféricas (para-raios).</p>
+          <p>Norma para Sistemas de Proteção contra Descargas Atmosféricas.</p>
           <h5>Níveis de proteção (NP):</h5>
           <ul>
             <li>NP I — Alta prioridade (hospitais, escolas)</li>
@@ -639,7 +862,6 @@
           <h4>🔌 ABNT NBR 14136 — Tomadas</h4><span class="install-chevron">▼</span>
         </div>
         <div class="install-body">
-          <p>Define o padrão brasileiro de tomadas elétricas.</p>
           <ul>
             <li>Tomada 10 A — pinos de 4 mm (aparelhos domésticos)</li>
             <li>Tomada 20 A — pinos de 4,8 mm (equipamentos pesados)</li>
@@ -654,547 +876,14 @@
           <h4>🏭 NR-10 — Segurança em Eletricidade</h4><span class="install-chevron">▼</span>
         </div>
         <div class="install-body">
-          <p>Norma Regulamentadora do MTE para segurança em instalações e serviços elétricos.</p>
           <h5>Requisitos principais:</h5>
           <ul>
             <li>Treinamento obrigatório para todo trabalhador com risco elétrico</li>
             <li>NR-10 Básico: 40 horas</li>
             <li>NR-10 SEP: 40 horas adicionais</li>
             <li>Uso obrigatório de EPI e EPC</li>
-            <li>Prontuário de instalações elétricas atualizado</li>
           </ul>
         </div>
-      </div>
-    </div>
-
-    <!-- ========== CALC: DR/DPS ========== -->
-    <div id="calcDrDps" class="screen">
-      <div class="screen-title"><div class="dot"></div>DR/DPS — Dimensionamento</div>
-      <div class="calc-card">
-        <h3>🔐 Dimensionamento de DR e DPS</h3>
-        <div class="form-group"><label>Corrente do circuito (A):</label><input type="number" id="correnteDR" placeholder="Ex: 25"></div>
-        <div class="form-group"><label>Tipo de DR:</label>
-          <select id="tipoDR">
-            <option value="residual">DR Residencial (30 mA)</option>
-            <option value="industrial">DR Industrial (100 mA)</option>
-            <option value="10ma">DR Alta Sensibilidade (10 mA)</option>
-          </select>
-        </div>
-        <div class="form-group"><label>Tensão do sistema (V):</label>
-          <select id="tensaoDR">
-            <option value="127">127 V (monofásico)</option>
-            <option value="220">220 V (monofásico)</option>
-            <option value="220t">220/380 V (trifásico)</option>
-          </select>
-        </div>
-        <div class="form-group"><label>Nível de sobretensão (kV):</label>
-          <select id="nivelDPS">
-            <option value="6">Categoria IV — 6 kV (entrada geral)</option>
-            <option value="4">Categoria III — 4 kV (quadro)</option>
-            <option value="2.5">Categoria II — 2,5 kV (tomada)</option>
-            <option value="1.5">Categoria I — 1,5 kV (equipamentos)</option>
-          </select>
-        </div>
-        <button class="btn" onclick="calcularDrDps()">⚡ Calcular</button>
-        <button class="btn btn-yellow" onclick="gerarPDFCalc('DR/DPS')">📄 PDF</button>
-        <div id="resultDrDps"></div>
-      </div>
-    </div>
-
-    <!-- ========== CALC: ELETRODUTO ========== -->
-    <div id="calcEletroduto" class="screen">
-      <div class="screen-title"><div class="dot"></div>Eletroduto — Quantos condutores cabem</div>
-      <div class="calc-card">
-        <h3>🪣 Cálculo de Eletroduto</h3>
-        <p style="font-size:.82rem;color:var(--text-muted);margin-bottom:1rem;">
-          NBR 5410 — Taxa de ocupação máx. 53% (1 cabo) / 31% (2 cabos) / 40% (3+ cabos)
-        </p>
-        <div class="form-group"><label>Diâmetro do eletroduto (mm):</label>
-          <select id="diaEletroduto">
-            <option value="16">Ø 16 mm (1/2")</option>
-            <option value="20">Ø 20 mm (3/4")</option>
-            <option value="25">Ø 25 mm (1")</option>
-            <option value="32">Ø 32 mm (1¼")</option>
-            <option value="40">Ø 40 mm (1½")</option>
-            <option value="50">Ø 50 mm (2")</option>
-            <option value="63">Ø 63 mm (2½")</option>
-            <option value="75">Ø 75 mm (3")</option>
-          </select>
-        </div>
-        <div class="form-group"><label>Seção do condutor (mm²):</label>
-          <select id="secaoEletroduto">
-            <option value="1.5">1,5 mm² — diam. ext. ≈ 5,3 mm</option>
-            <option value="2.5">2,5 mm² — diam. ext. ≈ 5,8 mm</option>
-            <option value="4">4 mm² — diam. ext. ≈ 6,5 mm</option>
-            <option value="6">6 mm² — diam. ext. ≈ 7,4 mm</option>
-            <option value="10">10 mm² — diam. ext. ≈ 8,9 mm</option>
-            <option value="16">16 mm² — diam. ext. ≈ 10,2 mm</option>
-            <option value="25">25 mm² — diam. ext. ≈ 13,1 mm</option>
-            <option value="35">35 mm² — diam. ext. ≈ 15,0 mm</option>
-            <option value="50">50 mm² — diam. ext. ≈ 17,5 mm</option>
-          </select>
-        </div>
-        <button class="btn" onclick="calcularEletroduto()">⚡ Calcular</button>
-        <button class="btn btn-yellow" onclick="gerarPDFCalc('Eletroduto')">📄 PDF</button>
-        <div id="resultEletroduto"></div>
-      </div>
-    </div>
-
-    <!-- ========== CALC: QUEDA TRIFÁSICO ========== -->
-    <div id="calcQuedaTri" class="screen">
-      <div class="screen-title"><div class="dot"></div>Queda de Tensão — Trifásico</div>
-      <div class="calc-card">
-        <h3>📉 Queda de Tensão Trifásico</h3>
-        <div class="form-group"><label>Potência total (kW):</label><input type="number" id="potQuedaTri" placeholder="Ex: 30"></div>
-        <div class="form-group"><label>Tensão de linha (V):</label><input type="number" id="tensaoQuedaTri" placeholder="Ex: 380" value="380"></div>
-        <div class="form-group"><label>Fator de potência (cos φ):</label><input type="number" id="fpQuedaTri" placeholder="0.92" value="0.92" step="0.01"></div>
-        <div class="form-group"><label>Comprimento do cabo (m):</label><input type="number" id="compQuedaTri" placeholder="Ex: 100"></div>
-        <div class="form-group"><label>Seção do condutor (mm²):</label>
-          <select id="secaoQuedaTri">
-            <option value="2.5">2,5 mm²</option><option value="4">4 mm²</option>
-            <option value="6">6 mm²</option><option value="10">10 mm²</option>
-            <option value="16">16 mm²</option><option value="25">25 mm²</option>
-            <option value="35">35 mm²</option><option value="50">50 mm²</option>
-            <option value="70">70 mm²</option><option value="95">95 mm²</option>
-            <option value="120">120 mm²</option>
-          </select>
-        </div>
-        <button class="btn" onclick="calcularQuedaTrifasico()">⚡ Calcular</button>
-        <button class="btn btn-yellow" onclick="gerarPDFCalc('Queda Trifásico')">📄 PDF</button>
-        <div id="resultQuedaTri"></div>
-      </div>
-    </div>
-
-    <!-- ========== CALC: BITOLA MOTOR ========== -->
-    <div id="calcMotor" class="screen">
-      <div class="screen-title"><div class="dot"></div>Bitola para Motor</div>
-      <div class="calc-card">
-        <h3>⚙️ Dimensionamento para Motor Elétrico</h3>
-        <div class="form-group"><label>Potência do motor (cv/HP):</label><input type="number" id="potMotor" placeholder="Ex: 10"></div>
-        <div class="form-group"><label>Tensão (V):</label>
-          <select id="tensaoMotor">
-            <option value="220">220 V Trifásico</option>
-            <option value="380">380 V Trifásico</option>
-            <option value="440">440 V Trifásico</option>
-            <option value="220m">220 V Monofásico</option>
-          </select>
-        </div>
-        <div class="form-group"><label>Tipo de partida:</label>
-          <select id="tipoPartidaMotor">
-            <option value="direta">Partida Direta</option>
-            <option value="estrela-triangulo">Estrela-Triângulo (Y-Δ)</option>
-            <option value="soft">Soft-Starter / Inversor</option>
-          </select>
-        </div>
-        <div class="form-group"><label>Fator de serviço / utilização (%):</label><input type="number" id="fsMotor" placeholder="100" value="100"></div>
-        <button class="btn" onclick="calcularBitolaMotor()">⚡ Calcular</button>
-        <button class="btn btn-yellow" onclick="gerarPDFCalc('Bitola Motor')">📄 PDF</button>
-        <div id="resultMotor"></div>
-      </div>
-    </div>
-
-    <!-- ========== CALC: CUSTO ENERGIA MENSAL ========== -->
-    <div id="calcEnergiaMes" class="screen">
-      <div class="screen-title"><div class="dot"></div>Custo de Energia Mensal</div>
-      <div class="calc-card">
-        <h3>💡 Estimativa de Custo de Energia Mensal</h3>
-        <div class="form-group"><label>Tarifa de energia (R$/kWh):</label><input type="number" id="tarifaEnergia" placeholder="Ex: 0.85" value="0.85" step="0.01"></div>
-        <div class="form-group"><label>ICMS incluso na tarifa?</label>
-          <select id="icmsEnergia">
-            <option value="0">Sim, já incluso</option>
-            <option value="0.25">Não — adicionar 25% ICMS</option>
-            <option value="0.18">Não — adicionar 18% ICMS</option>
-          </select>
-        </div>
-        <div id="energiaItens">
-          <div class="consumo-item-row" id="energiaRow0">
-            <div class="form-group"><label>Equipamento</label><input type="text" placeholder="Ex: Ar-condicionado"></div>
-            <div class="form-group"><label>Potência (W)</label><input type="number" placeholder="Ex: 1200"></div>
-            <div class="form-group"><label>Horas/dia</label><input type="number" placeholder="Ex: 8" step="0.5"></div>
-            <div class="form-group"><label>Dias/mês</label><input type="number" placeholder="30" value="30"></div>
-          </div>
-        </div>
-        <button class="btn" onclick="addEnergiaRow()">➕ Adicionar</button>
-        <button class="btn btn-yellow" onclick="calcularEnergiaMensal()">💰 Calcular Custo</button>
-        <button class="btn btn-yellow" onclick="gerarPDFCalc('Custo Energia')">📄 PDF</button>
-            <div id="resultEnergiaMes"></div>
-  </div>
-
-  <!-- ===== TABELA DE REFERÊNCIA — POTÊNCIA DOS APARELHOS ===== -->
-  <div class="calc-card" style="margin-top:1.2rem;">
-    <h3>📋 Tabela de Referência — Potência dos Aparelhos</h3>
-    <p style="font-size:0.82rem;color:var(--text-muted);margin-bottom:1rem;">
-      Use os valores abaixo como referência para preencher a calculadora acima. 
-      Atenção às observações (⚠️) de alguns aparelhos.
-    </p>
-
-    <div class="table-responsive">
-      <table>
-        <thead>
-          <tr>
-            <th>Aparelho</th>
-            <th>Potência Típica (W)</th>
-            <th>Observação</th>
-          </tr>
-        </thead>
-        <tbody>
-
-          <!-- CLIMATIZAÇÃO -->
-          <tr>
-            <td colspan="3" style="background:rgba(33,150,243,0.12);font-weight:700;color:var(--yellow-soft);font-size:0.8rem;letter-spacing:0.5px;">
-              🌡️ CLIMATIZAÇÃO
-            </td>
-          </tr>
-          <tr>
-            <td>Ar-condicionado 7.000 BTU</td>
-            <td>700 – 900 W</td>
-            <td></td>
-          </tr>
-          <tr>
-            <td>Ar-condicionado 9.000 BTU</td>
-            <td>900 – 1.100 W</td>
-            <td></td>
-          </tr>
-          <tr>
-            <td>Ar-condicionado 12.000 BTU</td>
-            <td>1.100 – 1.400 W</td>
-            <td></td>
-          </tr>
-          <tr>
-            <td>Ar-condicionado 18.000 BTU</td>
-            <td>1.600 – 2.000 W</td>
-            <td></td>
-          </tr>
-          <tr>
-            <td>Ventilador de teto</td>
-            <td>60 – 90 W</td>
-            <td></td>
-          </tr>
-          <tr>
-            <td>Ventilador de coluna</td>
-            <td>40 – 70 W</td>
-            <td></td>
-          </tr>
-
-          <!-- COZINHA / ALIMENTAÇÃO -->
-          <tr>
-            <td colspan="3" style="background:rgba(33,150,243,0.12);font-weight:700;color:var(--yellow-soft);font-size:0.8rem;letter-spacing:0.5px;">
-              🍳 COZINHA / ALIMENTAÇÃO
-            </td>
-          </tr>
-          <tr>
-            <td>Geladeira / Refrigerador</td>
-            <td>100 – 350 W</td>
-            <td>
-              <span style="color:#ffca28;font-size:0.82rem;">
-                ⚠️ O compressor não funciona 100% do tempo. Para uso normal, 
-                considere <strong>50% das horas</strong> (ex: se fica ligada 24h, 
-                use 12h/dia na calculadora). Em uso intenso (porta aberta com frequência), 
-                use 16–18h/dia.
-              </span>
-            </td>
-          </tr>
-          <tr>
-            <td>Freezer vertical/horizontal</td>
-            <td>150 – 400 W</td>
-            <td>
-              <span style="color:#ffca28;font-size:0.82rem;">
-                ⚠️ Assim como a geladeira, o compressor cicla. 
-                Considere <strong>50% das horas</strong> para uso doméstico normal. 
-                Freezers mais velhos ou sem inversores podem chegar a 60–70%.
-              </span>
-            </td>
-          </tr>
-          <tr>
-            <td>Micro-ondas</td>
-            <td>1.000 – 1.500 W</td>
-            <td>
-              <span style="color:var(--text-muted);font-size:0.82rem;">
-                💡 Uso médio: 15–30 min/dia. Use 0,25–0,5h/dia na calculadora.
-              </span>
-            </td>
-          </tr>
-          <tr>
-            <td>Forno elétrico / Air fryer grande</td>
-            <td>1.500 – 2.500 W</td>
-            <td>
-              <span style="color:var(--text-muted);font-size:0.82rem;">
-                💡 Uso intermitente. Estime o tempo real de uso.
-              </span>
-            </td>
-          </tr>
-          <tr>
-            <td>Cafeteira elétrica</td>
-            <td>800 – 1.200 W</td>
-            <td>
-              <span style="color:var(--text-muted);font-size:0.82rem;">
-                💡 Tempo de uso real: ~5–10 min por preparo.
-              </span>
-            </td>
-          </tr>
-          <tr>
-            <td>Liquidificador</td>
-            <td>300 – 700 W</td>
-            <td></td>
-          </tr>
-          <tr>
-            <td>Batedeira</td>
-            <td>200 – 500 W</td>
-            <td></td>
-          </tr>
-          <tr>
-            <td>Coifa / Exaustor</td>
-            <td>100 – 300 W</td>
-            <td></td>
-          </tr>
-          <tr>
-            <td>Lava-louças</td>
-            <td>1.200 – 2.000 W</td>
-            <td>
-              <span style="color:var(--text-muted);font-size:0.82rem;">
-                💡 Ciclo de 1–2h/uso. Estime quantos ciclos por mês.
-              </span>
-            </td>
-          </tr>
-
-          <!-- BANHO / ÁGUA -->
-          <tr>
-            <td colspan="3" style="background:rgba(33,150,243,0.12);font-weight:700;color:var(--yellow-soft);font-size:0.8rem;letter-spacing:0.5px;">
-              🚿 BANHO / ÁGUA
-            </td>
-          </tr>
-          <tr>
-            <td>Chuveiro elétrico (baixa)</td>
-            <td>4.000 – 5.000 W</td>
-            <td>
-              <span style="color:#f44336;font-size:0.82rem;">
-                🔴 Maior consumidor residencial. Circuito exclusivo obrigatório.
-              </span>
-            </td>
-          </tr>
-          <tr>
-            <td>Chuveiro elétrico (média/alta)</td>
-            <td>5.500 – 7.500 W</td>
-            <td>
-              <span style="color:#f44336;font-size:0.82rem;">
-                🔴 Circuito exclusivo 6 mm². Tempo médio de banho: 8–15 min/dia.
-              </span>
-            </td>
-          </tr>
-          <tr>
-            <td>Aquecedor de passagem a gás</td>
-            <td>~ 10 W (bomba)</td>
-            <td>
-              <span style="color:#4caf50;font-size:0.82rem;">
-                ✅ Praticamente sem consumo elétrico.
-              </span>
-            </td>
-          </tr>
-          <tr>
-            <td>Bomba d'água (residencial)</td>
-            <td>500 – 1.500 W</td>
-            <td>
-              <span style="color:#ffca28;font-size:0.82rem;">
-                ⚠️ Funciona de forma intermitente. Estimativa típica: 
-                1–2h/dia para uso doméstico normal.
-              </span>
-            </td>
-          </tr>
-
-          <!-- LAVANDERIA -->
-          <tr>
-            <td colspan="3" style="background:rgba(33,150,243,0.12);font-weight:700;color:var(--yellow-soft);font-size:0.8rem;letter-spacing:0.5px;">
-              👕 LAVANDERIA
-            </td>
-          </tr>
-          <tr>
-            <td>Máquina de lavar (ciclo de lavagem)</td>
-            <td>500 – 1.000 W</td>
-            <td>
-              <span style="color:var(--text-muted);font-size:0.82rem;">
-                💡 Ciclo completo: ~1h. Estime pelo nº de ciclos/mês.
-              </span>
-            </td>
-          </tr>
-          <tr>
-            <td>Secadora de roupas elétrica</td>
-            <td>2.000 – 5.000 W</td>
-            <td>
-              <span style="color:#f44336;font-size:0.82rem;">
-                🔴 Alto consumo. Prefira secagem ao sol sempre que possível.
-              </span>
-            </td>
-          </tr>
-          <tr>
-            <td>Ferro de passar (convencional)</td>
-            <td>1.000 – 2.000 W</td>
-            <td>
-              <span style="color:#ffca28;font-size:0.82rem;">
-                ⚠️ O termostato desliga e religar ciclicamente. 
-                Considere <strong>50–70% do tempo</strong> com potência plena.
-              </span>
-            </td>
-          </tr>
-
-          <!-- ENTRETENIMENTO / INFORMÁTICA -->
-          <tr>
-            <td colspan="3" style="background:rgba(33,150,243,0.12);font-weight:700;color:var(--yellow-soft);font-size:0.8rem;letter-spacing:0.5px;">
-              📺 ENTRETENIMENTO / INFORMÁTICA
-            </td>
-          </tr>
-          <tr>
-            <td>TV LED 32"</td>
-            <td>40 – 60 W</td>
-            <td></td>
-          </tr>
-          <tr>
-            <td>TV LED 50" – 55"</td>
-            <td>80 – 130 W</td>
-            <td></td>
-          </tr>
-          <tr>
-            <td>TV LED 65" ou maior</td>
-            <td>120 – 200 W</td>
-            <td></td>
-          </tr>
-          <tr>
-            <td>Computador desktop (completo)</td>
-            <td>150 – 400 W</td>
-            <td>
-              <span style="color:var(--text-muted);font-size:0.82rem;">
-                💡 PCs gamer com placa de vídeo dedicada podem ultrapassar 400 W.
-              </span>
-            </td>
-          </tr>
-          <tr>
-            <td>Notebook / Laptop</td>
-            <td>45 – 90 W</td>
-            <td></td>
-          </tr>
-          <tr>
-            <td>Monitor LED 24"</td>
-            <td>20 – 40 W</td>
-            <td></td>
-          </tr>
-          <tr>
-            <td>Roteador Wi-Fi</td>
-            <td>5 – 15 W</td>
-            <td>
-              <span style="color:var(--text-muted);font-size:0.82rem;">
-                💡 Fica ligado 24h/dia — use 24h e 30 dias na calculadora.
-              </span>
-            </td>
-          </tr>
-          <tr>
-            <td>Videogame (PS5 / Xbox Series X)</td>
-            <td>100 – 200 W</td>
-            <td></td>
-          </tr>
-
-          <!-- ILUMINAÇÃO -->
-          <tr>
-            <td colspan="3" style="background:rgba(33,150,243,0.12);font-weight:700;color:var(--yellow-soft);font-size:0.8rem;letter-spacing:0.5px;">
-              💡 ILUMINAÇÃO
-            </td>
-          </tr>
-          <tr>
-            <td>Lâmpada LED bulbo 9W</td>
-            <td>9 W</td>
-            <td>
-              <span style="color:#4caf50;font-size:0.82rem;">
-                ✅ Equivalente à incandescente 60W. Multiplique pelo nº de lâmpadas.
-              </span>
-            </td>
-          </tr>
-          <tr>
-            <td>Lâmpada LED bulbo 12W</td>
-            <td>12 W</td>
-            <td></td>
-          </tr>
-          <tr>
-            <td>Luminária LED tubular (T8) 18W</td>
-            <td>18 W</td>
-            <td></td>
-          </tr>
-          <tr>
-            <td>Spot/Downlight LED 7W</td>
-            <td>7 W</td>
-            <td></td>
-          </tr>
-
-          <!-- OUTROS -->
-          <tr>
-            <td colspan="3" style="background:rgba(33,150,243,0.12);font-weight:700;color:var(--yellow-soft);font-size:0.8rem;letter-spacing:0.5px;">
-              🔧 OUTROS EQUIPAMENTOS
-            </td>
-          </tr>
-          <tr>
-            <td>Aspirador de pó</td>
-            <td>1.000 – 1.500 W</td>
-            <td>
-              <span style="color:var(--text-muted);font-size:0.82rem;">
-                💡 Uso breve: ~15–30 min/dia nos dias de uso.
-              </span>
-            </td>
-          </tr>
-          <tr>
-            <td>Secador de cabelo</td>
-            <td>1.500 – 2.200 W</td>
-            <td>
-              <span style="color:var(--text-muted);font-size:0.82rem;">
-                💡 Uso: ~5–15 min/dia nos dias de uso.
-              </span>
-            </td>
-          </tr>
-          <tr>
-            <td>Carregador de celular</td>
-            <td>5 – 25 W</td>
-            <td></td>
-          </tr>
-          <tr>
-            <td>Portão eletrônico (motor)</td>
-            <td>200 – 500 W</td>
-            <td>
-              <span style="color:var(--text-muted);font-size:0.82rem;">
-                💡 Acionamento breve (~30 seg/vez). Calcule pela quantidade de acionamentos.
-              </span>
-            </td>
-          </tr>
-          <tr>
-            <td>Motor monofásico ½ CV</td>
-            <td>~370 W</td>
-            <td></td>
-          </tr>
-          <tr>
-            <td>Motor monofásico 1 CV</td>
-            <td>~750 W</td>
-            <td></td>
-          </tr>
-          <tr>
-            <td>Motor monofásico 2 CV</td>
-            <td>~1.500 W</td>
-            <td></td>
-          </tr>
-
-        </tbody>
-      </table>
-    </div>
-
-    <!-- LEGENDA -->
-    <div style="margin-top:1rem;padding:0.9rem 1rem;background:rgba(255,255,255,0.04);border:1px solid rgba(33,150,243,0.2);border-radius:10px;font-size:0.82rem;line-height:1.8;color:var(--text-muted);">
-      <strong style="color:var(--yellow-soft);">📌 Legenda das Observações:</strong><br>
-      <span style="color:#ffca28;">⚠️ Atenção</span> — Aparelho com funcionamento cíclico ou intermitente: 
-      considere apenas o tempo médio de acionamento real, não o tempo total conectado.<br>
-      <span style="color:#f44336;">🔴 Alto consumo</span> — Equipamento com potência elevada. 
-      Impacta significativamente a conta de luz.<br>
-      <span style="color:#4caf50;">✅ Baixo consumo</span> — Equipamento eficiente. 
-      Pequeno impacto na conta de luz.<br>
-      <span>💡 Dica</span> — Sugestão para melhor precisão no cálculo.
-    </div>
-  </div>
-
-</div>
-
       </div>
     </div>
 
@@ -1202,43 +891,35 @@
     <div id="historico" class="screen">
       <div class="screen-title"><div class="dot"></div>Histórico de Orçamentos e Cálculos</div>
       <div style="display:flex;gap:.6rem;margin-bottom:1rem;flex-wrap:wrap;">
-        <button class="btn" onclick="filtrarHistorico('todos')">📂 Todos</button>
-        <button class="btn" onclick="filtrarHistorico('orcamento')">💰 Orçamentos</button>
-        <button class="btn" onclick="filtrarHistorico('calculo')">🧮 Cálculos</button>
-        <button class="btn btn-red" onclick="limparHistorico()">🗑️ Limpar</button>
+        <button class="btn" type="button" onclick="filtrarHistorico('todos')">📂 Todos</button>
+        <button class="btn" type="button" onclick="filtrarHistorico('orcamento')">💰 Orçamentos</button>
+        <button class="btn" type="button" onclick="filtrarHistorico('calculo')">🧮 Cálculos</button>
+        <button class="btn btn-red" type="button" onclick="limparHistorico()">🗑️ Limpar</button>
       </div>
       <div id="listaHistorico"><p style="color:var(--text-muted);">Nenhum registro salvo.</p></div>
     </div>
 
   </div><!-- /container -->
 
-  <!-- PRO GATE MODAL -->
-  <div id="proGateModal" class="pro-gate-overlay" onclick="if(event.target===this) closeProModal()">
-    <div class="pro-gate-modal">
-      <div class="pro-gate-badge">👑 PRO</div>
-      <h3 id="proGateTitle">Recurso disponível no PRO</h3>
-      <p id="proGateSubtitle">Ative o PRO para liberar.</p>
-      <ul class="pro-gate-feats">
-        <li>✅ PDF (cálculos, tabelas e orçamentos)</li>
-        <li>✅ Salvar e acessar Histórico</li>
-        <li>✅ Enviar orçamento por WhatsApp</li>
-        <li>✅ Uso ilimitado (sem limite diário)</li>
-      </ul>
-      <div class="pro-gate-actions">
-        <button class="btn btn-yellow" onclick="window.location.href='login.html'">⚡ Ativar PRO</button>
-        <button class="btn" onclick="closeProModal()">Agora não</button>
-      </div>
+  <footer class="ep-legal-footer">
+    <div class="ep-legal-brand">⚡ ElétricaPro</div>
+    <div class="ep-legal-links">
+      <a href="politica-de-privacidade.html">🔒 Privacidade</a>
+      <a href="termos-de-uso.html">📋 Termos</a>
+      <a href="mailto:eletricaproapp@gmail.com">✉ Suporte</a>
     </div>
-  </div>
+    <div class="ep-legal-copy">© 2026 COFservicos · CNPJ 31.577.846/0001-12 · Iguape/SP</div>
+  </footer>
 
   <!-- jsPDF -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.31/jspdf.plugin.autotable.min.js"></script>
 
   <script>
-    /* ======================== STARS ======================== */
+    /* ========= Stars background ========= */
     (function(){
       const c = document.getElementById('stars-canvas');
+      if(!c) return;
       const ctx = c.getContext('2d');
       let W, H, stars = [];
       function resize(){ W = c.width = window.innerWidth; H = c.height = window.innerHeight; }
@@ -1247,447 +928,640 @@
       function draw(){
         ctx.clearRect(0,0,W,H);
         stars.forEach(s=>{
-          s.a+=s.da;
-          if(s.a<0)s.da=Math.abs(s.da);
-          if(s.a>1)s.da=-Math.abs(s.da);
+          s.a += s.da;
+          if(s.a<0) s.da = Math.abs(s.da);
+          if(s.a>1) s.da = -Math.abs(s.da);
           ctx.beginPath(); ctx.arc(s.x,s.y,s.r,0,Math.PI*2);
-          ctx.fillStyle=`rgba(255,255,255,${s.a})`;
+          ctx.fillStyle = `rgba(255,255,255,${s.a})`;
           ctx.fill();
         });
         requestAnimationFrame(draw);
       }
-      window.addEventListener('resize',init);
+      window.addEventListener('resize', init);
       init(); draw();
     })();
 
-    /* ======================== NAVIGATION ======================== */
+    /* ========= Auth gate ========= */
+    const SESSION_KEY = 'eletricapro_local_session';
+    let isGuest = false;
+
+    function getSession(){ return localStorage.getItem(SESSION_KEY) || null; }
+    function setSession(email){ localStorage.setItem(SESSION_KEY, email); }
+    function clearSession(){ localStorage.removeItem(SESSION_KEY); }
+
+    function showApp(){
+      document.getElementById('lockScreen').style.display = 'none';
+      document.getElementById('mainApp').style.display = 'block';
+      document.getElementById('appHeader').style.display = 'flex';
+      const user = getSession();
+      if(user){
+        const short = user.split('@')[0];
+        document.getElementById('userNameShort').textContent = short;
+      } else if(isGuest){
+        document.getElementById('userNameShort').textContent = 'Visitante';
+      }
+    }
+    function logout(){
+      clearSession();
+      isGuest = false;
+      window.location.href = 'login.html';
+    }
+    function enterGuestMode(){
+      isGuest = true;
+      showApp();
+      document.getElementById('userNameShort').textContent = 'Visitante';
+    }
+
+    /* ========= Navigation ========= */
     let screenStack = [];
-
-    // ======================== PRO / LIMITES (FREE) ========================
-    function getTrial(){
-      try { return JSON.parse(localStorage.getItem('eletricapro_trial') || '{}'); }
-      catch(e){ return {}; }
-    }
-
-    function isProActive(){
-      const t = getTrial();
-      if(!t || t.isPro !== true) return false;
-      // Se houver validade e já expirou, considera não-PRO
-      if(t.proUntil){
-        const until = new Date(t.proUntil);
-        if(!isNaN(until.getTime()) && until.getTime() < Date.now()) return false;
-      }
-      return true;
-    }
-
-    function openProModal(title, subtitle){
-      const m = document.getElementById('proGateModal');
-      if(!m) return alert('Recurso disponível somente no PRO.');
-      document.getElementById('proGateTitle').textContent = title || 'Disponível no PRO';
-      document.getElementById('proGateSubtitle').textContent = subtitle || 'Ative o PRO para liberar este recurso.';
-      m.classList.add('show');
-    }
-    function closeProModal(){
-      const m = document.getElementById('proGateModal');
-      if(m) m.classList.remove('show');
-    }
-
-    function requirePro(featureLabel){
-      if(isProActive()) return true;
-      openProModal('👑 Recurso PRO', `${featureLabel || 'Este recurso'} está disponível somente no PRO.`);
-      return false;
-    }
-
-    function canUseFree(featureKey, featureLabel){
-      if(isProActive()) return true;
-      const today = new Date().toISOString().slice(0,10); // YYYY-MM-DD
-      const storeKey = 'eletricapro_free_usage_' + today;
-      let data = {};
-      try { data = JSON.parse(localStorage.getItem(storeKey) || '{}'); } catch(e) { data = {}; }
-      const n = Number(data[featureKey] || 0);
-      if(n >= 2){
-        openProModal('⛔ Limite diário atingido', `${featureLabel || 'Este item'} no plano grátis: 2 usos/dia. Ative o PRO para uso ilimitado.`);
-        return false;
-      }
-      data[featureKey] = n + 1;
-      localStorage.setItem(storeKey, JSON.stringify(data));
-      return true;
-    }
-
-    function openScreen(id, title) {
-      // Histórico agora é somente PRO
-      if(id === 'historico' && !requirePro('Histórico / Salvar')) return;
-
+    function openScreen(id, title){
       document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
-      document.getElementById(id).classList.add('active');
+      const el = document.getElementById(id);
+      if(!el){ console.warn('tela não encontrada:', id); return; }
+      el.classList.add('active');
       screenStack.push(id);
       document.getElementById('headerBack').style.display = 'block';
       document.getElementById('headerSubtitle').textContent = title;
-      window.scrollTo({top:0,behavior:'smooth'});
+      window.scrollTo({top:0, behavior:'smooth'});
     }
-
-    function goHome() {
+    function goHome(){
       document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
-      document.getElementById('homeScreen').classList.add('active');
+      const home = document.getElementById('homeScreen');
+      if(home) home.classList.add('active');
       screenStack = [];
       document.getElementById('headerBack').style.display = 'none';
-      document.getElementById('headerSubtitle').textContent = 'Calculadoras, Tabelas e Instalações';
-      window.scrollTo({top:0,behavior:'smooth'});
+      document.getElementById('headerSubtitle').textContent = 'Calculadoras, Tabelas e Orçamentos';
+      window.scrollTo({top:0, behavior:'smooth'});
     }
 
-    /* ======================== LIBERADO (sem FREE/PRO gating) ======================== */
-    function checkFreeLimit(){ return true; } // mantido para compatibilidade
+    /* ========= PRO/Paywall STRIPPED ========= */
+    function requirePro(){ return true; }
+    function canUseFree(){ return true; }
 
-    /* ======================== HELPERS ======================== */
+    /* ========= Helpers ========= */
     let lastCalcResults = {};
-    function showResult(divId, html){ document.getElementById(divId).innerHTML=html; }
+    function showResult(divId, html){ document.getElementById(divId).innerHTML = html; }
     function resultBox(title, items){
       return `<div class="result-box"><h4>📊 ${title}</h4>${
         items.map(([l,v])=>`<div class="result-item"><span>${l}</span><strong>${v}</strong></div>`).join('')
       }</div>`;
     }
 
-    /* ======================== CALCULADORAS ======================== */
+    /* ========= Toggles ========= */
+    function toggleInstall(id){
+      const el = document.getElementById(id);
+      if(el) el.classList.toggle('open');
+    }
+
+    /* ========= CALC: Lei de Ohm ========= */
     function calcularLeiOhm(){
-      if(!canUseFree('leiOhm', 'Lei de Ohm')) return;
-      const V=parseFloat(document.getElementById('tensaoOhm').value)||0;
-      const I=parseFloat(document.getElementById('correnteOhm').value)||0;
-      const R=parseFloat(document.getElementById('resistenciaOhm').value)||0;
+      const V = parseFloat(document.getElementById('tensaoOhm').value) || 0;
+      const I = parseFloat(document.getElementById('correnteOhm').value) || 0;
+      const R = parseFloat(document.getElementById('resistenciaOhm').value) || 0;
       let v=V,i=I,r=R;
-      if(V&&I&&!R) r=(V/I).toFixed(3);
-      else if(V&&R&&!I) i=(V/R).toFixed(3);
-      else if(I&&R&&!V) v=(I*R).toFixed(3);
+      if(V&&I&&!R) r = (V/I).toFixed(3);
+      else if(V&&R&&!I) i = (V/R).toFixed(3);
+      else if(I&&R&&!V) v = (I*R).toFixed(3);
       else { alert('Preencha exatamente 2 dos 3 campos!'); return; }
-      lastCalcResults.leiOhm={v,i,r};
+      lastCalcResults.leiOhm = {v,i,r};
       showResult('resultLeiOhm', resultBox('Lei de Ohm',[
-        ['Tensão (V)',`${v} V`],
-        ['Corrente (I)',`${i} A`],
-        ['Resistência (R)',`${r} Ω`],
+        ['Tensão (V)', `${v} V`],
+        ['Corrente (I)', `${i} A`],
+        ['Resistência (R)', `${r} Ω`],
       ]));
       salvarCalculoHistorico('Lei de Ohm', `${v}V · ${i}A · ${r}Ω`);
     }
 
+    /* ========= CALC: Potência ========= */
     function calcularPotencia(){
-      if(!canUseFree('potencia', 'Potência')) return;
-      const V=parseFloat(document.getElementById('tensaoPot').value);
-      const I=parseFloat(document.getElementById('correntePot').value);
-      const fp=parseFloat(document.getElementById('fatorPot').value);
-      const tipo=document.getElementById('tipoCircuito').value;
+      const V = parseFloat(document.getElementById('tensaoPot').value);
+      const I = parseFloat(document.getElementById('correntePot').value);
+      const fp = parseFloat(document.getElementById('fatorPot').value);
+      const tipo = document.getElementById('tipoCircuito').value;
       if(!V||!I||!fp){ alert('Preencha todos os campos!'); return; }
-      let S = tipo==='monofasico' ? V*I : Math.sqrt(3)*V*I;
-      let P = S*fp, Q = Math.sqrt(S*S-P*P);
-      lastCalcResults.potencia={tipo,V,I,fp,P:P.toFixed(2),S:S.toFixed(2),Q:Q.toFixed(2)};
+      const S = tipo === 'monofasico' ? V*I : Math.sqrt(3)*V*I;
+      const P = S*fp;
+      const Q = Math.sqrt(S*S - P*P);
+      lastCalcResults.potencia = {tipo, V, I, fp, P:P.toFixed(2), S:S.toFixed(2), Q:Q.toFixed(2)};
       showResult('resultPotencia', resultBox(`Potência — ${tipo==='monofasico'?'Monofásico':'Trifásico'}`,[
-        ['Potência Ativa (P)',`${P.toFixed(2)} W`],
-        ['Potência Aparente (S)',`${S.toFixed(2)} VA`],
-        ['Potência Reativa (Q)',`${Q.toFixed(2)} VAr`],
-        ['Fator de Potência',fp],
+        ['Potência Ativa (P)', `${P.toFixed(2)} W`],
+        ['Potência Aparente (S)', `${S.toFixed(2)} VA`],
+        ['Potência Reativa (Q)', `${Q.toFixed(2)} VAr`],
+        ['Fator de Potência', fp],
       ]));
       salvarCalculoHistorico('Potência', `${(P/1000).toFixed(2)}kW · fp ${fp}`);
     }
 
+    /* ========= CALC: Queda de Tensão ========= */
     function calcularQuedaTensao(){
-      if(!canUseFree('quedaTensao', 'Queda de Tensão')) return;
-      const I=parseFloat(document.getElementById('correnteQueda').value);
-      const L=parseFloat(document.getElementById('distanciaQueda').value);
-      const s=parseFloat(document.getElementById('secaoQueda').value);
-      const V=parseFloat(document.getElementById('tensaoQueda').value);
+      const I = parseFloat(document.getElementById('correnteQueda').value);
+      const L = parseFloat(document.getElementById('distanciaQueda').value);
+      const s = parseFloat(document.getElementById('secaoQueda').value);
+      const V = parseFloat(document.getElementById('tensaoQueda').value);
       if(!I||!L||!s||!V){ alert('Preencha todos os campos!'); return; }
-      const ro=0.0172, R=(ro*2*L)/s, dV=I*R, pct=(dV/V)*100;
-      const ok=pct<=4;
-      lastCalcResults.quedaTensao={I,L,s,V,dV:dV.toFixed(2),pct:pct.toFixed(2),ok};
+      const ro = 0.0172;
+      const R = (ro * 2 * L) / s;
+      const dV = I * R;
+      const pct = (dV / V) * 100;
+      const ok = pct <= 4;
+      lastCalcResults.quedaTensao = {I, L, s, V, dV:dV.toFixed(2), pct:pct.toFixed(2), ok};
       showResult('resultQuedaTensao', resultBox('Queda de Tensão',[
-        ['Queda de Tensão',`${dV.toFixed(2)} V`],
-        ['Percentual',`${pct.toFixed(2)}%`],
-        ['Status (limite 4%)',ok?'✅ Dentro do limite':'❌ Acima do limite'],
+        ['Queda de Tensão', `${dV.toFixed(2)} V`],
+        ['Percentual', `${pct.toFixed(2)}%`],
+        ['Status (limite 4%)', ok?'✅ Dentro do limite':'❌ Acima do limite'],
       ]));
       salvarCalculoHistorico('Queda de Tensão', `${pct.toFixed(2)}% · ${s}mm²`);
     }
 
+    /* ========= CALC: Dimensionamento ========= */
     function dimensionarCondutor(){
-      if(!canUseFree('dimensionamento', 'Dimensionamento')) return;
-      const P=parseFloat(document.getElementById('potenciaCondutor').value);
-      const V=parseFloat(document.getElementById('tensaoCondutor').value);
-      const L=parseFloat(document.getElementById('distanciaCondutor').value);
-      const tipo=document.getElementById('tipoInstalacao').value;
+      const P = parseFloat(document.getElementById('potenciaCondutor').value);
+      const V = parseFloat(document.getElementById('tensaoCondutor').value);
+      const L = parseFloat(document.getElementById('distanciaCondutor').value);
+      const tipo = document.getElementById('tipoInstalacao').value;
       if(!P||!V||!L){ alert('Preencha todos os campos!'); return; }
-      const I=P/V;
-
-      const cap={
+      const I = P / V;
+      const cap = {
         B1:[{s:1.5,c:15.5},{s:2.5,c:21},{s:4,c:28},{s:6,c:36},{s:10,c:50},{s:16,c:68},{s:25,c:89},{s:35,c:110},{s:50,c:134}],
         B2:[{s:1.5,c:17.5},{s:2.5,c:24},{s:4,c:32},{s:6,c:41},{s:10,c:57},{s:16,c:76},{s:25,c:101},{s:35,c:125},{s:50,c:151}],
         C: [{s:1.5,c:19.5},{s:2.5,c:27},{s:4,c:36},{s:6,c:46},{s:10,c:63},{s:16,c:85},{s:25,c:112},{s:35,c:138},{s:50,c:168}]
       };
-
-      let sec=50;
-      for(let x of cap[tipo]) if(x.c>=I*1.25){ sec=x.s; break; }
-
-      const ro=0.0172, dV=I*(ro*2*L)/sec, pct=(dV/V)*100;
-      if(pct>4){
-        const sMin=(ro*2*L*I)/(V*0.04);
-        [1.5,2.5,4,6,10,16,25,35,50,70,95].forEach(sx=>{ if(sx>=sMin&&sx>sec) sec=sx; });
+      let sec = 50;
+      for(let x of cap[tipo]) if(x.c >= I*1.25){ sec = x.s; break; }
+      const ro = 0.0172;
+      const dV = I * (ro * 2 * L) / sec;
+      const pct = (dV / V) * 100;
+      if(pct > 4){
+        const sMin = (ro * 2 * L * I) / (V * 0.04);
+        [1.5,2.5,4,6,10,16,25,35,50,70,95].forEach(sx=>{ if(sx >= sMin && sx > sec) sec = sx; });
       }
-
-      const disj=[10,16,20,25,32,40,50,63,70].find(d=>d>=I)||63;
-
-      lastCalcResults.condutor={P,V,I:I.toFixed(2),sec,disj,pct:pct.toFixed(2)};
+      const disj = [10,16,20,25,32,40,50,63,70].find(d => d >= I) || 63;
+      lastCalcResults.condutor = {P, V, I:I.toFixed(2), sec, disj, pct:pct.toFixed(2)};
       showResult('resultCondutor', resultBox('Dimensionamento',[
-        ['Corrente calculada',`${I.toFixed(2)} A`],
-        ['Seção recomendada',`${sec} mm²`],
-        ['Disjuntor recomendado',`${disj} A`],
-        ['Queda de tensão',`${pct.toFixed(2)}%`],
+        ['Corrente calculada', `${I.toFixed(2)} A`],
+        ['Seção recomendada', `${sec} mm²`],
+        ['Disjuntor recomendado', `${disj} A`],
+        ['Queda de tensão', `${pct.toFixed(2)}%`],
       ]));
       salvarCalculoHistorico('Dimensionamento', `${sec}mm² · DJ ${disj}A · ${pct.toFixed(2)}%`);
     }
 
-    /* ======================== CONSUMO ======================== */
-    let consumoRowCount = 1;
-    function addConsumoRow(){
-      const container = document.getElementById('consumoItens');
-      const div = document.createElement('div');
-      div.className = 'consumo-item-row'; div.id='consumoRow'+consumoRowCount;
-      div.innerHTML=`
-        <div class="form-group"><label>Aparelho</label><input type="text" placeholder="Ex: TV"></div>
-        <div class="form-group"><label>Potência (W)</label><input type="number" placeholder="Ex: 100"></div>
-        <div class="form-group"><label>Horas/dia</label><input type="number" placeholder="Ex: 5" step="0.5"></div>
-        <div style="padding-bottom:0.9rem;display:flex;align-items:flex-end;">
-          <button class="btn btn-red" onclick="this.closest('.consumo-item-row').remove()">🗑️</button>
-        </div>`;
-      container.appendChild(div); consumoRowCount++;
+    /* ========= CALC: Conversões ========= */
+    const conversaoData = {
+      potencia: {
+        unidades: ['Watts (W)', 'Quilowatts (kW)', 'Cavalos-Vapor (CV/HP)', 'Megawatts (MW)', 'Milliwatts (mW)'],
+        valores: ['W','kW','CV','MW','mW'],
+        toW: { W:1, kW:1000, CV:735.499, MW:1e6, mW:0.001 },
+        fromW: { W:1, kW:0.001, CV:1/735.499, MW:1e-6, mW:1000 }
+      },
+      tensao: {
+        unidades: ['Volts (V)', 'Quilovolts (kV)', 'Milivolts (mV)', 'Microvolts (µV)'],
+        valores: ['V','kV','mV','µV'],
+        toV: { V:1, kV:1000, mV:0.001, 'µV':0.000001 },
+        fromV: { V:1, kV:0.001, mV:1000, 'µV':1000000 }
+      },
+      corrente: {
+        unidades: ['Amperes (A)', 'Miliamperes (mA)', 'Quiloamperes (kA)', 'Microamperes (µA)'],
+        valores: ['A','mA','kA','µA'],
+        toA: { A:1, mA:0.001, kA:1000, 'µA':0.000001 },
+        fromA: { A:1, mA:1000, kA:0.001, 'µA':1000000 }
+      },
+      resistencia: {
+        unidades: ['Ohms (Ω)', 'Quiloohms (kΩ)', 'Megaohms (MΩ)', 'Miliohms (mΩ)'],
+        valores: ['Ω','kΩ','MΩ','mΩ'],
+        toOhm: { 'Ω':1, 'kΩ':1000, 'MΩ':1e6, 'mΩ':0.001 },
+        fromOhm: { 'Ω':1, 'kΩ':0.001, 'MΩ':1e-6, 'mΩ':1000 }
+      },
+      energia: {
+        unidades: ['kWh','Wh','J','MJ','kcal'],
+        valores: ['kWh','Wh','J','MJ','kcal'],
+        toKwh: { kWh:1, Wh:0.001, J:2.778e-7, MJ:0.2778, kcal:0.001163 },
+        fromKwh: { kWh:1, Wh:1000, J:3600000, MJ:3.6, kcal:860 }
+      },
+      bitola: {
+        awgTable: [
+          {awg:'4/0',mm2:107.2},{awg:'3/0',mm2:85.0},{awg:'2/0',mm2:67.4},
+          {awg:'1/0',mm2:53.5},{awg:'1',mm2:42.4},{awg:'2',mm2:33.6},
+          {awg:'3',mm2:26.7},{awg:'4',mm2:21.1},{awg:'6',mm2:13.3},
+          {awg:'8',mm2:8.37},{awg:'10',mm2:5.26},{awg:'12',mm2:3.31},
+          {awg:'14',mm2:2.08},{awg:'16',mm2:1.31},{awg:'18',mm2:0.823},
+          {awg:'20',mm2:0.519},{awg:'22',mm2:0.326},{awg:'24',mm2:0.205}
+        ]
+      }
+    };
+
+    function updateUnidades(){
+      const tipo = document.getElementById('tipoConversao').value;
+      const sel = document.getElementById('unidadeConversao');
+      sel.innerHTML = '';
+      if(tipo === 'bitola'){
+        ['mm² → AWG', 'AWG → mm²'].forEach(u=>{
+          const opt = document.createElement('option');
+          opt.value = u; opt.textContent = u;
+          sel.appendChild(opt);
+        });
+      } else {
+        const data = conversaoData[tipo];
+        data.unidades.forEach((u,i)=>{
+          const opt = document.createElement('option');
+          opt.value = data.valores[i];
+          opt.textContent = u;
+          sel.appendChild(opt);
+        });
+      }
     }
 
-    function calcularConsumo(){
-      if(!canUseFree('consumo', 'Consumo')) return;
+    function calcularConversao(){
+      const tipo = document.getElementById('tipoConversao').value;
+      const valor = parseFloat(document.getElementById('valorConversao').value);
+      const unidade = document.getElementById('unidadeConversao').value;
+      if(isNaN(valor)){ alert('Digite um valor válido!'); return; }
+
+      let html = '<div class="result-box"><h4>🔄 Resultados da Conversão</h4>';
+      const resultados = [];
+
+      if(tipo === 'bitola'){
+        const tbl = conversaoData.bitola.awgTable;
+        if(unidade === 'mm² → AWG'){
+          const closest = tbl.reduce((p,c)=>Math.abs(c.mm2-valor)<Math.abs(p.mm2-valor)?c:p);
+          html += `<div class="result-item"><span>Valor inserido</span><strong>${valor} mm²</strong></div>`;
+          html += `<div class="result-item"><span>AWG equivalente mais próximo</span><strong>AWG ${closest.awg}</strong></div>`;
+          html += `<div class="result-item"><span>mm² exato do AWG ${closest.awg}</span><strong>${closest.mm2} mm²</strong></div>`;
+        } else {
+          const awgStr = prompt('Digite o número AWG (ex: 12, 4/0, 1/0):');
+          const found = tbl.find(r => r.awg === (awgStr||'').trim());
+          if(!found){ alert('AWG não encontrado.'); return; }
+          html += `<div class="result-item"><span>AWG ${found.awg}</span><strong>${found.mm2} mm²</strong></div>`;
+        }
+      } else {
+        const data = conversaoData[tipo];
+        let toBase, fromBase;
+        if(tipo === 'potencia')      { toBase = data.toW; fromBase = data.fromW; }
+        else if(tipo === 'tensao')   { toBase = data.toV; fromBase = data.fromV; }
+        else if(tipo === 'corrente') { toBase = data.toA; fromBase = data.fromA; }
+        else if(tipo === 'resistencia') { toBase = data.toOhm; fromBase = data.fromOhm; }
+        else if(tipo === 'energia')  { toBase = data.toKwh; fromBase = data.fromKwh; }
+
+        const baseVal = valor * toBase[unidade];
+        html += `<div class="result-item"><span>Valor original</span><strong>${valor} ${unidade}</strong></div>`;
+        html += `<div style="height:0.5rem;"></div>`;
+        Object.keys(fromBase).forEach(u=>{
+          if(u !== unidade){
+            const c = baseVal * fromBase[u];
+            let disp;
+            if(c >= 1e6) disp = c.toExponential(4);
+            else if(c < 0.0001 && c !== 0) disp = c.toExponential(4);
+            else disp = parseFloat(c.toFixed(6)).toString();
+            html += `<div class="result-item"><span>${u}</span><strong>${disp} ${u}</strong></div>`;
+            resultados.push([u, `${disp} ${u}`]);
+          }
+        });
+        lastCalcResults.conversao = {valor, unidade, resultados};
+        salvarCalculoHistorico('Conversão', `${valor} ${unidade}`);
+      }
+      html += '</div>';
+      document.getElementById('resultConversao').innerHTML = html;
+    }
+
+    /* ========= CALC: Iluminação ========= */
+    function calcularIluminacao(){
+      const area = parseFloat(document.getElementById('areaIlum').value);
+      const altura = parseFloat(document.getElementById('alturaIlum').value);
+      const planoTrabalho = parseFloat(document.getElementById('planoTrabalho').value) || 0.75;
+      const tipoAmbiente = document.getElementById('tipoAmbienteIlum').value;
+      const fluxoLamp = parseFloat(document.getElementById('fluxoLamp').value);
+      if(!area || !altura || !fluxoLamp){ alert('Preencha todos os campos obrigatórios!'); return; }
+
+      const iluminancias = {
+        sala:{E:200,nome:'Sala de Estar'},quarto:{E:100,nome:'Quarto'},
+        cozinha:{E:300,nome:'Cozinha'},escritorio:{E:500,nome:'Escritório'},
+        banheiro:{E:200,nome:'Banheiro'},garagem:{E:75,nome:'Garagem'},
+        corredor:{E:100,nome:'Corredor'},externo:{E:50,nome:'Área Externa'}
+      };
+      const {E, nome} = iluminancias[tipoAmbiente];
+
+      const larguraEst = Math.sqrt(area * 0.75);
+      const comprimentoEst = area / larguraEst;
+      const h = altura - planoTrabalho;
+      const K = (larguraEst * comprimentoEst) / (h * (larguraEst + comprimentoEst));
+
+      let fu = 0.5;
+      if(K >= 0.6 && K < 1) fu = 0.55;
+      else if(K >= 1 && K < 1.5) fu = 0.60;
+      else if(K >= 1.5 && K < 2) fu = 0.65;
+      else if(K >= 2 && K < 2.5) fu = 0.70;
+      else if(K >= 2.5) fu = 0.75;
+
+      const fm = 0.80;
+      const nLampadas = Math.ceil((E * area) / (fluxoLamp * fu * fm));
+      const nLuminarias = Math.ceil(nLampadas / 2);
+      const fluxoTotal = nLampadas * fluxoLamp;
+      const iluminanciaReal = (fluxoTotal * fu * fm) / area;
+
+      const html = `
+        <div class="result-box">
+          <h4>💡 Resultado — ${nome}</h4>
+          <div class="result-item"><span>Iluminância recomendada</span><strong>${E} lux</strong></div>
+          <div class="result-item"><span>Área do ambiente</span><strong>${area} m²</strong></div>
+          <div class="result-item"><span>Índice do local (K)</span><strong>${K.toFixed(2)}</strong></div>
+          <div class="result-item"><span>Fator de utilização (Fu)</span><strong>${fu.toFixed(2)}</strong></div>
+          <div class="result-item"><span>Fator de manutenção (Fm)</span><strong>${fm}</strong></div>
+          <div style="border-top:2px solid #2196f3;margin:0.8rem 0;"></div>
+          <div class="result-item"><span>🔆 Nº de lâmpadas</span><strong style="color:#ffd600;font-size:1.1rem;">${nLampadas} lâmpadas</strong></div>
+          <div class="result-item"><span>💡 Nº de luminárias</span><strong>${nLuminarias} luminárias</strong></div>
+          <div class="result-item"><span>Iluminância resultante</span><strong>${iluminanciaReal.toFixed(0)} lux</strong></div>
+          <div class="result-item"><span>Status</span><strong style="color:${iluminanciaReal>=E?'#4caf50':'#ff9800'}">${iluminanciaReal>=E?'✅ Dentro':'⚠️ Abaixo'}</strong></div>
+        </div>`;
+      lastCalcResults.iluminacao = {nome, area, E, nLampadas, nLuminarias, iluminanciaReal: iluminanciaReal.toFixed(0)};
+      document.getElementById('resultIluminacao').innerHTML = html;
+      salvarCalculoHistorico('Iluminação', `${nome} · ${nLampadas} lâmp. · ${iluminanciaReal.toFixed(0)} lux`);
+    }
+
+    /* ========= CALC: Curto-Circuito ========= */
+    function calcularCurtoCircuito(){
+      const tensao = parseFloat(document.getElementById('tensaoCC').value);
+      const potTrafo = parseFloat(document.getElementById('potTrafo').value);
+      const impedTrafo = parseFloat(document.getElementById('impedTrafo').value) || 4;
+      const secCabo = parseFloat(document.getElementById('secCaboCC').value);
+      const distCabo = parseFloat(document.getElementById('distCaboCC').value);
+      const tipoCC = document.getElementById('tipoCC').value;
+      if(!tensao || !potTrafo || !secCabo || !distCabo){ alert('Preencha todos os campos!'); return; }
+
+      const zTrafo = (impedTrafo/100) * (tensao*tensao) / (potTrafo*1000);
+      const ro = 0.0172;
+      const rCabo = (ro * distCabo) / secCabo;
+      const zTotal = Math.sqrt(Math.pow(zTrafo + rCabo*2, 2));
+      const Icc3f = tensao / (Math.sqrt(3) * zTotal);
+      const Icc2f = Icc3f * 0.866;
+      const Icc1f = tensao / (2 * zTotal);
+      const resultado = tipoCC === 'trifasico' ? Icc3f : tipoCC === 'bifasico' ? Icc2f : Icc1f;
+      const nomeCC = tipoCC === 'trifasico' ? 'Trifásico (mais severo)' : tipoCC === 'bifasico' ? 'Bifásico' : 'Monofásico';
+      const podInterr = resultado <= 6000 ? 6 : resultado <= 10000 ? 10 : resultado <= 15000 ? 15 : 25;
+
+      const html = `
+        <div class="result-box">
+          <h4>⚡ Corrente de Curto-Circuito — ${nomeCC}</h4>
+          <div class="result-item"><span>Impedância do trafo (Zt)</span><strong>${zTrafo.toFixed(4)} Ω</strong></div>
+          <div class="result-item"><span>Resistência do cabo (ida+volta)</span><strong>${(rCabo*2).toFixed(4)} Ω</strong></div>
+          <div class="result-item"><span>Impedância total (Ztotal)</span><strong>${zTotal.toFixed(4)} Ω</strong></div>
+          <div style="border-top:2px solid #2196f3;margin:0.8rem 0;"></div>
+          <div class="result-item"><span>⚡ Icc Trifásico</span><strong>${(Icc3f/1000).toFixed(2)} kA (${Icc3f.toFixed(0)} A)</strong></div>
+          <div class="result-item"><span>⚡ Icc Bifásico</span><strong>${(Icc2f/1000).toFixed(2)} kA (${Icc2f.toFixed(0)} A)</strong></div>
+          <div class="result-item"><span>⚡ Icc Monofásico</span><strong>${(Icc1f/1000).toFixed(2)} kA (${Icc1f.toFixed(0)} A)</strong></div>
+          <div style="border-top:2px solid #ffd600;margin:0.8rem 0;"></div>
+          <div class="result-item"><span>🔒 Poder de corte mínimo</span><strong style="color:#ffd600">${podInterr} kA</strong></div>
+        </div>`;
+      lastCalcResults.curtoCircuito = {nomeCC, resultado, podInterr};
+      document.getElementById('resultCurtoCircuito').innerHTML = html;
+      salvarCalculoHistorico('Curto-Circuito', `${(resultado/1000).toFixed(2)}kA · corte ${podInterr}kA`);
+    }
+
+    /* ========= CALC: Fator de Demanda ========= */
+    function adicionarCargaFD(){
+      const container = document.getElementById('cargasFD');
+      const div = document.createElement('div');
+      div.className = 'consumo-item-row';
+      div.innerHTML = `
+        <div class="form-group"><label>Carga</label><input type="text" placeholder="Ar-condicionado"></div>
+        <div class="form-group"><label>Potência (W)</label><input type="number" placeholder="2000"></div>
+        <div class="form-group"><label>Qtd</label><input type="number" value="1" min="1"></div>
+        <div class="form-group"><label>FD (%)</label><input type="number" value="75" min="1" max="100"></div>
+        <div style="padding-bottom:0.9rem;display:flex;align-items:flex-end;">
+          <button class="btn btn-red" type="button" onclick="this.closest('.consumo-item-row').remove()">🗑️</button>
+        </div>`;
+      container.appendChild(div);
+    }
+
+    function calcularFatorDemanda(){
       const rows = document.querySelectorAll('.consumo-item-row');
-      let totalKwh=0, items=[];
+      if(!rows.length){ alert('Adicione pelo menos uma carga!'); return; }
+      let potInst = 0, demMax = 0, itens = [];
       rows.forEach(row=>{
-        const inputs=row.querySelectorAll('input');
-        const nome=inputs[0].value||'Aparelho';
-        const W=parseFloat(inputs[1].value)||0;
-        const h=parseFloat(inputs[2].value)||0;
-        if(W&&h){
-          const kwh=(W*h*30)/1000;
-          totalKwh+=kwh;
-          items.push({nome,W,h,kwh:kwh.toFixed(2)});
+        const inputs = row.querySelectorAll('input');
+        const nome = inputs[0].value || 'Carga';
+        const pot = parseFloat(inputs[1].value) || 0;
+        const qtd = parseFloat(inputs[2].value) || 1;
+        const fd = parseFloat(inputs[3].value) || 75;
+        if(pot > 0){
+          const potTotal = pot * qtd;
+          const dem = potTotal * (fd/100);
+          potInst += potTotal;
+          demMax += dem;
+          itens.push({nome, potTotal, fd, demanda: dem});
         }
       });
-      if(!items.length){ alert('Preencha pelo menos um aparelho!'); return; }
+      if(!potInst){ alert('Preencha as potências!'); return; }
+      const fdGlobal = (demMax / potInst) * 100;
+      const tensao = parseFloat(document.getElementById('tensaoFD').value) || 220;
+      const I = demMax / tensao;
+      const secoes = [1.5,2.5,4,6,10,16,25,35,50,70,95];
+      const cap220 = [15.5,21,28,36,50,68,89,110,134,170,210];
+      let secaoRec = 50;
+      for(let i=0;i<cap220.length;i++){ if(cap220[i] >= I*1.25){ secaoRec = secoes[i]; break; } }
+      const disjRec = [10,16,20,25,32,40,50,63,70,80,100].find(d=>d>=I*1.25) || 100;
 
-      const custo=(totalKwh*0.75).toFixed(2);
-      let html=`<div class="consumo-result-summary">
-        <h4>⚡ Consumo Mensal Estimado</h4>
-        <div class="consumo-big">${totalKwh.toFixed(1)} <span>kWh/mês</span></div>
-        <div class="result-item"><span>💸 Custo estimado (R$ 0,75/kWh)</span><strong>R$ ${custo}</strong></div>`;
-      items.forEach(it=>{
-        html+=`<div class="result-item"><span>${it.nome} (${it.W}W × ${it.h}h/dia)</span><strong>${it.kwh} kWh</strong></div>`;
+      let html = `<div class="result-box"><h4>📊 Resultado — Fator de Demanda</h4>`;
+      html += `<div class="result-item"><span>Potência Total Instalada</span><strong>${(potInst/1000).toFixed(2)} kW</strong></div>`;
+      html += `<div class="result-item"><span>Demanda Máxima Estimada</span><strong>${(demMax/1000).toFixed(2)} kW</strong></div>`;
+      html += `<div class="result-item"><span>Fator de Demanda Global</span><strong>${fdGlobal.toFixed(1)}%</strong></div>`;
+      html += `<div class="result-item"><span>Corrente de demanda (${tensao}V)</span><strong>${I.toFixed(1)} A</strong></div>`;
+      html += `<div style="border-top:2px solid #ffd600;margin:0.8rem 0;"></div>`;
+      html += `<div class="result-item"><span>Seção recomendada</span><strong style="color:#ffd600">${secaoRec} mm²</strong></div>`;
+      html += `<div class="result-item"><span>Disjuntor recomendado</span><strong style="color:#ffd600">${disjRec} A</strong></div>`;
+      html += `</div>`;
+      lastCalcResults.fatorDemanda = {potenciaInstalada:potInst, demandaMaxima:demMax, fdGlobal, secaoRec, disjRec};
+      document.getElementById('resultFatorDemanda').innerHTML = html;
+      salvarCalculoHistorico('Fator de Demanda', `${(demMax/1000).toFixed(2)}kW · FD ${fdGlobal.toFixed(1)}%`);
+    }
+
+    /* ========= CALC: DR/DPS ========= */
+    function calcularDrDps(){
+      const corrente = parseFloat(document.getElementById('correnteDR').value);
+      const tipoDR = document.getElementById('tipoDR').value;
+      const tensao = document.getElementById('tensaoDR').value;
+      const nivelDPS = parseFloat(document.getElementById('nivelDPS').value);
+      if(!corrente){ alert('Informe a corrente!'); return; }
+      const sensMap = {residual:'30 mA', industrial:'100 mA', '10ma':'10 mA'};
+      const sensNom = sensMap[tipoDR];
+      const correnteDR = corrente<=16?25:corrente<=25?40:corrente<=40?63:corrente<=63?80:100;
+      const dpsCat = nivelDPS>=6?'Cat. IV — Entrada geral':nivelDPS>=4?'Cat. III — Quadro':nivelDPS>=2.5?'Cat. II — Tomadas':'Cat. I — Equipamentos';
+      const dpsTipoRec = nivelDPS>=4?'DPS Classe I':nivelDPS>=2.5?'DPS Classe II':'DPS Classe III';
+      const tensaoDPS = tensao==='220t'?'275 V (linha)/320 V (fase-neutro)':tensao==='220'?'275 V':'150 V';
+      const html = resultBox('DR/DPS — Resultado',[
+        ['Tipo de DR', `DR ${sensNom}`],
+        ['Corrente do DR', `${correnteDR} A`],
+        ['DPS recomendado', dpsTipoRec],
+        ['Categoria', dpsCat],
+        ['Tensão nominal DPS (Un)', tensaoDPS],
+        ['Corrente de impulso mínima', nivelDPS>=4?'12,5 kA (8/20 µs)':'5 kA (8/20 µs)'],
+      ]);
+      lastCalcResults.drDps = {correnteDR, sensNom, dpsTipoRec};
+      document.getElementById('resultDrDps').innerHTML = html;
+      salvarCalculoHistorico('DR/DPS', `DR ${correnteDR}A · ${sensNom} · ${dpsTipoRec}`);
+    }
+
+    /* ========= CALC: Eletroduto ========= */
+    function calcularEletroduto(){
+      const diaEletroduto = parseFloat(document.getElementById('diaEletroduto').value);
+      const secaoCabo = parseFloat(document.getElementById('secaoEletroduto').value);
+      const diamCaboMap = {1.5:5.3,2.5:5.8,4:6.5,6:7.4,10:8.9,16:10.2,25:13.1,35:15.0,50:17.5};
+      const dCabo = diamCaboMap[secaoCabo] || (Math.sqrt(secaoCabo)*2.5+2);
+      const areaCabo = Math.PI * Math.pow(dCabo/2, 2);
+      const areaEletroduto = Math.PI * Math.pow(diaEletroduto/2, 2);
+      const q1 = Math.floor((areaEletroduto * 0.53) / areaCabo);
+      const q2 = Math.floor((areaEletroduto * 0.31) / areaCabo);
+      const q3 = Math.floor((areaEletroduto * 0.40) / areaCabo);
+      const html = resultBox(`Eletroduto Ø${diaEletroduto}mm × cabo ${secaoCabo}mm²`,[
+        ['Área interna do eletroduto', `${areaEletroduto.toFixed(0)} mm²`],
+        ['Área do cabo (ext. Ø'+dCabo+'mm)', `${areaCabo.toFixed(1)} mm²`],
+        ['Cabos (1 cabo — taxa 53%)', `${q1} condutor(es)`],
+        ['Cabos (2 cabos — taxa 31%)', `${q2} condutores`],
+        ['Cabos (3+ cabos — taxa 40%)', `${q3} condutores`],
+      ]);
+      document.getElementById('resultEletroduto').innerHTML = html;
+      salvarCalculoHistorico('Eletroduto', `Ø${diaEletroduto}mm · ${secaoCabo}mm² · máx ${q3} cabos`);
+    }
+
+    /* ========= CALC: Queda Trifásico ========= */
+    function calcularQuedaTrifasico(){
+      const Pkw = parseFloat(document.getElementById('potQuedaTri').value);
+      const V = parseFloat(document.getElementById('tensaoQuedaTri').value);
+      const fp = parseFloat(document.getElementById('fpQuedaTri').value);
+      const L = parseFloat(document.getElementById('compQuedaTri').value);
+      const s = parseFloat(document.getElementById('secaoQuedaTri').value);
+      if(!Pkw||!V||!L||!s){ alert('Preencha todos os campos!'); return; }
+      const P = Pkw * 1000;
+      const I = P / (Math.sqrt(3) * V * fp);
+      const ro = 0.0172;
+      const dV = Math.sqrt(3) * ro * L * I / s;
+      const pct = (dV / V) * 100;
+      const ok = pct <= 4;
+      const html = resultBox('Queda de Tensão Trifásico',[
+        ['Potência', `${Pkw} kW`],
+        ['Corrente de linha', `${I.toFixed(2)} A`],
+        ['Queda de tensão (ΔU)', `${dV.toFixed(2)} V`],
+        ['Percentual', `${pct.toFixed(2)}%`],
+        ['Status (limite 4%)', ok?'✅ Dentro do limite':'❌ Acima — aumentar seção'],
+      ]);
+      document.getElementById('resultQuedaTri').innerHTML = html;
+      salvarCalculoHistorico('Queda Trifásico', `${Pkw}kW · ${s}mm² · ${pct.toFixed(1)}%`);
+    }
+
+    /* ========= CALC: Bitola Motor ========= */
+    function calcularBitolaMotor(){
+      const cv = parseFloat(document.getElementById('potMotor').value);
+      const tensao = document.getElementById('tensaoMotor').value;
+      const partida = document.getElementById('tipoPartidaMotor').value;
+      const fs = parseFloat(document.getElementById('fsMotor').value) / 100 || 1;
+      if(!cv){ alert('Informe a potência!'); return; }
+      const P = cv * 735.499 * fs;
+      const isMono = tensao === '220m';
+      const V = isMono ? 220 : parseFloat(tensao);
+      const fpMotor = 0.85, rendMotor = 0.90;
+      let I;
+      if(isMono) I = P / (V * fpMotor * rendMotor);
+      else I = P / (Math.sqrt(3) * V * fpMotor * rendMotor);
+      const Ipartida = partida === 'direta' ? I*7 : partida === 'estrela-triangulo' ? I*2.5 : I*3;
+      const disjMotor = [10,16,20,25,32,40,50,63,70,80,100].find(d=>d>=I*1.25) || 100;
+      const contator = Math.ceil(I*1.15/5)*5;
+      const cap_m = [{s:1.5,c:15},{s:2.5,c:21},{s:4,c:28},{s:6,c:36},{s:10,c:50},{s:16,c:68},{s:25,c:89},{s:35,c:110},{s:50,c:134}];
+      let sec = 50;
+      for(let x of cap_m) if(x.c >= I*1.25){ sec = x.s; break; }
+      const html = resultBox(`Motor ${cv} cv`,[
+        ['Potência', `${cv} cv = ${(P/1000).toFixed(2)} kW`],
+        ['Corrente nominal estimada', `${I.toFixed(2)} A`],
+        ['Corrente de partida estimada', `${Ipartida.toFixed(0)} A`],
+        ['Disjuntor/Protetor', `${disjMotor} A`],
+        ['Contator (mínimo)', `${contator} A`],
+        ['Seção do condutor', `${sec} mm²`],
+      ]);
+      document.getElementById('resultMotor').innerHTML = html;
+      salvarCalculoHistorico('Bitola Motor', `${cv}cv · ${V}V · ${sec}mm² · ${disjMotor}A`);
+    }
+
+    /* ========= CALC: Custo Energia Mensal ========= */
+    function addEnergiaRow(){
+      const container = document.getElementById('energiaItens');
+      const div = document.createElement('div');
+      div.className = 'consumo-item-row';
+      div.innerHTML = `
+        <div class="form-group"><label>Equipamento</label><input type="text" placeholder="Motor"></div>
+        <div class="form-group"><label>Potência (W)</label><input type="number" placeholder="2000"></div>
+        <div class="form-group"><label>Horas/dia</label><input type="number" placeholder="8" step="0.5"></div>
+        <div class="form-group"><label>Dias/mês</label><input type="number" value="30"></div>
+        <div style="padding-bottom:.9rem;display:flex;align-items:flex-end;">
+          <button class="btn btn-red" type="button" onclick="this.closest('.consumo-item-row').remove()">🗑️</button>
+        </div>`;
+      container.appendChild(div);
+    }
+
+    function calcularEnergiaMensal(){
+      const rows = document.querySelectorAll('#energiaItens .consumo-item-row');
+      const tarifa = parseFloat(document.getElementById('tarifaEnergia').value) || 0.85;
+      const icms = parseFloat(document.getElementById('icmsEnergia').value) || 0;
+      const tarifaFinal = tarifa * (1 + icms);
+      let total = 0;
+      rows.forEach(row=>{
+        const inputs = row.querySelectorAll('input');
+        const W = parseFloat(inputs[1].value) || 0;
+        const h = parseFloat(inputs[2].value) || 0;
+        const dias = parseFloat(inputs[3].value) || 30;
+        if(W && h) total += (W * h * dias) / 1000;
       });
-      html+=`</div>`;
-      lastCalcResults.consumo = {totalKwh, custo};
-      document.getElementById('resultConsumo').innerHTML=html;
-      salvarCalculoHistorico('Consumo', `${totalKwh.toFixed(1)}kWh/mês · R$${custo}`);
+      if(!total){ alert('Preencha pelo menos um equipamento!'); return; }
+      const custoTotal = (total * tarifaFinal).toFixed(2);
+      let html = `<div class="consumo-result-summary"><h4>💰 Custo Estimado de Energia — Mensal</h4>`;
+      html += `<div class="consumo-big">R$ ${custoTotal} <span>/mês</span></div>`;
+      html += `<div class="result-item"><span>Consumo total</span><strong>${total.toFixed(1)} kWh/mês</strong></div>`;
+      html += `<div class="result-item"><span>Tarifa utilizada</span><strong>R$ ${tarifaFinal.toFixed(4)}/kWh</strong></div>`;
+      html += `</div>`;
+      document.getElementById('resultEnergiaMes').innerHTML = html;
+      salvarCalculoHistorico('Custo Energia', `R$ ${custoTotal}/mês · ${total.toFixed(1)} kWh`);
     }
 
-    /* ======================== ORÇAMENTOS ======================== */
-    let itensOrcamento=[];
+    /* ========= Orçamento ========= */
+    let itensOrcamento = [];
     function adicionarItem(){
-      const d=document.getElementById('itemDescricao').value;
-      const q=parseFloat(document.getElementById('itemQuantidade').value);
-      const v=parseFloat(document.getElementById('itemValor').value);
-      if(!d||!q||!v){ alert('Preencha todos os campos!'); return; }
-      itensOrcamento.push({id:Date.now(),d,q,v,total:q*v});
+      const d = document.getElementById('itemDescricao').value;
+      const q = parseFloat(document.getElementById('itemQuantidade').value);
+      const v = parseFloat(document.getElementById('itemValor').value);
+      if(!d || !q || !v){ alert('Preencha todos os campos!'); return; }
+      itensOrcamento.push({id:Date.now(), d, q, v, total: q*v});
       renderItens();
-      document.getElementById('itemDescricao').value='';
-      document.getElementById('itemQuantidade').value='1';
-      document.getElementById('itemValor').value='';
+      document.getElementById('itemDescricao').value = '';
+      document.getElementById('itemQuantidade').value = '1';
+      document.getElementById('itemValor').value = '';
     }
-    function removerItem(id){ itensOrcamento=itensOrcamento.filter(i=>i.id!==id); renderItens(); }
+    function removerItem(id){
+      itensOrcamento = itensOrcamento.filter(i => i.id !== id);
+      renderItens();
+    }
     function renderItens(){
-      const lista=document.getElementById('listaItens');
+      const lista = document.getElementById('listaItens');
       if(!itensOrcamento.length){
-        lista.innerHTML='<p style="color:var(--text-muted);">Nenhum item adicionado</p>';
+        lista.innerHTML = '<p style="color:var(--text-muted);">Nenhum item adicionado</p>';
       } else {
-        lista.innerHTML=itensOrcamento.map(i=>`
+        lista.innerHTML = itensOrcamento.map(i => `
           <div class="orcamento-item">
             <div>
               <strong>${i.d}</strong><br>
               <small>${i.q} × R$ ${i.v.toFixed(2)} = R$ ${i.total.toFixed(2)}</small>
             </div>
-            <button class="btn btn-red" onclick="removerItem(${i.id})">🗑️</button>
+            <button class="btn btn-red" type="button" onclick="removerItem(${i.id})">🗑️</button>
           </div>`).join('');
       }
-      document.getElementById('totalOrcamento').textContent=`Total: R$ ${itensOrcamento.reduce((s,i)=>s+i.total,0).toFixed(2)}`;
-    }
-
-    /* ======================== INSTALAÇÕES TOGGLE ======================== */
-    function toggleInstall(id){
-      const el=document.getElementById(id);
-      el.classList.toggle('open');
-    }
-
-    /* ======================== PDF ======================== */
-    function pdfSafe(str) {
-      if (typeof str !== 'string') str = String(str);
-      return str.normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^\x00-\x7F]/g, '');
-    }
-    function pdfHeader(doc, subtitle){
-      doc.setFillColor(10,22,40); doc.rect(0,0,210,45,'F');
-      doc.setFillColor(21,101,192); doc.rect(0,40,210,5,'F');
-      doc.setTextColor(255,214,0); doc.setFontSize(22); doc.setFont(undefined,'bold');
-      doc.text(pdfSafe('Eletrica Pro'),20,22);
-      doc.setTextColor(255,255,255); doc.setFontSize(11); doc.setFont(undefined,'normal');
-      doc.text(pdfSafe(subtitle),20,34);
-      doc.setTextColor(0,0,0);
-    }
-    function pdfFooter(doc){
-      const now = new Date();
-      const dateStr = now.toLocaleDateString('pt-BR') + ' ' + now.toLocaleTimeString('pt-BR');
-      doc.setFontSize(8); doc.setTextColor(128,128,128);
-      doc.text(pdfSafe('Gerado em ' + dateStr + ' - Eletrica Pro'),105,285,{align:'center'});
-    }
-
-    function gerarPDFCalc(tipo){
-      if(!requirePro('Gerar PDF')) return;
-      const {jsPDF}=window.jspdf;
-      const doc=new jsPDF();
-      pdfHeader(doc,'Relatorio: '+pdfSafe(tipo));
-      doc.setFontSize(14); doc.setFont(undefined,'bold');
-      doc.text(pdfSafe('Calculo: '+tipo),20,58);
-      doc.setFontSize(10); doc.setFont(undefined,'normal');
-      let y=70;
-      const line=(l,v)=>{ doc.text(pdfSafe(l+': '+v),20,y); y+=8; };
-
-      if(tipo==='Lei de Ohm'&&lastCalcResults.leiOhm){
-        const r=lastCalcResults.leiOhm;
-        line('Tensao (V)',r.v+' V'); line('Corrente (I)',r.i+' A'); line('Resistencia (R)',r.r+' ohm');
-      } else if(tipo==='Potência'&&lastCalcResults.potencia){
-        const r=lastCalcResults.potencia;
-        line('Tipo',r.tipo==='monofasico'?'Monofasico':'Trifasico');
-        line('Tensao',r.V+' V'); line('Corrente',r.I+' A');
-        line('Fator de Potencia',r.fp);
-        line('Potencia Ativa',r.P+' W'); line('Potencia Aparente',r.S+' VA'); line('Potencia Reativa',r.Q+' VAr');
-      } else if(tipo==='Queda de Tensão'&&lastCalcResults.quedaTensao){
-        const r=lastCalcResults.quedaTensao;
-        line('Corrente',r.I+' A'); line('Distancia',r.L+' m'); line('Secao',r.s+' mm2');
-        line('Tensao',r.V+' V'); line('Queda de Tensao',r.dV+' V'); line('Percentual',r.pct+'%');
-        line('Status',r.ok?'OK - Dentro do limite':'ATENCAO - Acima do limite');
-      } else if(tipo==='Dimensionamento'&&lastCalcResults.condutor){
-        const r=lastCalcResults.condutor;
-        line('Potencia',r.P+' W'); line('Tensao',r.V+' V'); line('Corrente calculada',r.I+' A');
-        line('Secao recomendada',r.sec+' mm2'); line('Disjuntor recomendado',r.disj+' A');
-        line('Queda de tensao',r.pct+'%');
-      } else if(tipo==='Iluminação'&&lastCalcResults.iluminacao){
-        const r=lastCalcResults.iluminacao;
-        line('Ambiente',r.nome); line('Area',r.area+' m2'); line('Iluminancia',r.E+' lux');
-        line('Num. lampadas',r.nLampadas+' lampadas'); line('Num. luminarias',r.nLuminarias+' luminarias');
-        line('Iluminancia real',r.iluminanciaReal+' lux');
-      } else if(tipo==='Curto-Circuito'&&lastCalcResults.curtoCircuito){
-        const r=lastCalcResults.curtoCircuito;
-        line('Tipo',r.nomeCC); line('Icc',r.resultado.toFixed(0)+' A');
-        line('Icc (kA)',( r.resultado/1000).toFixed(2)+' kA');
-        line('Poder de corte min.',r.podInterr+' kA');
-      } else if(tipo==='Consumo'&&lastCalcResults.consumo){
-        const r=lastCalcResults.consumo;
-        line('Consumo total mensal',r.totalKwh.toFixed(1)+' kWh/mes');
-        line('Custo estimado','R$ '+r.custo);
-      } else if((tipo==='fator de demanda'||tipo==='Fator de Demanda')&&lastCalcResults.fatorDemanda){
-        const r=lastCalcResults.fatorDemanda;
-        line('Potencia instalada',(r.potenciaInstalada/1000).toFixed(2)+' kW');
-        line('Demanda maxima',(r.demandaMaxima/1000).toFixed(2)+' kW');
-        line('Fator de demanda global',r.fdGlobal.toFixed(1)+'%');
-        line('Secao recomendada',r.secaoRec+' mm2');
-        line('Disjuntor recomendado',r.disjRec+' A');
-      } else if(tipo==='conversão'&&lastCalcResults.conversao){
-        const r=lastCalcResults.conversao;
-        line('Valor original',r.valor+' '+r.unidade);
-        r.resultados.forEach(([u,v])=>line(u,v));
-      } else {
-        doc.text(pdfSafe('Realize o calculo primeiro para gerar o PDF.'),20,y);
-      }
-      pdfFooter(doc);
-      doc.save('calculo_'+tipo.replace(/ /g,'_')+'_'+Date.now()+'.pdf');
-    }
-
-    function gerarPDFTabela(tipo){
-      if(!requirePro('Gerar PDF')) return;
-      const {jsPDF}=window.jspdf; const doc=new jsPDF();
-      pdfHeader(doc,'Tabela: '+pdfSafe(tipo));
-      doc.setFontSize(14); doc.setFont(undefined,'bold'); doc.text(pdfSafe('Tabela Tecnica: '+tipo),20,58);
-      const hs={fillColor:[21,101,192]};
-      if(tipo==='Condutores'){
-        doc.autoTable({startY:68,head:[['Seção (mm²)','Diâmetro (mm)','Peso (kg/km)','Resistência (Ω/km)']],
-          body:[['1,5','1,38','13,3','12,1'],['2,5','1,78','22,2','7,41'],['4','2,25','35,5','4,61'],['6','2,76','53,3','3,08'],['10','3,57','88,8','1,83'],['16','4,51','142','1,15'],['25','5,64','222','0,727'],['35','6,68','311','0,524'],['50','7,98','444','0,387']],headStyles:hs});
-      } else if(tipo==='Disjuntores'){
-        doc.autoTable({startY:68,head:[['Corrente (A)','Condutor Mín. (mm²)','Potência 127V (W)','Potência 220V (W)']],
-          body:[['10','1,5','1.270','2.200'],['16','2,5','2.032','3.520'],['20','4','2.540','4.400'],['25','4','3.175','5.500'],['32','6','4.064','7.040'],['40','10','5.080','8.800'],['50','10','6.350','11.000'],['63','16','8.001','13.860'],['70','25','8.890','15.400']],headStyles:hs});
-      } else {
-        doc.autoTable({startY:68,head:[['Seção (mm²)','Método B1 (A)','Método B2 (A)','Método C (A)']],
-          body:[['1,5','15,5','17,5','19,5'],['2,5','21','24','27'],['4','28','32','36'],['6','36','41','46'],['10','50','57','63'],['16','68','76','85'],['25','89','101','112'],['35','110','125','138'],['50','134','151','168']],headStyles:hs});
-      }
-      pdfFooter(doc);
-      doc.save(`tabela_${tipo.replace(/ /g,'_')}_${Date.now()}.pdf`);
-    }
-
-    function gerarPDFOrcamento(){
-      if(!requirePro('Gerar PDF')) return;
-      const nome=document.getElementById('nomeCliente').value;
-      if(!nome||!itensOrcamento.length){ alert('Preencha o nome do cliente e adicione itens!'); return; }
-      const {jsPDF}=window.jspdf; const doc=new jsPDF();
-      pdfHeader(doc,'Orcamento Profissional');
-      doc.setFontSize(12); let y=58;
-      doc.setFont(undefined,'bold'); doc.text(pdfSafe('Dados do Cliente:'),20,y); y+=9;
-      doc.setFont(undefined,'normal'); doc.setFontSize(10);
-      doc.text(pdfSafe('Nome: '+nome),20,y); y+=7;
-      doc.text(pdfSafe('Telefone: '+document.getElementById('telefoneCliente').value),20,y); y+=7;
-      doc.text(pdfSafe('Endereco: '+document.getElementById('enderecoCliente').value),20,y); y+=7;
-      doc.text(pdfSafe('Data: '+new Date().toLocaleDateString('pt-BR')),20,y); y+=4;
-      const total=itensOrcamento.reduce((s,i)=>s+i.total,0);
-      doc.autoTable({
-        startY:y+6,
-        head:[[pdfSafe('Descricao'),'Qtd','Valor Unit.','Valor Total']],
-        body:itensOrcamento.map(i=>[pdfSafe(i.d),i.q,'R$ '+i.v.toFixed(2),'R$ '+i.total.toFixed(2)]),
-        foot:[['','','TOTAL:','R$ '+total.toFixed(2)]],
-        headStyles:{fillColor:[21,101,192]},
-        footStyles:{fillColor:[30,120,60],fontStyle:'bold',fontSize:12}
-      });
-      const fy=doc.lastAutoTable.finalY+14;
-      doc.setFontSize(10);
-      doc.text(pdfSafe('Obs: Validade do orcamento: a combinar | Condicoes: A combinar'),20,fy);
-      pdfFooter(doc);
-      doc.save('orcamento_'+pdfSafe(nome).replace(/ /g,'_')+'_'+Date.now()+'.pdf');
-    }
-
-    /* ======================== WHATSAPP EXPORT ======================== */
-    function enviarWhatsApp(){
-      if(!requirePro('Enviar por WhatsApp')) return;
-      const nome = document.getElementById('nomeCliente').value || 'Cliente';
-      const tel  = document.getElementById('telefoneCliente').value || '';
-      const end  = document.getElementById('enderecoCliente').value || '';
-      if(!itensOrcamento.length){ alert('Adicione itens ao orçamento!'); return; }
       const total = itensOrcamento.reduce((s,i)=>s+i.total,0);
-      let msg = `*Orçamento Elétrica Pro*\n`;
-      msg += `Cliente: ${nome}\n`;
-      if(tel) msg += `Telefone: ${tel}\n`;
-      if(end) msg += `Endereço: ${end}\n`;
-      msg += `\n*Itens:*\n`;
-      itensOrcamento.forEach(item=>{
-        msg += `• ${item.d} — ${item.q}x R$ ${item.v.toFixed(2)} = R$ ${item.total.toFixed(2)}\n`;
-      });
-      msg += `\n*Total: R$ ${total.toFixed(2)}*\n`;
-      msg += `\nValidade: a combinar | Pagamento: A combinar`;
-      const encoded = encodeURIComponent(msg);
-      window.open(`https://wa.me/?text=${encoded}`, '_blank');
+      document.getElementById('totalOrcamento').textContent = `Total: R$ ${total.toFixed(2)}`;
     }
 
-    /* ======================== HISTÓRICO ======================== */
+    /* ========= Histórico ========= */
     const HIST_KEY = 'eletricapro_historico';
     let _histFilter = 'todos';
-
     function getHistorico(){
-      return JSON.parse(localStorage.getItem(HIST_KEY) || '[]');
+      try { return JSON.parse(localStorage.getItem(HIST_KEY) || '[]'); }
+      catch(e){ return []; }
     }
-
     function salvarOrcamentoHistorico(){
-      if(!requirePro('Salvar no Histórico')) return;
       const nome = document.getElementById('nomeCliente').value;
       if(!nome || !itensOrcamento.length){ alert('Preencha o cliente e os itens antes de salvar!'); return; }
       const total = itensOrcamento.reduce((s,i)=>s+i.total,0);
@@ -1709,9 +1583,7 @@
       alert('✅ Orçamento salvo no histórico!');
       renderHistorico();
     }
-
     function salvarCalculoHistorico(tipo, resumo){
-      if(!isProActive()) return; // Histórico é PRO
       const hist = getHistorico();
       hist.unshift({
         id: Date.now(),
@@ -1723,50 +1595,42 @@
       localStorage.setItem(HIST_KEY, JSON.stringify(hist.slice(0,100)));
       renderHistorico();
     }
-
     function filtrarHistorico(filtro){
       _histFilter = filtro;
       renderHistorico();
     }
-
     function limparHistorico(){
-      if(!requirePro('Histórico')) return;
       if(confirm('⚠️ Limpar todo o histórico?')){
         localStorage.removeItem(HIST_KEY);
         renderHistorico();
       }
     }
-
     function carregarOrcamentoHistorico(id){
-      if(!requirePro('Histórico')) return;
       const hist = getHistorico();
-      const item = hist.find(h=>h.id===id);
+      const item = hist.find(h => h.id === id);
       if(!item || item.tipo !== 'orcamento') return;
       document.getElementById('nomeCliente').value = item.cliente.nome;
       document.getElementById('telefoneCliente').value = item.cliente.tel || '';
       document.getElementById('enderecoCliente').value = item.cliente.end || '';
       itensOrcamento = item.itens || [];
       renderItens();
-      openScreen('orcamentos','Orçamentos');
+      openScreen('orcamentos', 'Orçamentos');
     }
-
     function excluirHistorico(id){
-      if(!requirePro('Histórico')) return;
-      const hist = getHistorico().filter(h=>h.id!==id);
+      const hist = getHistorico().filter(h => h.id !== id);
       localStorage.setItem(HIST_KEY, JSON.stringify(hist));
       renderHistorico();
     }
-
     function renderHistorico(){
       const container = document.getElementById('listaHistorico');
       if(!container) return;
       let hist = getHistorico();
-      if(_histFilter !== 'todos') hist = hist.filter(h=>h.tipo===_histFilter);
+      if(_histFilter !== 'todos') hist = hist.filter(h => h.tipo === _histFilter);
       if(!hist.length){
-        container.innerHTML='<p style="color:var(--text-muted);">Nenhum registro salvo.</p>';
+        container.innerHTML = '<p style="color:var(--text-muted);">Nenhum registro salvo.</p>';
         return;
       }
-      container.innerHTML = hist.map(h=>`
+      container.innerHTML = hist.map(h => `
         <div class="calc-card" style="padding:1rem;margin-bottom:.8rem;">
           <div style="display:flex;justify-content:space-between;gap:.8rem;align-items:flex-start;">
             <div>
@@ -1776,693 +1640,204 @@
               <div style="font-size:.82rem;color:var(--text-muted);">${h.detalhe} · ${h.data}</div>
             </div>
             <div style="display:flex;gap:.4rem;">
-              ${h.tipo==='orcamento'?`<button class="btn" style="padding:.4rem .7rem;font-size:.8rem;" onclick="carregarOrcamentoHistorico(${h.id})">📂</button>`:''}
-              <button class="btn btn-red" style="padding:.4rem .7rem;font-size:.8rem;" onclick="excluirHistorico(${h.id})">🗑️</button>
+              ${h.tipo==='orcamento'?`<button class="btn" type="button" style="padding:.4rem .7rem;font-size:.8rem;" onclick="carregarOrcamentoHistorico(${h.id})">📂</button>`:''}
+              <button class="btn btn-red" type="button" style="padding:.4rem .7rem;font-size:.8rem;" onclick="excluirHistorico(${h.id})">🗑️</button>
             </div>
           </div>
-        </div>
-      `).join('');
+        </div>`).join('');
     }
 
-    /* ======================== DR/DPS ======================== */
-    function calcularDrDps(){
-      if(!canUseFree('drdps', 'DR/DPS')) return;
-      const corrente = parseFloat(document.getElementById('correnteDR').value);
-      const tipoDR   = document.getElementById('tipoDR').value;
-      const tensao   = document.getElementById('tensaoDR').value;
-      const nivelDPS = parseFloat(document.getElementById('nivelDPS').value);
-      if(!corrente){ alert('Informe a corrente do circuito!'); return; }
-
-      const sensMap = {residual:'30 mA', industrial:'100 mA', '10ma':'10 mA'};
-      const sensNom = sensMap[tipoDR];
-      const correnteDR = corrente <= 16 ? 25 : corrente <= 25 ? 40 : corrente <= 40 ? 63 : corrente <= 63 ? 80 : 100;
-
-      const dpsCat = nivelDPS >= 6 ? 'Cat. IV — Entrada geral (ramal, medição)' :
-                    nivelDPS >= 4 ? 'Cat. III — Quadro de distribuição' :
-                    nivelDPS >= 2.5 ? 'Cat. II — Tomadas e cargas' : 'Cat. I — Equipamentos eletrônicos';
-
-      const dpsTipoRec = nivelDPS >= 4 ? 'DPS Classe I (SPD Tipo 1)' :
-                         nivelDPS >= 2.5 ? 'DPS Classe II (SPD Tipo 2)' :
-                         'DPS Classe III (SPD Tipo 3)';
-
-      const tensaoDPS = tensao === '220t' ? '275 V (linha) / 320 V (fase-neutro)' : tensao === '220' ? '275 V' : '150 V';
-
-      const html = resultBox('DR/DPS — Resultado',[
-        ['Tipo de DR', `DR ${sensNom}`],
-        ['Corrente do DR', `${correnteDR} A (padrão comercial)`],
-        ['DPS recomendado', dpsTipoRec],
-        ['Categoria', dpsCat],
-        ['Tensão nominal DPS (Un)', tensaoDPS],
-        ['Corrente de impulso mínima', nivelDPS >= 4 ? '12,5 kA (8/20 µs)' : '5 kA (8/20 µs)'],
-      ]);
-
-      lastCalcResults.drDps = {correnteDR, sensNom, dpsTipoRec, dpsCat};
-      document.getElementById('resultDrDps').innerHTML = html;
-      salvarCalculoHistorico('DR/DPS', `DR ${correnteDR}A · ${sensNom} · ${dpsTipoRec}`);
+    /* ========= PDF (jsPDF) ========= */
+    function pdfSafe(str){
+      if(typeof str !== 'string') str = String(str);
+      return str.normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^\x00-\x7F]/g, '');
+    }
+    function pdfHeader(doc, subtitle){
+      doc.setFillColor(10,22,40);
+      doc.rect(0,0,210,45,'F');
+      doc.setFillColor(21,101,192);
+      doc.rect(0,40,210,5,'F');
+      doc.setTextColor(255,214,0);
+      doc.setFontSize(22);
+      doc.setFont(undefined,'bold');
+      doc.text(pdfSafe('Eletrica Pro'), 20, 22);
+      doc.setTextColor(255,255,255);
+      doc.setFontSize(11);
+      doc.setFont(undefined,'normal');
+      doc.text(pdfSafe(subtitle), 20, 34);
+      doc.setTextColor(0,0,0);
+    }
+    function pdfFooter(doc){
+      const now = new Date();
+      const dateStr = now.toLocaleDateString('pt-BR') + ' ' + now.toLocaleTimeString('pt-BR');
+      doc.setFontSize(8);
+      doc.setTextColor(128,128,128);
+      doc.text(pdfSafe('Gerado em ' + dateStr + ' - Eletrica Pro'), 105, 285, {align:'center'});
     }
 
-    /* ======================== ELETRODUTO ======================== */
-    function calcularEletroduto(){
-      if(!canUseFree('eletroduto', 'Eletroduto')) return;
-      const diaEletroduto = parseFloat(document.getElementById('diaEletroduto').value);
-      const secaoCabo     = parseFloat(document.getElementById('secaoEletroduto').value);
-
-      const diamCaboMap = {1.5:5.3, 2.5:5.8, 4:6.5, 6:7.4, 10:8.9, 16:10.2, 25:13.1, 35:15.0, 50:17.5};
-      const dCabo = diamCaboMap[secaoCabo] || (Math.sqrt(secaoCabo)*2.5 + 2);
-
-      const areaCabo = Math.PI * Math.pow(dCabo/2, 2);
-      const areaEletroduto = Math.PI * Math.pow(diaEletroduto/2, 2);
-
-      const taxa1 = 0.53, taxa2 = 0.31, taxa3 = 0.40;
-      const q1 = Math.floor((areaEletroduto * taxa1) / areaCabo);
-      const q2 = Math.floor((areaEletroduto * taxa2) / areaCabo);
-      const q3 = Math.floor((areaEletroduto * taxa3) / areaCabo);
-
-      const html = resultBox(`Eletroduto Ø${diaEletroduto}mm × cabo ${secaoCabo}mm²`,[
-        ['Área interna do eletroduto', `${areaEletroduto.toFixed(0)} mm²`],
-        ['Área do cabo (ext. Ø'+dCabo+'mm)', `${areaCabo.toFixed(1)} mm²`],
-        ['Cabos (1 cabo — taxa 53%)', `${q1} condutor(es)`],
-        ['Cabos (2 cabos — taxa 31%)', `${q2} condutores`],
-        ['Cabos (3+ cabos — taxa 40%)', `${q3} condutores`],
-      ]);
-
-      lastCalcResults.eletroduto = {diaEletroduto, secaoCabo, q1, q2, q3};
-      document.getElementById('resultEletroduto').innerHTML = html;
-      salvarCalculoHistorico('Eletroduto', `Ø${diaEletroduto}mm · ${secaoCabo}mm² · máx ${q3} cabos`);
-    }
-
-    /* ======================== QUEDA TRIFÁSICO ======================== */
-    function calcularQuedaTrifasico(){
-      if(!canUseFree('quedaTri', 'Queda Trifásico')) return;
-      const Pkw   = parseFloat(document.getElementById('potQuedaTri').value);
-      const V     = parseFloat(document.getElementById('tensaoQuedaTri').value);
-      const fp    = parseFloat(document.getElementById('fpQuedaTri').value);
-      const L     = parseFloat(document.getElementById('compQuedaTri').value);
-      const s     = parseFloat(document.getElementById('secaoQuedaTri').value);
-      if(!Pkw||!V||!L||!s){ alert('Preencha todos os campos!'); return; }
-
-      const P = Pkw * 1000;
-      const I = P / (Math.sqrt(3) * V * fp);
-      const ro = 0.0172;
-      const dV = Math.sqrt(3) * ro * L * I / s;
-      const pct = (dV / V) * 100;
-      const ok = pct <= 4;
-
-      lastCalcResults.quedaTri = {Pkw, V, fp, L, s, I:I.toFixed(2), dV:dV.toFixed(2), pct:pct.toFixed(2), ok};
-      const html = resultBox('Queda de Tensão Trifásico',[
-        ['Potência', `${Pkw} kW`],
-        ['Corrente de linha', `${I.toFixed(2)} A`],
-        ['Queda de tensão (ΔU)', `${dV.toFixed(2)} V`],
-        ['Percentual', `${pct.toFixed(2)}%`],
-        ['Status (limite 4%)', ok ? '✅ Dentro do limite NBR' : '❌ Acima do limite — aumentar seção'],
-      ]);
-      document.getElementById('resultQuedaTri').innerHTML = html;
-      salvarCalculoHistorico('Queda Trifásico', `${Pkw}kW · ${s}mm² · ${pct.toFixed(1)}%`);
-    }
-
-    /* ======================== BITOLA MOTOR ======================== */
-    function calcularBitolaMotor(){
-      if(!canUseFree('motor', 'Bitola Motor')) return;
-      const cv     = parseFloat(document.getElementById('potMotor').value);
-      const tensao = document.getElementById('tensaoMotor').value;
-      const partida = document.getElementById('tipoPartidaMotor').value;
-      const fs     = parseFloat(document.getElementById('fsMotor').value) / 100 || 1;
-      if(!cv){ alert('Informe a potência do motor!'); return; }
-
-      const P = cv * 735.499 * fs;
-      const isMonofasico = tensao === '220m';
-      const V = isMonofasico ? 220 : parseFloat(tensao);
-      const fpMotor = 0.85, rendMotor = 0.90;
-
-      let I;
-      if(isMonofasico){
-        I = P / (V * fpMotor * rendMotor);
+    function gerarPDFCalc(tipo){
+      if(typeof window.jspdf === 'undefined'){ alert('jsPDF não carregou — verifique a conexão.'); return; }
+      const {jsPDF} = window.jspdf;
+      const doc = new jsPDF();
+      pdfHeader(doc, 'Relatorio: ' + pdfSafe(tipo));
+      doc.setFontSize(14); doc.setFont(undefined,'bold');
+      doc.text(pdfSafe('Calculo: ' + tipo), 20, 58);
+      doc.setFontSize(10); doc.setFont(undefined,'normal');
+      let y = 70;
+      const line = (l, v) => { doc.text(pdfSafe(l+': '+v), 20, y); y += 8; };
+      const r = lastCalcResults.leiOhm || lastCalcResults.potencia || lastCalcResults.quedaTensao ||
+                lastCalcResults.condutor || lastCalcResults.iluminacao || lastCalcResults.curtoCircuito ||
+                lastCalcResults.fatorDemanda || lastCalcResults.drDps || lastCalcResults.conversao;
+      if(r){
+        if(tipo === 'Lei de Ohm') { line('Tensao', r.v+' V'); line('Corrente', r.i+' A'); line('Resistencia', r.r+' ohm'); }
+        else if(tipo === 'Potência' || tipo === 'Potencia'){ line('Tipo', r.tipo==='monofasico'?'Monofasico':'Trifasico'); line('P', r.P+' W'); line('S', r.S+' VA'); line('Q', r.Q+' VAr'); }
+        else if(tipo === 'Queda de Tensão'){ line('Corrente', r.I+' A'); line('Distancia', r.L+' m'); line('Secao', r.s+' mm2'); line('Tensao', r.V+' V'); line('Queda', r.dV+' V'); line('%', r.pct+'%'); line('Status', r.ok?'OK':'ATENCAO'); }
+        else if(tipo === 'Dimensionamento'){ line('Corrente', r.I+' A'); line('Secao', r.sec+' mm2'); line('Disjuntor', r.disj+' A'); line('Queda', r.pct+'%'); }
+        else if(tipo === 'Iluminação'){ line('Ambiente', r.nome); line('Area', r.area+' m2'); line('E', r.E+' lux'); line('Lampadas', r.nLampadas); }
+        else if(tipo === 'Curto-Circuito'){ line('Tipo', r.nomeCC); line('Icc', (r.resultado/1000).toFixed(2)+' kA'); line('Poder corte', r.podInterr+' kA'); }
+        else if(tipo === 'Fator de Demanda'){ line('Pot instalada', (r.potenciaInstalada/1000).toFixed(2)+' kW'); line('Demanda', (r.demandaMaxima/1000).toFixed(2)+' kW'); line('FD global', r.fdGlobal.toFixed(1)+'%'); }
+        else if(tipo === 'DR/DPS'){ line('DR corrente', r.correnteDR+' A'); line('Sensibilidade', r.sensNom); line('DPS', r.dpsTipoRec); }
+        else if(tipo === 'Conversão'){ line('Valor', r.valor+' '+r.unidade); (r.resultados||[]).forEach(([u,v])=>line(u,v)); }
+        else { doc.text(pdfSafe('Resultado salvo no historico.'), 20, y); }
       } else {
-        I = P / (Math.sqrt(3) * V * fpMotor * rendMotor);
+        doc.text(pdfSafe('Realize o calculo primeiro para gerar o PDF.'), 20, y);
       }
-
-      const Ipartida = partida === 'direta' ? I * 7 : partida === 'estrela-triangulo' ? I * 2.5 : I * 3;
-      const disjMotor = [10,16,20,25,32,40,50,63,70,80,100].find(d=>d>=I*1.25) || 100;
-      const contator = Math.ceil(I * 1.15 / 5) * 5;
-
-      const cap_motores = [{s:1.5,c:15},{s:2.5,c:21},{s:4,c:28},{s:6,c:36},{s:10,c:50},{s:16,c:68},{s:25,c:89},{s:35,c:110},{s:50,c:134}];
-      let sec = 50;
-      for(let x of cap_motores) if(x.c >= I * 1.25){ sec = x.s; break; }
-
-      const partidaNome = partida==='direta' ? 'Direta' : partida==='estrela-triangulo' ? 'Estrela-Triângulo (Y-Δ)' : 'Soft-Starter / Inversor';
-
-      lastCalcResults.motor = {cv, V, I:I.toFixed(2), Ipartida:Ipartida.toFixed(0), sec, disjMotor, partida};
-      const html = resultBox(`Motor ${cv} cv — ${partidaNome}`,[
-        ['Potência', `${cv} cv = ${(P/1000).toFixed(2)} kW`],
-        ['Corrente nominal estimada', `${I.toFixed(2)} A`],
-        ['Corrente de partida estimada', `${Ipartida.toFixed(0)} A`],
-        ['Disjuntor/Protetor de motor', `${disjMotor} A`],
-        ['Contator (mínimo)', `${contator} A`],
-        ['Seção do condutor', `${sec} mm²`],
-        ['Proteção sobrecarga (relé)', `${(I*0.9).toFixed(1)} – ${(I*1.1).toFixed(1)} A`],
-      ]);
-      document.getElementById('resultMotor').innerHTML = html;
-      salvarCalculoHistorico('Bitola Motor', `${cv}cv · ${V}V · ${sec}mm² · ${disjMotor}A`);
+      pdfFooter(doc);
+      doc.save('calculo_'+tipo.replace(/ /g,'_')+'_'+Date.now()+'.pdf');
     }
 
-    /* ======================== CUSTO ENERGIA MENSAL ======================== */
-    function addEnergiaRow(){
-      const container = document.getElementById('energiaItens');
-      const div = document.createElement('div');
-      div.className = 'consumo-item-row';
-      div.innerHTML = `
-        <div class="form-group"><label>Equipamento</label><input type="text" placeholder="Ex: Motor"></div>
-        <div class="form-group"><label>Potência (W)</label><input type="number" placeholder="Ex: 2000"></div>
-        <div class="form-group"><label>Horas/dia</label><input type="number" placeholder="Ex: 8" step="0.5"></div>
-        <div class="form-group"><label>Dias/mês</label><input type="number" placeholder="30" value="30"></div>
-        <div style="padding-bottom:.9rem;display:flex;align-items:flex-end;">
-          <button class="btn btn-red" onclick="this.closest('.consumo-item-row').remove()">🗑️</button>
-        </div>`;
-      container.appendChild(div);
-    }
-
-    function calcularEnergiaMensal(){
-      if(!canUseFree('energiaMes', 'Custo Energia')) return;
-      const rows = document.querySelectorAll('#energiaItens .consumo-item-row');
-      const tarifa = parseFloat(document.getElementById('tarifaEnergia').value) || 0.85;
-      const icms   = parseFloat(document.getElementById('icmsEnergia').value) || 0;
-      const tarifaFinal = tarifa * (1 + icms);
-
-      let total = 0, items = [];
-      rows.forEach(row=>{
-        const inputs = row.querySelectorAll('input');
-        const nome = inputs[0].value || 'Equipamento';
-        const W = parseFloat(inputs[1].value) || 0;
-        const h = parseFloat(inputs[2].value) || 0;
-        const dias = parseFloat(inputs[3].value) || 30;
-        if(W && h){
-          const kwh = (W * h * dias) / 1000;
-          const custo = kwh * tarifaFinal;
-          total += kwh;
-          items.push({nome, W, h, dias, kwh:kwh.toFixed(2), custo:custo.toFixed(2)});
-        }
-      });
-
-      if(!items.length){ alert('Preencha pelo menos um equipamento!'); return; }
-      const custoTotal = (total * tarifaFinal).toFixed(2);
-
-      let html = `<div class="consumo-result-summary"><h4>💰 Custo Estimado de Energia — Mensal</h4>`;
-      html += `<div class="consumo-big">R$ ${custoTotal} <span>/mês</span></div>`;
-      html += `<div class="result-item"><span>Consumo total</span><strong>${total.toFixed(1)} kWh/mês</strong></div>`;
-      html += `<div class="result-item"><span>Tarifa utilizada</span><strong>R$ ${tarifaFinal.toFixed(4)}/kWh</strong></div>`;
-      html += `<div style="border-top:1px solid rgba(255,214,0,.3);margin:.8rem 0;"></div>`;
-      items.forEach(it=>{
-        html += `<div class="result-item"><span>${it.nome} (${it.W}W × ${it.h}h × ${it.dias}d)</span><strong>R$ ${it.custo}</strong></div>`;
-      });
-      html += `</div>`;
-
-      lastCalcResults.energiaMes = {total, custoTotal, tarifa:tarifaFinal};
-      document.getElementById('resultEnergiaMes').innerHTML = html;
-      salvarCalculoHistorico('Custo Energia', `R$ ${custoTotal}/mês · ${total.toFixed(1)} kWh`);
-    }
-
-    /* ======================== CONVERSÕES ======================== */
-    const conversaoData = {
-      potencia: {
-        unidades: ['Watts (W)', 'Quilowatts (kW)', 'Cavalos-Vapor (CV/HP)', 'Megawatts (MW)', 'Milliwatts (mW)'],
-        valores:  ['W', 'kW', 'CV', 'MW', 'mW'],
-        toW: { W:1, kW:1000, CV:735.499, MW:1e6, mW:0.001 },
-        fromW: { W:1, kW:0.001, CV:1/735.499, MW:1e-6, mW:1000 }
-      },
-      tensao: {
-        unidades: ['Volts (V)', 'Quilovolts (kV)', 'Milivolts (mV)', 'Microvolts (µV)'],
-        valores:  ['V', 'kV', 'mV', 'µV'],
-        toV: { V:1, kV:1000, mV:0.001, 'µV':0.000001 },
-        fromV: { V:1, kV:0.001, mV:1000, 'µV':1000000 }
-      },
-      corrente: {
-        unidades: ['Amperes (A)', 'Miliamperes (mA)', 'Quiloamperes (kA)', 'Microamperes (µA)'],
-        valores:  ['A', 'mA', 'kA', 'µA'],
-        toA: { A:1, mA:0.001, kA:1000, 'µA':0.000001 },
-        fromA: { A:1, mA:1000, kA:0.001, 'µA':1000000 }
-      },
-      resistencia: {
-        unidades: ['Ohms (Ω)', 'Quiloohms (kΩ)', 'Megaohms (MΩ)', 'Miliohms (mΩ)'],
-        valores:  ['Ω', 'kΩ', 'MΩ', 'mΩ'],
-        toOhm: { 'Ω':1, 'kΩ':1000, 'MΩ':1e6, 'mΩ':0.001 },
-        fromOhm: { 'Ω':1, 'kΩ':0.001, 'MΩ':1e-6, 'mΩ':1000 }
-      },
-      energia: {
-        unidades: ['Quilowatt-hora (kWh)', 'Watt-hora (Wh)', 'Joule (J)', 'Megajoule (MJ)', 'Caloria (kcal)'],
-        valores:  ['kWh', 'Wh', 'J', 'MJ', 'kcal'],
-        toKwh: { kWh:1, Wh:0.001, J:2.778e-7, MJ:0.2778, kcal:0.001163 },
-        fromKwh: { kWh:1, Wh:1000, J:3600000, MJ:3.6, kcal:860 }
-      },
-      bitola: {
-        awgTable: [
-          {awg:'4/0', mm2:107.2},  {awg:'3/0', mm2:85.0},   {awg:'2/0', mm2:67.4},
-          {awg:'1/0', mm2:53.5},   {awg:'1',   mm2:42.4},   {awg:'2',   mm2:33.6},
-          {awg:'3',   mm2:26.7},   {awg:'4',   mm2:21.1},   {awg:'6',   mm2:13.3},
-          {awg:'8',   mm2:8.37},   {awg:'10',  mm2:5.26},   {awg:'12',  mm2:3.31},
-          {awg:'14',  mm2:2.08},   {awg:'16',  mm2:1.31},   {awg:'18',  mm2:0.823},
-          {awg:'20',  mm2:0.519},  {awg:'22',  mm2:0.326},  {awg:'24',  mm2:0.205}
-        ]
-      }
-    };
-
-    function updateUnidades() {
-      const tipo = document.getElementById('tipoConversao').value;
-      const sel = document.getElementById('unidadeConversao');
-      sel.innerHTML = '';
-      if (tipo === 'bitola') {
-        ['mm² → AWG', 'AWG → mm²'].forEach(u => {
-          const opt = document.createElement('option'); opt.value = u; opt.textContent = u; sel.appendChild(opt);
-        });
+    function gerarPDFTabela(tipo){
+      if(typeof window.jspdf === 'undefined'){ alert('jsPDF não carregou.'); return; }
+      const {jsPDF} = window.jspdf;
+      const doc = new jsPDF();
+      pdfHeader(doc, 'Tabela: ' + pdfSafe(tipo));
+      doc.setFontSize(14); doc.setFont(undefined,'bold');
+      doc.text(pdfSafe('Tabela Tecnica: ' + tipo), 20, 58);
+      const hs = {fillColor:[21,101,192]};
+      if(tipo === 'Condutores'){
+        doc.autoTable({startY:68,
+          head:[['Secao (mm2)','Diametro (mm)','Peso (kg/km)','Resistencia (Ω/km)']],
+          body:[['1,5','1,38','13,3','12,1'],['2,5','1,78','22,2','7,41'],['4','2,25','35,5','4,61'],['6','2,76','53,3','3,08'],['10','3,57','88,8','1,83'],['16','4,51','142','1,15'],['25','5,64','222','0,727'],['35','6,68','311','0,524'],['50','7,98','444','0,387']],
+          headStyles:hs});
+      } else if(tipo === 'Disjuntores'){
+        doc.autoTable({startY:68,
+          head:[['Corrente (A)','Condutor Min. (mm2)','Potencia 127V (W)','Potencia 220V (W)']],
+          body:[['10','1,5','1.270','2.200'],['16','2,5','2.032','3.520'],['20','4','2.540','4.400'],['25','4','3.175','5.500'],['32','6','4.064','7.040'],['40','10','5.080','8.800'],['50','10','6.350','11.000'],['63','16','8.001','13.860'],['70','25','8.890','15.400']],
+          headStyles:hs});
       } else {
-        const data = conversaoData[tipo];
-        data.unidades.forEach((u, i) => {
-          const opt = document.createElement('option'); opt.value = data.valores[i]; opt.textContent = u; sel.appendChild(opt);
-        });
+        doc.autoTable({startY:68,
+          head:[['Secao (mm2)','B1 (A)','B2 (A)','C (A)']],
+          body:[['1,5','15,5','17,5','19,5'],['2,5','21','24','27'],['4','28','32','36'],['6','36','41','46'],['10','50','57','63'],['16','68','76','85'],['25','89','101','112'],['35','110','125','138'],['50','134','151','168']],
+          headStyles:hs});
       }
+      pdfFooter(doc);
+      doc.save('tabela_'+tipo.replace(/ /g,'_')+'_'+Date.now()+'.pdf');
     }
 
-    function calcularConversao() {
-      if(!canUseFree('conversao', 'Conversão')) return;
-      const tipo = document.getElementById('tipoConversao').value;
-      const valor = parseFloat(document.getElementById('valorConversao').value);
-      const unidade = document.getElementById('unidadeConversao').value;
-
-      if (isNaN(valor)) { alert('Digite um valor válido!'); return; }
-
-      let html = '<div class="result-box"><h4>🔄 Resultados da Conversão</h4>';
-
-      if (tipo === 'bitola') {
-        const tbl = conversaoData.bitola.awgTable;
-        if (unidade === 'mm² → AWG') {
-          const closest = tbl.reduce((prev, curr) =>
-            Math.abs(curr.mm2 - valor) < Math.abs(prev.mm2 - valor) ? curr : prev
-          );
-          html += `<div class="result-item"><span>Valor inserido</span><strong>${valor} mm²</strong></div>`;
-          html += `<div class="result-item"><span>AWG equivalente mais próximo</span><strong>AWG ${closest.awg}</strong></div>`;
-          html += `<div class="result-item"><span>mm² exato do AWG ${closest.awg}</span><strong>${closest.mm2} mm²</strong></div>`;
-        } else {
-          const awgStr = prompt('Digite o número AWG (ex: 12, 4/0, 1/0):');
-          const found = tbl.find(r => r.awg === awgStr?.trim());
-          if (!found) { alert('AWG não encontrado.'); return; }
-          html += `<div class="result-item"><span>AWG ${found.awg}</span><strong>${found.mm2} mm²</strong></div>`;
-        }
-      } else {
-        const data = conversaoData[tipo];
-        let toBase, fromBase;
-        if (tipo === 'potencia')      { toBase = data.toW;   fromBase = data.fromW; }
-        else if (tipo === 'tensao')   { toBase = data.toV;   fromBase = data.fromV; }
-        else if (tipo === 'corrente') { toBase = data.toA;   fromBase = data.fromA; }
-        else if (tipo === 'resistencia') { toBase = data.toOhm; fromBase = data.fromOhm; }
-        else if (tipo === 'energia')  { toBase = data.toKwh; fromBase = data.fromKwh; }
-
-        const baseVal = valor * toBase[unidade];
-
-        html += `<div class="result-item"><span>Valor original</span><strong>${valor} ${unidade}</strong></div>`;
-        html += `<div style="height:0.5rem;"></div>`;
-
-        const resultados = [];
-        Object.keys(fromBase).forEach(u => {
-          if (u !== unidade) {
-            const converted = baseVal * fromBase[u];
-            let display;
-            if (converted >= 1e6) display = converted.toExponential(4);
-            else if (converted < 0.0001 && converted !== 0) display = converted.toExponential(4);
-            else display = parseFloat(converted.toFixed(6)).toString();
-            html += `<div class="result-item"><span>${u}</span><strong>${display} ${u}</strong></div>`;
-            resultados.push([u, `${display} ${u}`]);
-          }
-        });
-
-        lastCalcResults.conversao = { valor, unidade, resultados };
-        salvarCalculoHistorico('Conversão', `${valor} ${unidade}`);
-      }
-
-      html += '</div>';
-      document.getElementById('resultConversao').innerHTML = html;
-    }
-
-    /* ======================== ILUMINAÇÃO ======================== */
-    function calcularIluminacao() {
-      if(!canUseFree('iluminacao', 'Iluminação')) return;
-      const area = parseFloat(document.getElementById('areaIlum').value);
-      const altura = parseFloat(document.getElementById('alturaIlum').value);
-      const planoTrabalho = parseFloat(document.getElementById('planoTrabalho').value) || 0.75;
-      const tipoAmbiente = document.getElementById('tipoAmbienteIlum').value;
-      const fluxoLamp = parseFloat(document.getElementById('fluxoLamp').value);
-
-      if (!area || !altura || !fluxoLamp) { alert('Preencha todos os campos obrigatórios!'); return; }
-
-      const iluminancias = {
-        sala:       { E: 200, nome: 'Sala de Estar' },
-        quarto:     { E: 100, nome: 'Quarto' },
-        cozinha:    { E: 300, nome: 'Cozinha' },
-        escritorio: { E: 500, nome: 'Escritório' },
-        banheiro:   { E: 200, nome: 'Banheiro' },
-        garagem:    { E: 75,  nome: 'Garagem' },
-        corredor:   { E: 100, nome: 'Corredor' },
-        externo:    { E: 50,  nome: 'Área Externa' }
-      };
-      const { E, nome } = iluminancias[tipoAmbiente];
-
-      const larguraEst = Math.sqrt(area * 0.75);
-      const comprimentoEst = area / larguraEst;
-      const h = altura - planoTrabalho;
-      const K = (larguraEst * comprimentoEst) / (h * (larguraEst + comprimentoEst));
-
-      let fu = 0.5;
-      if (K >= 0.6 && K < 1) fu = 0.55;
-      else if (K >= 1 && K < 1.5) fu = 0.60;
-      else if (K >= 1.5 && K < 2) fu = 0.65;
-      else if (K >= 2 && K < 2.5) fu = 0.70;
-      else if (K >= 2.5) fu = 0.75;
-
-      const fm = 0.80;
-      const nLampadas = Math.ceil((E * area) / (fluxoLamp * fu * fm));
-      const nLuminarias = Math.ceil(nLampadas / 2);
-      const fluxoTotal = nLampadas * fluxoLamp;
-      const iluminanciaReal = (fluxoTotal * fu * fm) / area;
-
-      const html = `
-        <div class="result-box">
-          <h4>💡 Resultado — ${nome}</h4>
-          <div class="result-item"><span>Iluminância recomendada</span><strong>${E} lux</strong></div>
-          <div class="result-item"><span>Área do ambiente</span><strong>${area} m²</strong></div>
-          <div class="result-item"><span>Índice do local (K)</span><strong>${K.toFixed(2)}</strong></div>
-          <div class="result-item"><span>Fator de utilização (Fu)</span><strong>${fu.toFixed(2)}</strong></div>
-          <div class="result-item"><span>Fator de manutenção (Fm)</span><strong>${fm}</strong></div>
-          <div style="border-top:2px solid var(--blue-glow);margin:0.8rem 0;"></div>
-          <div class="result-item"><span>🔆 Nº de lâmpadas</span><strong style="color:var(--yellow);font-size:1.1rem;">${nLampadas} lâmpadas</strong></div>
-          <div class="result-item"><span>💡 Nº de luminárias (2 lâmp/lum.)</span><strong>${nLuminarias} luminárias</strong></div>
-          <div class="result-item"><span>Iluminância resultante</span><strong>${iluminanciaReal.toFixed(0)} lux</strong></div>
-          <div class="result-item"><span>Status</span><strong style="color:${iluminanciaReal>=E?'#4caf50':'#ff9800'}">${iluminanciaReal>=E?'✅ Dentro do recomendado':'⚠️ Abaixo do recomendado'}</strong></div>
-        </div>`;
-
-      lastCalcResults.iluminacao = {nome, area, E, nLampadas, nLuminarias, iluminanciaReal: iluminanciaReal.toFixed(0)};
-      document.getElementById('resultIluminacao').innerHTML = html;
-      salvarCalculoHistorico('Iluminação', `${nome} · ${nLampadas} lâmp. · ${iluminanciaReal.toFixed(0)} lux`);
-    }
-
-    /* ======================== CURTO-CIRCUITO ======================== */
-    function calcularCurtoCircuito() {
-      if(!canUseFree('curto', 'Curto-Circuito')) return;
-      const tensao = parseFloat(document.getElementById('tensaoCC').value);
-      const potTrafo = parseFloat(document.getElementById('potTrafo').value);
-      const impedTrafo = parseFloat(document.getElementById('impedTrafo').value) || 4;
-      const secCabo = parseFloat(document.getElementById('secCaboCC').value);
-      const distCabo = parseFloat(document.getElementById('distCaboCC').value);
-      const tipoCC = document.getElementById('tipoCC').value;
-
-      if (!tensao || !potTrafo || !secCabo || !distCabo) { alert('Preencha todos os campos!'); return; }
-
-      const zTrafo = (impedTrafo / 100) * (tensao * tensao) / (potTrafo * 1000);
-      const ro = 0.0172;
-      const rCabo = (ro * distCabo) / secCabo;
-      const zTotal = Math.sqrt(Math.pow(zTrafo + rCabo * 2, 2));
-
-      let Icc3f = tensao / (Math.sqrt(3) * zTotal);
-      const Icc2f = Icc3f * 0.866;
-      const Icc1f = tensao / (2 * zTotal);
-
-      const resultado = tipoCC === 'trifasico' ? Icc3f : tipoCC === 'bifasico' ? Icc2f : Icc1f;
-      const nomeCC = tipoCC === 'trifasico' ? 'Trifásico (mais severo)' : tipoCC === 'bifasico' ? 'Bifásico' : 'Monofásico (fase-neutro)';
-      const podInterr = resultado <= 6000 ? 6 : resultado <= 10000 ? 10 : resultado <= 15000 ? 15 : 25;
-
-      const html = `
-        <div class="result-box">
-          <h4>⚡ Corrente de Curto-Circuito — ${nomeCC}</h4>
-          <div class="result-item"><span>Impedância do transformador (Zt)</span><strong>${zTrafo.toFixed(4)} Ω</strong></div>
-          <div class="result-item"><span>Resistência do cabo (Rc ida+volta)</span><strong>${(rCabo*2).toFixed(4)} Ω</strong></div>
-          <div class="result-item"><span>Impedância total (Ztotal)</span><strong>${zTotal.toFixed(4)} Ω</strong></div>
-          <div style="border-top:2px solid var(--blue-glow);margin:0.8rem 0;"></div>
-          <div class="result-item"><span>⚡ Icc Trifásico</span><strong>${(Icc3f/1000).toFixed(2)} kA (${Icc3f.toFixed(0)} A)</strong></div>
-          <div class="result-item"><span>⚡ Icc Bifásico</span><strong>${(Icc2f/1000).toFixed(2)} kA (${Icc2f.toFixed(0)} A)</strong></div>
-          <div class="result-item"><span>⚡ Icc Monofásico</span><strong>${(Icc1f/1000).toFixed(2)} kA (${Icc1f.toFixed(0)} A)</strong></div>
-          <div style="border-top:2px solid var(--yellow);margin:0.8rem 0;"></div>
-          <div class="result-item"><span>🔒 Poder de corte mínimo do disjuntor</span><strong style="color:var(--yellow)">${podInterr} kA</strong></div>
-        </div>`;
-
-      lastCalcResults.curtoCircuito = {nomeCC, resultado, podInterr};
-      document.getElementById('resultCurtoCircuito').innerHTML = html;
-      salvarCalculoHistorico('Curto-Circuito', `${(resultado/1000).toFixed(2)}kA · corte ${podInterr}kA`);
-    }
-
-    /* ======================== FATOR DE DEMANDA ======================== */
-    function adicionarCargaFD() {
-      const container = document.getElementById('cargasFD');
-      const div = document.createElement('div');
-      div.className = 'carga-fd-row consumo-item-row';
-      div.innerHTML = `
-        <div class="form-group"><label>Carga</label><input type="text" placeholder="Ex: Ar-condicionado"></div>
-        <div class="form-group"><label>Potência (W)</label><input type="number" placeholder="Ex: 2000"></div>
-        <div class="form-group"><label>Qtd</label><input type="number" placeholder="1" value="1" min="1"></div>
-        <div class="form-group"><label>FD (%)</label><input type="number" placeholder="Ex: 75" value="75" min="1" max="100"></div>
-        <div style="padding-bottom:0.9rem;display:flex;align-items:flex-end;">
-          <button class="btn btn-red" onclick="this.closest('.carga-fd-row').remove()">🗑️</button>
-        </div>`;
-      container.appendChild(div);
-    }
-
-    function calcularFatorDemanda() {
-      if(!canUseFree('fatorDemanda', 'Fator de Demanda')) return;
-      const rows = document.querySelectorAll('.carga-fd-row');
-      if (!rows.length) { alert('Adicione pelo menos uma carga!'); return; }
-
-      let potenciaInstalada = 0;
-      let demandaMaxima = 0;
-      let itens = [];
-
-      rows.forEach(row => {
-        const inputs = row.querySelectorAll('input');
-        const nome = inputs[0].value || 'Carga';
-        const pot = parseFloat(inputs[1].value) || 0;
-        const qtd = parseFloat(inputs[2].value) || 1;
-        const fd = parseFloat(inputs[3].value) || 75;
-
-        if (pot > 0) {
-          const potTotal = pot * qtd;
-          const demanda = potTotal * (fd / 100);
-          potenciaInstalada += potTotal;
-          demandaMaxima += demanda;
-          itens.push({ nome, potTotal, fd, demanda });
-        }
+    function gerarPDFOrcamento(){
+      if(typeof window.jspdf === 'undefined'){ alert('jsPDF não carregou.'); return; }
+      const nome = document.getElementById('nomeCliente').value;
+      if(!nome || !itensOrcamento.length){ alert('Preencha o nome do cliente e adicione itens!'); return; }
+      const {jsPDF} = window.jspdf;
+      const doc = new jsPDF();
+      pdfFooter(doc);
+      pdfHeader(doc, 'Orcamento Profissional');
+      doc.setFontSize(12);
+      let y = 58;
+      doc.setFont(undefined,'bold'); doc.text(pdfSafe('Dados do Cliente:'), 20, y); y += 9;
+      doc.setFont(undefined,'normal'); doc.setFontSize(10);
+      doc.text(pdfSafe('Nome: '+nome), 20, y); y += 7;
+      doc.text(pdfSafe('Telefone: '+document.getElementById('telefoneCliente').value), 20, y); y += 7;
+      doc.text(pdfSafe('Endereco: '+document.getElementById('enderecoCliente').value), 20, y); y += 7;
+      doc.text(pdfSafe('Data: '+new Date().toLocaleDateString('pt-BR')), 20, y); y += 4;
+      const total = itensOrcamento.reduce((s,i)=>s+i.total,0);
+      doc.autoTable({
+        startY: y+6,
+        head: [[pdfSafe('Descricao'), 'Qtd', 'Valor Unit.', 'Valor Total']],
+        body: itensOrcamento.map(i=>[pdfSafe(i.d), i.q, 'R$ '+i.v.toFixed(2), 'R$ '+i.total.toFixed(2)]),
+        foot: [['', '', 'TOTAL:', 'R$ '+total.toFixed(2)]],
+        headStyles: {fillColor:[21,101,192]},
+        footStyles: {fillColor:[30,120,60], fontStyle:'bold', fontSize:12}
       });
-
-      if (!potenciaInstalada) { alert('Preencha as potências das cargas!'); return; }
-
-      const fdGlobal = (demandaMaxima / potenciaInstalada) * 100;
-      const tensao = parseFloat(document.getElementById('tensaoFD').value) || 220;
-      const correnteDemanda = demandaMaxima / tensao;
-
-      const secoesDisponiveis = [1.5, 2.5, 4, 6, 10, 16, 25, 35, 50, 70, 95];
-      const cap220 = [15.5, 21, 28, 36, 50, 68, 89, 110, 134, 170, 210];
-      let secaoRec = 50;
-      for(let i = 0; i < cap220.length; i++) {
-        if(cap220[i] >= correnteDemanda * 1.25) { secaoRec = secoesDisponiveis[i]; break; }
-      }
-      const disjRec = [10,16,20,25,32,40,50,63,70,80,100].find(d => d >= correnteDemanda * 1.25) || 100;
-
-      let html = `<div class="result-box"><h4>📊 Resultado — Fator de Demanda</h4>`;
-      html += `<div class="result-item"><span>Potência Total Instalada</span><strong>${(potenciaInstalada/1000).toFixed(2)} kW</strong></div>`;
-      html += `<div class="result-item"><span>Demanda Máxima Estimada</span><strong>${(demandaMaxima/1000).toFixed(2)} kW</strong></div>`;
-      html += `<div class="result-item"><span>Fator de Demanda Global</span><strong>${fdGlobal.toFixed(1)}%</strong></div>`;
-      html += `<div class="result-item"><span>Corrente de demanda (${tensao}V)</span><strong>${correnteDemanda.toFixed(1)} A</strong></div>`;
-      html += `<div style="border-top:2px solid var(--yellow);margin:0.8rem 0;"></div>`;
-      html += `<div class="result-item"><span>Seção recomendada</span><strong style="color:var(--yellow)">${secaoRec} mm²</strong></div>`;
-      html += `<div class="result-item"><span>Disjuntor recomendado</span><strong style="color:var(--yellow)">${disjRec} A</strong></div>`;
-      html += `<div style="margin-top:1rem;font-size:0.82rem;color:var(--text-muted);">Detalhamento por carga:</div>`;
-      itens.forEach(it => {
-        html += `<div class="result-item"><span>${it.nome} (FD ${it.fd}%)</span><strong>${(it.demanda/1000).toFixed(2)} kW</strong></div>`;
-      });
-      html += `</div>`;
-
-      lastCalcResults.fatorDemanda = {potenciaInstalada, demandaMaxima, fdGlobal, secaoRec, disjRec};
-      document.getElementById('resultFatorDemanda').innerHTML = html;
-      salvarCalculoHistorico('Fator de Demanda', `${(demandaMaxima/1000).toFixed(2)}kW · FD ${fdGlobal.toFixed(1)}%`);
+      const fy = doc.lastAutoTable.finalY + 14;
+      doc.setFontSize(10);
+      doc.text(pdfSafe('Obs: Validade a combinar | Condicoes: A combinar'), 20, fy);
+      pdfFooter(doc);
+      doc.save('orcamento_'+pdfSafe(nome).replace(/ /g,'_')+'_'+Date.now()+'.pdf');
     }
 
-    /* ======================== TEMA (claro/escuro) ======================== */
-    function toggleDarkMode() {
+    function enviarWhatsApp(){
+      const nome = document.getElementById('nomeCliente').value || 'Cliente';
+      const tel = document.getElementById('telefoneCliente').value || '';
+      const end = document.getElementById('enderecoCliente').value || '';
+      if(!itensOrcamento.length){ alert('Adicione itens ao orçamento!'); return; }
+      const total = itensOrcamento.reduce((s,i)=>s+i.total,0);
+      let msg = `*Orçamento Elétrica Pro*\n`;
+      msg += `Cliente: ${nome}\n`;
+      if(tel) msg += `Telefone: ${tel}\n`;
+      if(end) msg += `Endereço: ${end}\n`;
+      msg += `\n*Itens:*\n`;
+      itensOrcamento.forEach(item=>{
+        msg += `• ${item.d} — ${item.q}x R$ ${item.v.toFixed(2)} = R$ ${item.total.toFixed(2)}\n`;
+      });
+      msg += `\n*Total: R$ ${total.toFixed(2)}*\n`;
+      msg += `\nValidade: a combinar | Pagamento: A combinar`;
+      const encoded = encodeURIComponent(msg);
+      window.open(`https://wa.me/?text=${encoded}`, '_blank');
+    }
+
+    /* ========= Tema ========= */
+    function toggleDarkMode(){
       const root = document.documentElement;
       const btn = document.getElementById('darkModeBtn');
-      const isDark = root.getAttribute('data-theme') === 'dark' || !root.getAttribute('data-theme');
-
-      if (isDark) {
-        root.style.setProperty('--blue-deep', '#f0f4f8');
-        root.style.setProperty('--blue-mid', '#e2ecf7');
-        root.style.setProperty('--blue-bright', '#1565c0');
-        root.style.setProperty('--card-bg', 'rgba(255,255,255,0.92)');
-        root.style.setProperty('--card-border', 'rgba(21,101,192,0.25)');
-        root.style.setProperty('--text-muted', 'rgba(10,22,40,0.6)');
-        document.body.style.color = '#0a1628';
-        btn.textContent = '🌙 Modo Escuro';
+      const isDark = !root.getAttribute('data-theme') || root.getAttribute('data-theme') === 'dark';
+      if(isDark){
         root.setAttribute('data-theme', 'light');
+        document.body.style.background = '#f0f4f8';
+        document.body.style.color = '#0a1628';
+        if(btn) btn.textContent = '🌙 Escuro';
         localStorage.setItem('eletricapro_theme', 'light');
       } else {
-        root.style.setProperty('--blue-deep', '#0a1628');
-        root.style.setProperty('--blue-mid', '#0d2347');
-        root.style.setProperty('--blue-bright', '#1565c0');
-        root.style.setProperty('--card-bg', 'rgba(13,35,71,0.85)');
-        root.style.setProperty('--card-border', 'rgba(33,150,243,0.35)');
-        root.style.setProperty('--text-muted', 'rgba(255,255,255,0.65)');
-        document.body.style.color = '#ffffff';
-        btn.textContent = '☀️ Modo Claro';
         root.setAttribute('data-theme', 'dark');
+        document.body.style.background = '#0a1628';
+        document.body.style.color = '#ffffff';
+        if(btn) btn.textContent = '☀️ Claro';
         localStorage.setItem('eletricapro_theme', 'dark');
       }
     }
-
-
-    function handleDeepLinks() {
-      const params = new URLSearchParams(window.location.search);
-      const calc = (params.get('calc') || '').toLowerCase();
-      const tab = (params.get('tab') || '').toLowerCase();
-
-      const calcMap = {
-        ohm: ['calcLeiOhm', 'Lei de Ohm'],
-        queda: ['calcQueda', 'Queda de Tensão'],
-        dimensionamento: ['calcCondutor', 'Dimensionamento']
-      };
-      const tabMap = {
-        orcamentos: ['orcamentos', 'Orçamentos']
-      };
-
-      if (calcMap[calc]) {
-        const [id, title] = calcMap[calc];
-        openScreen(id, title);
-        return;
-      }
-      if (tabMap[tab]) {
-        const [id, title] = tabMap[tab];
-        openScreen(id, title);
-      }
-    }
-
-    function initTheme() {
-      const savedTheme = localStorage.getItem('eletricapro_theme');
-      if (savedTheme === 'light') {
-        document.documentElement.setAttribute('data-theme', 'light');
-        toggleDarkMode();
+    function initTheme(){
+      const saved = localStorage.getItem('eletricapro_theme');
+      if(saved === 'light'){
+        // Initialize dark first, then toggle
+        document.documentElement.setAttribute('data-theme','dark');
+        // Defer to ensure DOM is ready
+        setTimeout(toggleDarkMode, 0);
       } else {
-        document.documentElement.setAttribute('data-theme', 'dark');
+        document.documentElement.setAttribute('data-theme','dark');
       }
     }
 
-    /* ======================== INIT ======================== */
-    window.addEventListener('load', () => {
-      initTheme();
-      updateUnidades();
-      renderHistorico();
-      handleDeepLinks();
-    });
-  </script>
-
-  <!-- SERVICE WORKER (PWA OFFLINE) -->
-  <script>
-    if ('serviceWorker' in navigator) {
-      window.addEventListener('load', () => {
-        navigator.serviceWorker.register('./sw.js', { scope: './' })
-          .then(reg => {
-            console.log('✅ Service Worker ativo, scope:', reg.scope);
-            reg.addEventListener('updatefound', () => {
-              const newWorker = reg.installing;
-              newWorker.addEventListener('statechange', () => {
-                if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
-                  console.log('🔄 Nova versão disponível!');
-                }
-              });
-            });
-          })
-          .catch(err => console.warn('⚠️ Erro ao registrar SW:', err));
+    /* ========= Service Worker ========= */
+    if('serviceWorker' in navigator){
+      window.addEventListener('load', ()=>{
+        navigator.serviceWorker.register('./sw.js', {scope:'./'}).catch(()=>null);
       });
     }
-    
+
+    /* ========= Init (gate) ========= */
+    function initApp(){
+      initTheme();
+      updateUnidades();
+      const user = getSession();
+      if(user){
+        showApp();
+      } else {
+        // show lock screen (default in HTML)
+      }
+      renderHistorico();
+    }
+
+    initApp();
   </script>
-  <script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-app.js";
-import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-auth.js";
-
-const firebaseConfig = {
-  apiKey: "AIzaSyCibrDhAmeTg-2W9TiXhomotfLEM5EqwgE",
-  authDomain: "eletrica-pro.firebaseapp.com",
-  projectId: "eletrica-pro",
-  storageBucket: "eletrica-pro.firebasestorage.app",
-  messagingSenderId: "318733768519",
-  appId: "1:318733768519:web:93e0bdcdecd49b9570de62"
-};
-
-const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
-
-onAuthStateChanged(auth, (user) => {
-  if(user){
-    console.log("Usuário logado:", user.email);
-  }else{
-    console.log("Usuário não logado");
-  }
-});
-</script>
-  <!-- ============================================================
-     snippet-footer-links.html
-     ElétricaPro — COFservicos
-     
-     ONDE COLAR: antes de </body> no seu index.html
-     (ou dentro do elemento <footer> se você tiver um)
-     
-     INSTRUÇÕES:
-     1. Copie o bloco abaixo e cole antes de </body> no index.html
-     2. O estilo já está embutido — funciona sozinho.
-     ============================================================ -->
-
-<style>
-  .ep-legal-footer {
-    background: #1e293b;
-    padding: 1.25rem 1.5rem;
-    text-align: center;
-    margin-top: auto;
-  }
-  .ep-legal-footer .ep-legal-brand {
-    font-size: 0.8rem;
-    color: #f59e0b;
-    font-weight: 700;
-    letter-spacing: 1.5px;
-    text-transform: uppercase;
-    margin-bottom: 0.5rem;
-  }
-  .ep-legal-footer .ep-legal-links {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 0.4rem 1.2rem;
-    margin-bottom: 0.6rem;
-  }
-  .ep-legal-footer .ep-legal-links a {
-    color: #94a3b8;
-    text-decoration: none;
-    font-size: 0.8rem;
-    transition: color 0.15s;
-  }
-  .ep-legal-footer .ep-legal-links a:hover {
-    color: #f59e0b;
-  }
-  .ep-legal-footer .ep-legal-copy {
-    font-size: 0.72rem;
-    color: #475569;
-  }
-</style>
-
-<footer class="ep-legal-footer">
-  <div class="ep-legal-brand">⚡ ElétricaPro</div>
-  <div class="ep-legal-links">
-    <a href="politica-de-privacidade.html">🔒 Política de Privacidade</a>
-    <a href="termos-de-uso.html">📋 Termos de Uso</a>
-    <a href="etica-e-conformidade.html">🤝 Ética &amp; Conformidade</a>
-    <a href="mailto:eletricaproapp@gmail.com">✉ Suporte</a>
-  </div>
-  <div class="ep-legal-copy">
-    © 2026 COFservicos · CNPJ 31.577.846/0001-12 · Iguape/SP
-  </div>
-</footer>
-
 </body>
-  </html>
-            
+</html>
