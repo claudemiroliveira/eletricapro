@@ -6,6 +6,7 @@ const FILES_TO_CACHE = [
   "./login.html",
   "./manifest.json",
   "./app.js",
+  "./css/style.css,
   "./consentimento-li-e-aceito.js",
   "./politica-de-privacidade.html",
   "./termos-de-uso.html",
