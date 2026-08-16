@@ -1,1036 +1,1284 @@
-
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>EletricaPRO — Login & Planos PRO</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>EletricaPRO — Login</title>
+
   <style>
     :root {
-      --bg:       #0f1117;
-      --surface:  #1a1d2e;
+      --bg: #0f1117;
+      --surface: #1a1d2e;
       --surface2: #22263a;
-      --border:   #2e3350;
-      --accent:   #f5c518;
-      --green:    #22c55e;
-      --red:      #ef4444;
-      --blue:     #3b82f6;
-      --purple:   #a855f7;
-      --text:     #e2e8f0;
-      --muted:    #7c8db0;
-      --radius:   14px;
+      --border: #2e3350;
+      --accent: #f5c518;
+      --blue: #3b82f6;
+      --green: #22c55e;
+      --red: #ef4444;
+      --text: #e2e8f0;
+      --muted: #7c8db0;
     }
-    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
     body {
       font-family: 'Segoe UI', system-ui, sans-serif;
-      background: var(--bg); color: var(--text);
-      min-height: 100vh; padding-bottom: 40px;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      padding: 20px;
     }
 
-    /* ── TOP NAV ── */
-    .top-nav {
-      background: linear-gradient(135deg, #1a1d2e 0%, #0f1117 100%);
-      border-bottom: 1px solid var(--border);
-      padding: 12px 20px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      position: sticky;
-      top: 0;
-      z-index: 100;
+    /* CONTAINER */
+
+    .container {
+      width: 100%;
+      max-width: 430px;
     }
-    .top-nav .brand {
-      font-size: 20px;
-      font-weight: 800;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      text-decoration: none;
-      color: var(--text);
+
+    /* LOGO */
+
+    .header {
+      text-align: center;
+      margin-bottom: 24px;
     }
-    .top-nav .brand .logo-mini {
-      background: var(--accent);
-      color: #000;
-      padding: 4px 8px;
-      border-radius: 8px;
-      font-size: 16px;
-    }
-    .top-nav .nav-btns {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-    .nav-btn {
-      padding: 8px 18px;
-      border-radius: 9px;
-      font-size: 13px;
-      font-weight: 700;
-      cursor: pointer;
-      border: none;
-      transition: all .2s;
-      text-decoration: none;
+
+    .logo {
       display: inline-flex;
       align-items: center;
-      gap: 6px;
-    }
-    .nav-btn.login {
-      background: var(--surface2);
-      border: 1px solid var(--border);
-      color: var(--text);
-    }
-    .nav-btn.login:hover { border-color: var(--blue); color: var(--blue); }
-    .nav-btn.pro {
-      background: linear-gradient(135deg, #2e7d32, #22c55e);
-      color: #fff;
-      box-shadow: 0 4px 14px rgba(34,197,94,.35);
-    }
-    .nav-btn.pro:hover { filter: brightness(1.1); transform: translateY(-1px); }
-    .nav-btn.planos {
+      justify-content: center;
+
+      width: 70px;
+      height: 70px;
+
       background: var(--accent);
       color: #000;
-    }
-    .nav-btn.planos:hover { filter: brightness(1.1); transform: translateY(-1px); }
 
-    /* ── HEADER ── */
-    .pro-header {
-      background: linear-gradient(135deg, #1a1d2e 0%, #0f1117 100%);
-      padding: 32px 20px; text-align: center;
-    }
-    .pro-header .logo {
-      font-size: 42px; background: var(--accent);
-      color: #000; padding: 10px 18px; border-radius: 14px;
-      display: inline-block; margin-bottom: 16px;
-    }
-    .pro-header h1 { font-size: 28px; font-weight: 800; }
-    .pro-header h1 span { color: var(--accent); }
-    .pro-header p  { color: var(--muted); font-size: 15px; margin-top: 6px; }
+      border-radius: 18px;
 
-    /* ── STATUS BAR ── */
-    .status-bar {
-      max-width: 700px; margin: 24px auto 0; padding: 0 20px;
-    }
-    .status-box {
-      border-radius: 12px; padding: 14px 18px;
-      display: flex; align-items: center; gap: 12px; font-size: 14px;
-    }
-    .status-box.not-logged   { background: #1e2336; border: 1px solid var(--border); }
-    .status-box.not-pro      { background: #1e2336; border: 1px solid var(--border); }
-    .status-box.is-pro       { background: #052e16; border: 1px solid var(--green); }
-    .status-box.pending      { background: #2e1b07; border: 1px solid #f59e0b; }
-    .status-box .icon        { font-size: 22px; }
-    .status-box strong       { display: block; font-size: 15px; }
-    .status-box span         { color: var(--muted); font-size: 13px; }
-    .user-uid {
-      font-family: monospace; font-size: 10px;
-      background: var(--surface2); padding: 2px 8px; border-radius: 6px;
-      color: var(--muted); margin-left: auto; cursor: pointer;
-    }
-    .user-uid:hover { color: var(--accent); }
+      font-size: 38px;
 
-    /* ── LOGIN SECTION ── */
-    .login-section {
-      max-width: 440px; margin: 28px auto 0; padding: 0 20px;
+      margin-bottom: 14px;
+
+      box-shadow: 0 8px 25px rgba(245, 197, 24, .2);
     }
+
+    .header h1 {
+      font-size: 28px;
+      font-weight: 800;
+    }
+
+    .header h1 span {
+      color: var(--accent);
+    }
+
+    .header p {
+      color: var(--muted);
+      font-size: 14px;
+      margin-top: 5px;
+    }
+
+    /* LOGIN BOX */
+
     .login-box {
       background: var(--surface);
+
       border: 1px solid var(--border);
       border-radius: 18px;
-      padding: 28px 24px;
-    }
-    .login-box h2 {
-      font-size: 20px; font-weight: 800; text-align: center; margin-bottom: 6px;
-    }
-    .login-box .subtitle {
-      color: var(--muted); font-size: 13px; text-align: center; margin-bottom: 22px;
+
+      padding: 26px 24px;
+
+      box-shadow: 0 15px 50px rgba(0,0,0,.25);
     }
 
-    /* Tabs */
+    .login-box h2 {
+      text-align: center;
+      font-size: 21px;
+      margin-bottom: 6px;
+    }
+
+    .subtitle {
+      text-align: center;
+      color: var(--muted);
+      font-size: 13px;
+      margin-bottom: 22px;
+    }
+
+    /* TABS */
+
     .auth-tabs {
-      display: flex; gap: 6px; margin-bottom: 20px;
+      display: flex;
+      gap: 6px;
+      margin-bottom: 20px;
     }
+
     .auth-tab {
-      flex: 1; padding: 9px; text-align: center;
+      flex: 1;
+
+      padding: 10px;
+
+      text-align: center;
+
       background: var(--surface2);
-      border: 1.5px solid var(--border);
-      border-radius: 9px; cursor: pointer;
-      font-size: 13px; font-weight: 600;
-      transition: all .2s; color: var(--muted);
+      border: 1px solid var(--border);
+
+      border-radius: 9px;
+
+      color: var(--muted);
+
+      font-size: 13px;
+      font-weight: 700;
+
+      cursor: pointer;
+
+      transition: .2s;
     }
+
+    .auth-tab:hover {
+      border-color: var(--blue);
+    }
+
     .auth-tab.active {
       background: linear-gradient(135deg, #1565c0, #3b82f6);
       border-color: var(--blue);
       color: #fff;
     }
-    .auth-form { display: none; }
-    .auth-form.active { display: block; }
 
-    /* Inputs */
-    .field { margin-bottom: 14px; }
-    .field label {
-      display: block; margin-bottom: 5px;
-      font-size: 13px; color: var(--muted); font-weight: 500;
+    /* FORMS */
+
+    .auth-form {
+      display: none;
     }
+
+    .auth-form.active {
+      display: block;
+    }
+
+    /* INPUT */
+
+    .field {
+      margin-bottom: 14px;
+    }
+
+    .field label {
+      display: block;
+
+      color: var(--muted);
+
+      font-size: 13px;
+      font-weight: 600;
+
+      margin-bottom: 6px;
+    }
+
     .field input {
-      width: 100%; padding: 11px 14px;
+      width: 100%;
+
+      padding: 12px 14px;
+
       background: var(--surface2);
+
       border: 1.5px solid var(--border);
       border-radius: 9px;
-      color: var(--text); font-size: 14px;
-      transition: all .2s;
+
+      color: var(--text);
+
+      font-size: 14px;
+
+      transition: .2s;
     }
+
     .field input:focus {
       outline: none;
-      border-color: var(--blue);
-      background: rgba(59,130,246,.08);
-      box-shadow: 0 0 0 3px rgba(59,130,246,.15);
-    }
-    .field input::placeholder { color: var(--muted); }
 
-    /* Password wrapper */
-    .pwd-wrapper { position: relative; }
-    .pwd-wrapper input { padding-right: 42px; }
-    .pwd-toggle {
-      position: absolute; right: 12px; top: 50%;
-      transform: translateY(-50%);
-      background: none; border: none;
-      color: var(--muted); cursor: pointer; font-size: 16px;
-      padding: 0;
+      border-color: var(--blue);
+
+      background: rgba(59,130,246,.08);
+
+      box-shadow:
+        0 0 0 3px rgba(59,130,246,.15);
     }
-    .pwd-toggle:hover { color: var(--text); }
+
+    .field input::placeholder {
+      color: var(--muted);
+    }
+
+    /* PASSWORD */
+
+    .pwd-wrapper {
+      position: relative;
+    }
+
+    .pwd-wrapper input {
+      padding-right: 45px;
+    }
+
+    .pwd-toggle {
+      position: absolute;
+
+      right: 12px;
+      top: 50%;
+
+      transform: translateY(-50%);
+
+      background: none;
+      border: none;
+
+      color: var(--muted);
+
+      cursor: pointer;
+
+      font-size: 17px;
+    }
+
+    .pwd-toggle:hover {
+      color: var(--text);
+    }
+
+    /* MESSAGES */
 
     .auth-msg {
-      padding: 10px 14px; border-radius: 9px;
-      font-size: 13px; margin-bottom: 14px; display: none;
-    }
-    .auth-msg.error   { background: rgba(239,68,68,.12);  border: 1px solid var(--red);   color: #fca5a5; }
-    .auth-msg.success { background: rgba(34,197,94,.12);  border: 1px solid var(--green); color: #86efac; }
+      display: none;
 
-    .btn-email-login {
-      width: 100%; padding: 13px;
-      border: none; border-radius: 10px;
-      font-size: 15px; font-weight: 700; cursor: pointer;
-      background: linear-gradient(135deg, #1565c0, #3b82f6);
-      color: #fff;
-      transition: filter .2s, transform .1s;
-      margin-bottom: 10px;
-    }
-    .btn-email-login:hover:not(:disabled) { filter: brightness(1.1); transform: scale(1.01); }
-    .btn-email-login:disabled { opacity: .5; cursor: not-allowed; }
+      padding: 10px 13px;
 
-    .forgot-link {
-      text-align: right; margin-top: -6px; margin-bottom: 10px;
+      border-radius: 9px;
+
+      font-size: 13px;
+
+      margin-bottom: 14px;
     }
-    .forgot-link a {
-      font-size: 12px; color: var(--muted); cursor: pointer;
+
+    .auth-msg.error {
+      display: block;
+
+      background: rgba(239,68,68,.12);
+      border: 1px solid var(--red);
+
+      color: #fca5a5;
+    }
+
+    .auth-msg.success {
+      display: block;
+
+      background: rgba(34,197,94,.12);
+      border: 1px solid var(--green);
+
+      color: #86efac;
+    }
+
+    /* FORGOT PASSWORD */
+
+    .forgot {
+      text-align: right;
+
+      margin-top: -5px;
+      margin-bottom: 12px;
+    }
+
+    .forgot a {
+      color: var(--muted);
+
+      font-size: 12px;
+
+      cursor: pointer;
+
       text-decoration: none;
     }
-    .forgot-link a:hover { color: var(--blue); }
+
+    .forgot a:hover {
+      color: var(--blue);
+    }
+
+    /* BUTTON */
+
+    .btn-login {
+      width: 100%;
+
+      padding: 13px;
+
+      border: none;
+      border-radius: 10px;
+
+      background: linear-gradient(
+        135deg,
+        #1565c0,
+        #3b82f6
+      );
+
+      color: #fff;
+
+      font-size: 15px;
+      font-weight: 700;
+
+      cursor: pointer;
+
+      transition: .2s;
+    }
+
+    .btn-login:hover:not(:disabled) {
+      filter: brightness(1.1);
+      transform: translateY(-1px);
+    }
+
+    .btn-login:disabled {
+      opacity: .5;
+      cursor: not-allowed;
+    }
+
+    /* DIVIDER */
 
     .divider {
-      display: flex; align-items: center; gap: 10px;
-      margin: 16px 0; color: var(--muted); font-size: 12px;
-    }
-    .divider::before, .divider::after {
-      content: ''; flex: 1; height: 1px; background: var(--border);
+      display: flex;
+      align-items: center;
+
+      gap: 10px;
+
+      margin: 18px 0;
+
+      color: var(--muted);
+
+      font-size: 12px;
     }
 
-    #btnGoogleLogin {
-      display: inline-flex; align-items: center; justify-content: center; gap: 10px;
+    .divider::before,
+    .divider::after {
+      content: "";
+
+      flex: 1;
+
+      height: 1px;
+
+      background: var(--border);
+    }
+
+    /* GOOGLE */
+
+    .google-btn {
       width: 100%;
-      background: #fff; color: #000; border: none;
-      padding: 13px 26px; border-radius: 12px; font-size: 15px; font-weight: 700;
-      cursor: pointer; transition: filter .2s;
-    }
-    #btnGoogleLogin:hover { filter: brightness(.92); }
 
-    #btnLogout {
-      background: none; border: 1px solid var(--border); color: var(--muted);
-      padding: 8px 18px; border-radius: 8px; font-size: 13px; cursor: pointer;
-      transition: all .2s;
-    }
-    #btnLogout:hover { border-color: var(--red); color: var(--red); }
+      display: flex;
+      align-items: center;
+      justify-content: center;
 
-    /* ── PRO ACTIVE CARD ── */
-    .pro-active-card {
-      max-width: 500px; margin: 28px auto 0; padding: 0 20px;
-    }
-    .pro-active-box {
-      background: linear-gradient(135deg, #052e16, #0a3d20);
-      border: 2px solid var(--green);
-      border-radius: 18px; padding: 28px; text-align: center;
-    }
-    .pro-active-box .crown { font-size: 48px; margin-bottom: 12px; }
-    .pro-active-box h3 { font-size: 22px; font-weight: 800; color: var(--green); }
-    .pro-active-box p  { color: #86efac; font-size: 14px; margin-top: 6px; }
-    .plan-chip {
-      display: inline-block; margin: 12px 0;
-      padding: 6px 16px; border-radius: 20px; font-weight: 700; font-size: 13px;
-    }
-    .chip-monthly  { background: #3b82f622; color: #93c5fd; border: 1px solid #3b82f644; }
-    .chip-annual   { background: #f5c51822; color: #fde68a; border: 1px solid #f5c51844; }
-    .chip-lifetime { background: #a855f722; color: #d8b4fe; border: 1px solid #a855f744; }
-    .expiry-info   { font-size: 13px; color: #86efac; margin-top: 4px; }
+      gap: 10px;
 
-    /* ── PLANS GRID ── */
-    .plans-section { max-width: 860px; margin: 36px auto 0; padding: 0 20px; }
-    .plans-section h2 {
-      text-align: center; font-size: 20px; font-weight: 700; margin-bottom: 24px;
-    }
-    .plans-grid {
-      display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 18px;
-    }
-    .plan-card {
-      background: var(--surface); border: 2px solid var(--border);
-      border-radius: 18px; padding: 26px 22px; position: relative;
-      transition: transform .2s, border-color .2s;
-      display: flex; flex-direction: column;
-    }
-    .plan-card:hover { transform: translateY(-3px); }
-    .plan-card.best-value { border-color: var(--accent); }
-    .best-label {
-      position: absolute; top: -13px; left: 50%; transform: translateX(-50%);
-      background: var(--accent); color: #000;
-      font-size: 11px; font-weight: 800; padding: 4px 14px; border-radius: 20px;
-      white-space: nowrap;
-    }
-    .plan-icon { font-size: 32px; margin-bottom: 10px; }
-    .plan-name { font-size: 18px; font-weight: 800; }
-    .plan-desc { color: var(--muted); font-size: 13px; margin-top: 4px; }
-    .plan-price {
-      margin: 16px 0; padding: 12px 0; border-top: 1px solid var(--border);
-      border-bottom: 1px solid var(--border);
-    }
-    .plan-price .amount { font-size: 34px; font-weight: 900; line-height: 1; }
-    .plan-price .amount span { font-size: 18px; font-weight: 600; }
-    .plan-price .period { color: var(--muted); font-size: 13px; margin-top: 4px; }
-    .plan-price .economy {
-      display: inline-block; margin-top: 6px;
-      background: #052e1688; color: var(--green);
-      border: 1px solid #22c55e44;
-      font-size: 12px; font-weight: 700; padding: 3px 10px; border-radius: 20px;
-    }
-    .plan-features { list-style: none; margin: 14px 0; flex: 1; }
-    .plan-features li {
-      font-size: 13px; padding: 5px 0; display: flex; align-items: flex-start; gap: 8px;
-    }
-    .plan-features li .check { color: var(--green); font-size: 14px; margin-top: 1px; }
-    .plan-btn {
-      margin-top: auto; width: 100%; padding: 13px;
-      border: none; border-radius: 10px;
-      font-size: 15px; font-weight: 700; cursor: pointer;
-      transition: filter .2s, transform .1s;
-    }
-    .plan-btn:hover:not(:disabled) { filter: brightness(1.1); transform: scale(1.02); }
-    .plan-btn:disabled { opacity: .5; cursor: not-allowed; }
-    .plan-btn.monthly  { background: var(--blue);   color: #fff; }
-    .plan-btn.annual   { background: var(--accent);  color: #000; }
-    .plan-btn.lifetime { background: var(--purple);  color: #fff; }
+      padding: 13px;
 
-    /* ── FAQ ── */
-    .faq-section { max-width: 700px; margin: 40px auto 0; padding: 0 20px; }
-    .faq-section h2 { font-size: 18px; font-weight: 700; margin-bottom: 16px; }
-    .faq-item {
-      background: var(--surface); border: 1px solid var(--border);
-      border-radius: var(--radius); margin-bottom: 10px; overflow: hidden;
-    }
-    .faq-q {
-      padding: 14px 18px; cursor: pointer; font-size: 14px; font-weight: 600;
-      display: flex; justify-content: space-between; align-items: center;
-      user-select: none;
-    }
-    .faq-q:hover { background: var(--surface2); }
-    .faq-a { max-height: 0; overflow: hidden; transition: max-height .3s ease; }
-    .faq-a.open { max-height: 200px; }
-    .faq-a p { padding: 0 18px 14px; color: var(--muted); font-size: 13px; line-height: 1.6; }
+      background: #fff;
 
-    /* ── TOAST ── */
-    #toast {
-      position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%) translateY(60px);
-      background: var(--surface); border: 1px solid var(--green);
-      color: var(--green); padding: 12px 22px; border-radius: 12px;
-      font-size: 14px; font-weight: 600; opacity: 0; transition: all .3s;
-      pointer-events: none; white-space: nowrap; z-index: 999;
-    }
-    #toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
-    #toast.error { border-color: var(--red); color: var(--red); }
+      color: #000;
 
-    /* ── SPINNER ── */
+      border: none;
+
+      border-radius: 10px;
+
+      font-size: 14px;
+      font-weight: 700;
+
+      cursor: pointer;
+
+      transition: .2s;
+    }
+
+    .google-btn:hover {
+      filter: brightness(.92);
+    }
+
+    .google-btn svg {
+      width: 18px;
+      height: 18px;
+    }
+
+    /* FOOTER */
+
+    .footer {
+      text-align: center;
+
+      color: var(--muted);
+
+      font-size: 11px;
+
+      margin-top: 18px;
+    }
+
+    /* SPINNER */
+
     .spinner {
-      width: 18px; height: 18px;
-      border: 3px solid var(--border); border-top-color: var(--accent);
-      border-radius: 50%; animation: spin .7s linear infinite; display: inline-block;
-    }
-    @keyframes spin { to { transform: rotate(360deg); } }
+      width: 18px;
+      height: 18px;
 
-    @media (max-width: 560px) {
-      .plans-grid { grid-template-columns: 1fr; }
-      .pro-header h1 { font-size: 22px; }
-      .top-nav .nav-btns .nav-btn span.label { display: none; }
-    }
-    @media (max-width: 420px) {
-      .top-nav { flex-wrap: wrap; gap: 8px; }
-    }
-  
-    /* ── SPICY COUNTDOWN (Vitalício) ── */
-    .spicy-countdown{
-      margin-top:10px;
-      padding:10px 12px;
-      border-radius:12px;
-      background:linear-gradient(135deg, rgba(244,63,94,.18), rgba(168,85,247,.16));
-      border:1px solid rgba(244,63,94,.35);
-      color:#ffe4e6;
-      font-weight:700;
-      font-size:13px;
-      letter-spacing:.2px;
-      box-shadow:0 10px 26px rgba(244,63,94,.18);
-      animation: spicyPulse 1.2s ease-in-out infinite;
-    }
-    .spicy-countdown span{
-      font-variant-numeric: tabular-nums;
-      color:#fff;
-      background:rgba(0,0,0,.25);
-      padding:2px 8px;
-      border-radius:999px;
-      border:1px solid rgba(255,255,255,.15);
-      margin-left:6px;
-    }
-    @keyframes spicyPulse{
-      0%,100%{ transform:translateY(0); filter:saturate(1); }
-      50%{ transform:translateY(-1px); filter:saturate(1.25); }
+      border: 3px solid rgba(255,255,255,.3);
+
+      border-top-color: #fff;
+
+      border-radius: 50%;
+
+      animation: spin .7s linear infinite;
+
+      margin: auto;
     }
 
-</style>
-</head>
-<body>
-
-
-<!-- ── HEADER ── -->
-<div class="pro-header">
-  <div class="logo">⚡</div>
-  <h1>Eletrica<span>PRO</span></h1>
-  <p>Desbloqueie todos os recursos premium</p>
-</div>
-
-
-<!-- ── LOGIN / CADASTRO ── -->
-<div class="login-section" id="loginSection">
-  <div class="login-box">
-    <h2>🔐 Entrar</h2>
-    <p class="subtitle">Acesse sua conta EletricaPRO</p>
-
-    <!-- Tabs -->
-    <div class="auth-tabs">
-      <div class="auth-tab active" id="tabLogin" onclick="switchTab('login')">Entrar</div>
-      <div class="auth-tab" id="tabRegister" onclick="switchTab('register')">Criar conta</div>
-    </div>
-
-    <!-- ── FORMULÁRIO LOGIN ── -->
-    <div class="auth-form active" id="formLogin">
-      <div id="loginMsg" class="auth-msg"></div>
-
-      <div class="field">
-        <label>📧 E-mail</label>
-        <input type="email" id="loginEmail" placeholder="seu@email.com" autocomplete="email"/>
-      </div>
-      <div class="field">
-        <label>🔒 Senha</label>
-        <div class="pwd-wrapper">
-          <input type="password" id="loginPassword" placeholder="Sua senha" autocomplete="current-password"/>
-          <button type="button" class="pwd-toggle" onclick="togglePwd('loginPassword',this)">👁</button>
-        </div>
-      </div>
-      <div class="forgot-link">
-        <a onclick="sendPasswordReset()">Esqueceu a senha?</a>
-      </div>
-
-      <button class="btn-email-login" id="btnEmailLogin" onclick="loginWithEmail()">
-        Entrar
-      </button>
-
-      <div class="divider">ou</div>
-
-      <button id="btnGoogleLogin">
-        <svg width="18" height="18" viewBox="0 0 48 48">
-          <path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/>
-          <path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/>
-          <path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/>
-          <path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.18 1.48-4.97 2.36-8.16 2.36-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/>
-        </svg>
-        Entrar com Google
-      </button>
-    </div>
-
-    <!-- ── FORMULÁRIO CADASTRO ── -->
-    <div class="auth-form" id="formRegister">
-      <div id="registerMsg" class="auth-msg"></div>
-
-      <div class="field">
-        <label>👤 Nome completo</label>
-        <input type="text" id="registerName" placeholder="Seu nome" autocomplete="name"/>
-      </div>
-      <div class="field">
-        <label>📧 E-mail</label>
-        <input type="email" id="registerEmail" placeholder="seu@email.com" autocomplete="email"/>
-      </div>
-      <div class="field">
-        <label>🔒 Senha</label>
-        <div class="pwd-wrapper">
-          <input type="password" id="registerPassword" placeholder="Mínimo 6 caracteres" autocomplete="new-password"/>
-          <button type="button" class="pwd-toggle" onclick="togglePwd('registerPassword',this)">👁</button>
-        </div>
-      </div>
-      <div class="field">
-        <label>🔒 Confirmar senha</label>
-        <div class="pwd-wrapper">
-          <input type="password" id="registerConfirm" placeholder="Repita a senha" autocomplete="new-password"/>
-          <button type="button" class="pwd-toggle" onclick="togglePwd('registerConfirm',this)">👁</button>
-        </div>
-      </div>
-
-      <button class="btn-email-login" id="btnEmailRegister" onclick="registerWithEmail()">
-        Criar conta
-      </button>
-
-      <div class="divider">ou cadastre com</div>
-
-      <button id="btnGoogleLoginReg">
-        <svg width="18" height="18" viewBox="0 0 48 48">
-          <path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/>
-          <path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/>
-          <path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/>
-          <path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.18 1.48-4.97 2.36-8.16 2.36-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/>
-        </svg>
-        Cadastrar com Google
-      </button>
-    </div>
-
-  </div>
-  <p style="margin-top:12px;font-size:12px;color:var(--muted);text-align:center;">
-    Após o login, escolha seu plano PRO abaixo
-  </p>
-  <div style="text-align:center;margin-top:10px;">
-    <a onclick="irParaApp()" style="
-      font-size:13px;color:var(--muted);cursor:pointer;
-      text-decoration:underline;display:inline-block;">
-      Pular → Usar versão gratuita
-    </a>
-  </div>
-</div>
-
-<!-- ── PRO ACTIVE ── -->
-<div class="pro-active-card" id="proActiveSection" style="display:none;">
-  <div class="pro-active-box">
-    <div class="crown">👑</div>
-    <h3>PRO ATIVO ✓</h3>
-    <p>Você tem acesso completo ao EletricaPRO!</p>
-    <div id="proChip" class="plan-chip chip-lifetime">♾ Vitalício</div>
-    <div class="expiry-info" id="proExpiry"></div>
-  </div>
-  <div style="text-align:center;margin-top:16px;">
-    <button onclick="irParaApp()" style="
-      display:inline-flex;align-items:center;gap:8px;
-      background:linear-gradient(135deg,#1565c0,#2196f3);
-      color:#fff;border:none;padding:14px 28px;
-      border-radius:12px;font-size:16px;font-weight:700;
-      cursor:pointer;margin-bottom:12px;width:100%;justify-content:center;
-      box-shadow:0 6px 20px rgba(33,150,243,.4);transition:all .2s;">
-      ⚡ Entrar no App
-    </button>
-    <button id="btnLogout" style="display:inline-flex;">Sair da conta</button>
-  </div>
-</div>
-
-<!-- ── PLANS ── -->
-<div class="plans-section" id="plansSection" style="display:none;">
-  <h2>Escolha seu plano</h2>
-  <div class="plans-grid">
-    <!-- MENSAL -->
-    <div class="plan-card" id="card-monthly">
-      <div class="plan-icon">📅</div>
-      <div class="plan-name">Mensal</div>
-      <div class="plan-desc">Acesso por 30 dias, renovável</div>
-      <div class="plan-price">
-        <div class="amount"><span>R$</span> 14<span>,90</span></div>
-        <div class="period">por mês</div>
-      </div>
-      <ul class="plan-features">
-        <li><span class="check">✓</span> Todos os recursos PRO</li>
-        <li><span class="check">✓</span> Calculadoras avançadas</li>
-        <li><span class="check">✓</span> Suporte </li>
-        <li><span class="check">✓</span> Acesso em múltiplos dispositivos</li>
-    
-      </ul>
-      <button class="plan-btn monthly" id="btnMonthly"> Pagar R$ 14,90 </button>
-    <li><span class="check">✓</span>  em até 4x no cartão de crédito</li>
-    
-    </div>
-    
-    <!-- VITALÍCIO -->
-    <div class="plan-card" id="card-lifetime">
-      <div class="plan-icon">♾️</div>
-      <div class="plan-name">Vitalício</div>
-      <div class="plan-desc">Pague uma vez, use para sempre</div>
-      <div class="plan-price">
-        <div class="amount"><span>R$</span>29<span>,90</span></div>
-        <div class="period">pagamento único</div>
-        <div id="spicyCountdown" class="spicy-countdown">🔥 Oferta do <strong>Vitalício</strong> termina em <span id="spicyTime">--:--:--</span></div>
-        <div class="economy" style="background:#a855f722;color:#d8b4fe;border-color:#a855f744;">♾ Nunca expira</div>
-      </div>
-      <ul class="plan-features">
-        <li><span class="check">✓</span> Todos os recursos PRO</li>
-        <li><span class="check">✓</span> Calculadoras avançadas</li>
-        
-        <li><span class="check">✓</span> Suporte </li>
-        <li><span class="check">✓</span> Todas as atualizações futuras</li>
-        <li><span class="check">✓</span> Acesso em múltiplos dispositivos</li>
-      </ul>
-      <button class="plan-btn lifetime" id="btnLifetime">♾ Pagar R$ 29,90</button>
-  <li><span class="check">✓</span>  em até 12x no cartão de crédito</li>
-    
-    </div>
-  </div>
-
-  <!-- BOTÃO CONTINUAR PARA O APP -->
-  <div style="text-align:center;margin-top:28px;padding:0 20px;">
-    <button onclick="irParaApp()" style="
-      display:inline-flex;align-items:center;gap:10px;justify-content:center;
-      width:100%;max-width:460px;
-      background:linear-gradient(135deg,#1565c0,#2196f3);
-      color:#fff;border:none;padding:16px 28px;
-      border-radius:14px;font-size:16px;font-weight:700;
-      cursor:pointer;box-shadow:0 6px 20px rgba(33,150,243,.4);
-      transition:all .2s;">
-      ⚡ Continuar para o App →
-    </button>
-    <p style="margin-top:10px;font-size:12px;color:var(--muted);">
-      Você pode escolher um plano depois, dentro do app
-    </p>
-  </div>
-
-  <!-- PENDING STATE -->
-  <div id="pendingSection" style="display:none;text-align:center;margin-top:28px;">
-    <div style="background:#2e1b07;border:1px solid #f59e0b;border-radius:14px;padding:24px;max-width:460px;margin:0 auto;">
-      <div style="font-size:32px;margin-bottom:10px;">⏳</div>
-      <strong style="font-size:16px;color:#fbbf24;">Solicitação enviada!</strong>
-      <p style="color:#fde68a;font-size:13px;margin-top:8px;line-height:1.5;">
-        Seu pagamento está aguardando confirmação.<br/>
-        Assim que validado, o PRO será liberado automaticamente.
-      </p>
-      <div id="pendingPlan" style="margin-top:10px;font-size:12px;color:#f59e0b;"></div>
-      <button id="btnCancelPending"
-        style="margin-top:16px;background:none;border:1px solid #f59e0b;
-               color:#fbbf24;padding:8px 18px;border-radius:8px;cursor:pointer;font-size:13px;">
-        Enviar outro comprovante
-      </button>
-    </div>
-  </div>
-
-  <div style="text-align:center;margin-top:24px;">
-    <button id="btnLogout2" style="background:none;border:1px solid var(--border);
-      color:var(--muted);padding:8px 18px;border-radius:8px;font-size:13px;cursor:pointer;">
-      Sair da conta
-    </button>
-  </div>
-</div>
-
-
-
-<!-- ── TOAST ── -->
-<div id="toast"></div>
-
-<!-- ── UI HELPERS ── -->
-<script>
-  function switchTab(tab) {
-    document.getElementById('tabLogin').classList.toggle('active', tab === 'login');
-    document.getElementById('tabRegister').classList.toggle('active', tab === 'register');
-    document.getElementById('formLogin').classList.toggle('active', tab === 'login');
-    document.getElementById('formRegister').classList.toggle('active', tab === 'register');
-    clearMsgs();
-  }
-  function togglePwd(inputId, btn) {
-    const inp = document.getElementById(inputId);
-    const show = inp.type === 'password';
-    inp.type = show ? 'text' : 'password';
-    btn.textContent = show ?  '👁';
-  }
-  function clearMsgs() {
-    ['loginMsg','registerMsg'].forEach(id => {
-      const el = document.getElementById(id);
-      el.style.display = 'none'; el.className = 'auth-msg';
-    });
-  }
-  function showMsg(id, text, type) {
-    const el = document.getElementById(id);
-    el.textContent = text;
-    el.className = 'auth-msg ' + type;
-    el.style.display = 'block';
-  }
-  window.toggleFaq = function(el) {
-    const answer = el.nextElementSibling;
-    const icon   = el.querySelector('span');
-    answer.classList.toggle('open');
-    icon.textContent = answer.classList.contains('open') ? '▴' : '▾';
-  };
-  // ─── NAVEGA PARA O APP MARCANDO VISITA ───────────────────────
-  function irParaApp() {
-    localStorage.setItem('eletricapro_visited', '1');
-    window.location.href = 'index.html';
-  }
-  // ─────────────────────────────────────────────────────────────
-
-  // Atualiza nav ao logar/deslogar
-  function updateNavButtons(isLoggedIn, isPro) {
-    const loginBtn = document.getElementById('navLoginBtn');
-    const proBtn   = document.getElementById('navProBtn');
-    if (isLoggedIn) {
-      loginBtn.textContent = '✅ Conta';
-      loginBtn.href = 'login.html';
-    }
-    if (isPro) {
-      proBtn.style.background = 'linear-gradient(135deg,#f5c518,#f59e0b)';
-      proBtn.style.color = '#000';
-      proBtn.innerHTML = '👑 PRO';
-    }
-  }
-</script>
-
-<!-- ── FIREBASE SDK ── -->
-<script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-import {
-  getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged,
-  signInWithEmailAndPassword, createUserWithEmailAndPassword,
-  sendPasswordResetEmail, updateProfile
-} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-import {
-  getFirestore, doc, setDoc, getDoc, collection, addDoc, query,
-  where, orderBy, limit, onSnapshot, serverTimestamp, getDocs
-} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
-
-// ── CONFIGURAÇÃO FIREBASE ──────────────────────────────────────
-const firebaseConfig = {
-  apiKey: "AIzaSyCibrDhAmeTg-2W9TiXhomotfLEM5EqwgE",
-  authDomain: "eletrica-pro.firebaseapp.com",
-  projectId: "eletrica-pro",
-  storageBucket: "eletrica-pro.firebasestorage.app",
-  messagingSenderId: "318733768519",
-  appId: "1:318733768519:web:93e0bdcdecd49b9570de62"
-};
-// ──────────────────────────────────────────────────────────────
-
-const app  = initializeApp(firebaseConfig);
-const auth = getAuth(app);
-const db   = getFirestore(app);
-
-let currentUser = null;
-let unsubUser   = null;
-
-// ── HELPERS ──────────────────────────────────────────────────
-const $ = id => document.getElementById(id);
-
-function toast(msg, isError = false) {
-  const el = $("toast");
-  el.textContent = msg;
-  el.className   = "show" + (isError ? " error" : "");
-  setTimeout(() => { el.className = ""; }, 3500);
-}
-function fmtDateLong(ts) {
-  if (!ts) return "";
-  const d = ts.toDate ? ts.toDate() : new Date(ts);
-  return d.toLocaleDateString("pt-BR", { day:"2-digit", month:"long", year:"numeric" });
-}
-function daysLeft(ts) {
-  if (!ts) return null;
-  const d = ts.toDate ? ts.toDate() : new Date(ts);
-  return Math.ceil((d - Date.now()) / 86400000);
-}
-
-// ── RENDER STATUS ─────────────────────────────────────────────
-function renderProStatus(userData) {
-  const { pro, proType, proUntil } = userData;
-  const box = $("statusBox");
-
-  if (pro) {
-    box.className = "status-box is-pro";
-    const until     = proUntil ? fmtDateLong(proUntil) : null;
-    const days      = proUntil ? daysLeft(proUntil) : null;
-    const typeLabel = { monthly:"Mensal", annual:"Anual", lifetime:"Vitalício" }[proType] || proType;
-
-    box.innerHTML = `
-      <div class="icon">👑</div>
-      <div>
-        <strong style="color:var(--green)">PRO ATIVO — ${typeLabel}</strong>
-        <span>${until ? `Válido até ${until} (${days} dias)` : "Acesso vitalício"}</span>
-      </div>`;
-
-    $("proActiveSection").style.display = "block";
-    $("plansSection").style.display     = "none";
-    $("loginSection").style.display     = "none";
-
-    const chipClass = `plan-chip chip-${proType}`;
-    const chipLabel = { monthly:"📅 Mensal", lifetime:"♾ Vitalício" }[proType] || proType;
-    $("proChip").className   = chipClass;
-    $("proChip").textContent = chipLabel;
-    $("proExpiry").textContent = until ? `Válido até ${until}` : "Sem expiração — vitalício";
-
-    updateNavButtons(true, true);
-
-    try {
-      const trial = JSON.parse(localStorage.getItem("eletricapro_trial") || "{}");
-      trial.isPro = true; trial.proType = proType;
-      trial.proUntil = proUntil ? proUntil.toMillis() : null;
-      localStorage.setItem("eletricapro_trial", JSON.stringify(trial));
-    } catch(e) {}
-
-  } else {
-    box.className = "status-box not-pro";
-    box.innerHTML = `
-     / <div class="icon">🔒</div>
-      <div>
-        <strong>Sem plano PRO</strong>
-        <span>Escolha um plano abaixo para desbloquear</span>
-      </div>
-      <span class="user-uid" id="uidCopy" title="Clique para copiar UID">${currentUser.uid.slice(0,12)}…</span>`;
-
-    $("loginSection").style.display     = "none";
-    $("plansSection").style.display     = "block";
-    $("proActiveSection").style.display = "none";
-
-    updateNavButtons(true, false);
-    checkPendingRequest();
-
-    setTimeout(() => {
-      const uidEl = $("uidCopy");
-      if (uidEl) uidEl.onclick = () => {
-        navigator.clipboard.writeText(currentUser.uid).then(() => toast("UID copiado!"));
-      };
-    }, 100);
-
-    try {
-      const trial = JSON.parse(localStorage.getItem("eletricapro_trial") || "{}");
-      trial.isPro = false;
-      localStorage.setItem("eletricapro_trial", JSON.stringify(trial));
-    } catch(e) {}
-  }
-}
-
-// ── CHECK PENDING ────────────────────────────────────────────
-async function checkPendingRequest() {
-  if (!currentUser) return;
-  try {
-    const q = query(
-      collection(db, "pro_requests"),
-      where("uid", "==", currentUser.uid),
-      where("status", "==", "pending"),
-      orderBy("createdAt", "desc"),
-      limit(1)
-    );
-    const snap = await getDocs(q);
-    if (!snap || snap.empty) { $("pendingSection").style.display = "none"; return; }
-    const req = snap.docs[0].data();
-    $("pendingSection").style.display = "block";
-    const labels = { monthly:"Mensal (R$ 14,90)","Vitalício (R$ 29,90)" };
-    $("pendingPlan").textContent = `Plano solicitado: ${labels[req.plan] || req.plan}`;
-  } catch(e) { console.log("Pending check:", e.message); }
-}
-
-// ── SOLICITAR PRO ─────────────────────────────────────────────
-async function requestPro(plan) {
-  if (!currentUser) { toast("Faça login primeiro.", true); return; }
-  const btnId = { monthly:"btnMonthly", annual:"btnAnnual", lifetime:"btnLifetime" }[plan];
-  const btn   = $(btnId);
-  const orig  = btn.innerHTML;
-  btn.innerHTML = `<div class="spinner"></div> Registrando...`;
-  btn.disabled  = true;
-  await new Promise(r => setTimeout(r, 1000));
-  try {
-    await addDoc(collection(db, "pro_requests"), {
-      uid: currentUser.uid, email: currentUser.email,
-      plan, status: "pending", createdAt: serverTimestamp()
-    });
-    btn.innerHTML = orig; btn.disabled = false;
-    $("pendingSection").style.display = "block";
-    const labels = { monthly:"Mensal (R$ 14,90)", lifetime:"Vitalício (R$ 29,90)" };
-    $("pendingPlan").textContent = `Plano solicitado: ${labels[plan]}`;
-    toast("✅ Solicitação enviada! Aguarde a confirmação.");
-  } catch(e) {
-    btn.innerHTML = orig; btn.disabled = false;
-    toast("Erro ao criar solicitação: " + e.message, true);
-  }
-}
-
-// ── SUBSCRIBE USER ────────────────────────────────────────────
-function subscribeUser(uid) {
-  if (unsubUser) unsubUser();
-  unsubUser = onSnapshot(doc(db, "users", uid), snap => {
-    if (snap.exists()) renderProStatus(snap.data());
-  });
-}
-
-// ── AUTH STATE ────────────────────────────────────────────────
-onAuthStateChanged(auth, async user => {
-  currentUser = user;
-  if (user) {
-    $("loginSection").style.display = "none";
-    const userRef = doc(db, "users", user.uid);
-    const snap    = await getDoc(userRef);
-    if (!snap.exists()) {
-      await setDoc(userRef, {
-        email: user.email, photo: user.photoURL || "",
-        name: user.displayName || "",
-        pro: false, proType: null, proUntil: null,
-        createdAt: serverTimestamp()
-      });
-    }
-    subscribeUser(user.uid);
-    $("statusBox").innerHTML = `<div class="icon"><div class="spinner"></div></div>
-      <div><strong>Verificando status PRO...</strong></div>`;
-  } else {
-    currentUser = null;
-    if (unsubUser) unsubUser();
-    $("loginSection").style.display     = "block";
-    $("plansSection").style.display     = "none";
-    $("proActiveSection").style.display = "none";
-    const box = $("statusBox");
-    box.className = "status-box not-logged";
-    box.innerHTML = `<div class="icon">👤</div>
-      <div><strong>Faça login para continuar</strong>
-      <span>Entre com sua conta para acessar o PRO</span></div>`;
-  }
-});
-
-// ── LOGIN COM EMAIL ───────────────────────────────────────────
-window.loginWithEmail = async function() {
-  const email    = $("loginEmail").value.trim();
-  const password = $("loginPassword").value;
-  const btn      = $("btnEmailLogin");
-  if (!email || !password) {
-    showMsg("loginMsg", "⚠️ Preencha e-mail e senha.", "error"); return;
-  }
-  btn.disabled = true; btn.innerHTML = `<div class="spinner" style="margin:0 auto;border-top-color:#fff"></div>`;
-  try {
-    await signInWithEmailAndPassword(auth, email, password);
-    showMsg("loginMsg", "✅ Login realizado com sucesso!", "success");
-  } catch(e) {
-    const msgs = {
-      "auth/user-not-found":     "❌ E-mail não cadastrado.",
-      "auth/wrong-password":     "❌ Senha incorreta.",
-      "auth/invalid-email":      "❌ E-mail inválido.",
-      "auth/invalid-credential": "❌ E-mail ou senha incorretos.",
-      "auth/too-many-requests":  "⚠️ Muitas tentativas. Tente novamente mais tarde.",
-      "auth/user-disabled":      "⚠️ Conta desativada."
-    };
-    showMsg("loginMsg", msgs[e.code] || "❌ Erro: " + e.message, "error");
-    btn.disabled = false; btn.textContent = "Entrar";
-  }
-};
-
-// ── CADASTRO COM EMAIL ────────────────────────────────────────
-window.registerWithEmail = async function() {
-  const name     = $("registerName").value.trim();
-  const email    = $("registerEmail").value.trim();
-  const password = $("registerPassword").value;
-  const confirm  = $("registerConfirm").value;
-  const btn      = $("btnEmailRegister");
-
-  if (!name)              { showMsg("registerMsg", "⚠️ Informe seu nome.", "error"); return; }
-  if (!email)             { showMsg("registerMsg", "⚠️ Informe um e-mail.", "error"); return; }
-  if (password.length < 6){ showMsg("registerMsg", "⚠️ Senha mínima de 6 caracteres.", "error"); return; }
-  if (password !== confirm){ showMsg("registerMsg", "⚠️ As senhas não coincidem.", "error"); return; }
-
-  btn.disabled = true; btn.innerHTML = `<div class="spinner" style="margin:0 auto;border-top-color:#fff"></div>`;
-  try {
-    const cred = await createUserWithEmailAndPassword(auth, email, password);
-    await updateProfile(cred.user, { displayName: name });
-    showMsg("registerMsg", "✅ Conta criada! Bem-vindo ao EletricaPRO.", "success");
-  } catch(e) {
-    const msgs = {
-      "auth/email-already-in-use": "❌ E-mail já cadastrado. Faça login.",
-      "auth/invalid-email":        "❌ E-mail inválido.",
-      "auth/weak-password":        "❌ Senha muito fraca."
-    };
-    showMsg("registerMsg", msgs[e.code] || "❌ Erro: " + e.message, "error");
-    btn.disabled = false; btn.textContent = "Criar conta";
-  }
-};
-
-// ── RECUPERAR SENHA ───────────────────────────────────────────
-window.sendPasswordReset = async function() {
-  const email = $("loginEmail").value.trim();
-  if (!email) { showMsg("loginMsg","⚠️ Digite seu e-mail primeiro.","error"); return; }
-  try {
-    await sendPasswordResetEmail(auth, email);
-    showMsg("loginMsg","📧 E-mail de recuperação enviado! Verifique sua caixa.","success");
-  } catch(e) {
-    showMsg("loginMsg","❌ E-mail não encontrado.","error");
-  }
-};
-
-// ── GOOGLE LOGIN ──────────────────────────────────────────────
-const googleLogin = async () => {
-  try { await signInWithPopup(auth, new GoogleAuthProvider()); }
-  catch(e) { toast("Erro no login: " + e.message, true); }
-};
-$("btnGoogleLogin").onclick    = googleLogin;
-$("btnGoogleLoginReg").onclick = googleLogin;
-
-// ── LOGOUT ────────────────────────────────────────────────────
-const logout = async () => {
-  if (unsubUser) unsubUser();
-  await signOut(auth);
-};
-$("btnLogout")  && ($("btnLogout").onclick  = logout);
-$("btnLogout2") && ($("btnLogout2").onclick = logout);
-
-// ── PAYMENT LINKS ─────────────────────────────────────────────
-const PAYMENT_LINKS = {
-  monthly:  "https://link.picpay.com/p/177379752669ba0096bd8af",
-  annual:   "https://link.picpay.com/p/177379784169ba01d1cb515",
-  lifetime: "https://link.picpay.com/p/177379796869ba025058e63"
-};
-$("btnMonthly").onclick  = () => window.open(PAYMENT_LINKS.monthly,  "_blank");
-$("btnAnnual").onclick   = () => window.open(PAYMENT_LINKS.annual,   "_blank");
-$("btnLifetime").onclick = () => window.open(PAYMENT_LINKS.lifetime, "_blank");
-$("btnCancelPending").onclick = () => { $("pendingSection").style.display = "none"; };
-</script>
-
-<script>
-  // ── SPICY COUNTDOWN (Vitalício) ─────────────────────────────────────────
-  // Observação: contador local (front-end) para dar urgência no plano vitalício.
-  (function(){
-    const el = document.getElementById('spicyTime');
-    const box = document.getElementById('spicyCountdown');
-    if(!el || !box) return;
-
-    // Define um prazo persistente (ex.: 2h a partir do primeiro acesso)
-    const KEY = 'eletricapro_lifetime_countdown_end';
-    let end = Number(localStorage.getItem(KEY) || 0);
-    const now = Date.now();
-    const TWO_HOURS = 2 * 60 * 60 * 1000;
-
-    if(!end || end < now){
-      end = now + TWO_HOURS;
-      localStorage.setItem(KEY, String(end));
-    }
-
-    function pad(n){ return String(n).padStart(2,'0'); }
-    function tick(){
-      const diff = Math.max(0, end - Date.now());
-      const h = Math.floor(diff / 3600000);
-      const m = Math.floor((diff % 3600000) / 60000);
-      const s = Math.floor((diff % 60000) / 1000);
-      el.textContent = `${pad(h)}:${pad(m)}:${pad(s)}`;
-      if(diff <= 0){
-        // reinicia com outro prazo curto
-        end = Date.now() + TWO_HOURS;
-        localStorage.setItem(KEY, String(end));
+    @keyframes spin {
+      to {
+        transform: rotate(360deg);
       }
     }
-    tick();
-    setInterval(tick, 1000);
-  })();
-</script>
 
-<script defer src="https://static.cloudflareinsights.com/beacon.min.js/v8c78df7c7c0f484497ecbca7046644da1771523124516" integrity="sha512-8DS7rgIrAmghBFwoOTujcf6D9rXvH8xm8JQ1Ja01h9QX8EzXldiszufYa4IFfKdLUKTTrnSFXLDkUEOTrZQ8Qg==" data-cf-beacon='{"version":"2024.11.0","token":"4edd5f8ec12a48cfa682ab8261b80a79","server_timing":{"name":{"cfCacheStatus":true,"cfEdge":true,"cfExtPri":true,"cfL4":true,"cfOrigin":true,"cfSpeedBrain":true},"location_startswith":null}}' crossorigin="anonymous"></script>
+    /* MOBILE */
+
+    @media (max-width: 420px) {
+      body {
+        padding: 14px;
+      }
+
+      .login-box {
+        padding: 22px 18px;
+      }
+
+      .header h1 {
+        font-size: 24px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="container">
+
+    <!-- LOGO -->
+
+    <div class="header">
+
+      <div class="logo">
+        ⚡
+      </div>
+
+      <h1>
+        Eletrica<span>PRO</span>
+      </h1>
+
+      <p>
+        Entre ou crie sua conta
+      </p>
+
+    </div>
+
+
+    <!-- LOGIN -->
+
+    <div class="login-box">
+
+      <h2>🔐 Acesso</h2>
+
+      <p class="subtitle">
+        Acesse sua conta EletricaPRO
+      </p>
+
+
+      <!-- TABS -->
+
+      <div class="auth-tabs">
+
+        <div
+          class="auth-tab active"
+          id="tabLogin"
+          onclick="switchTab('login')">
+
+          Entrar
+
+        </div>
+
+        <div
+          class="auth-tab"
+          id="tabRegister"
+          onclick="switchTab('register')">
+
+          Criar conta
+
+        </div>
+
+      </div>
+
+
+      <!-- FORM LOGIN -->
+
+      <div
+        class="auth-form active"
+        id="formLogin">
+
+        <div
+          id="loginMsg"
+          class="auth-msg">
+        </div>
+
+
+        <div class="field">
+
+          <label>
+            📧 E-mail
+          </label>
+
+          <input
+            type="email"
+            id="loginEmail"
+            placeholder="seu@email.com"
+            autocomplete="email">
+
+        </div>
+
+
+        <div class="field">
+
+          <label>
+            🔒 Senha
+          </label>
+
+          <div class="pwd-wrapper">
+
+            <input
+              type="password"
+              id="loginPassword"
+              placeholder="Sua senha"
+              autocomplete="current-password">
+
+            <button
+              type="button"
+              class="pwd-toggle"
+              onclick="togglePwd('loginPassword', this)">
+
+              👁
+
+            </button>
+
+          </div>
+
+        </div>
+
+
+        <div class="forgot">
+
+          <a onclick="sendPasswordReset()">
+            Esqueceu a senha?
+          </a>
+
+        </div>
+
+
+        <button
+          class="btn-login"
+          id="btnEmailLogin"
+          onclick="loginWithEmail()">
+
+          Entrar
+
+        </button>
+
+
+        <div class="divider">
+          ou
+        </div>
+
+
+        <button
+          class="google-btn"
+          id="btnGoogleLogin">
+
+          <svg viewBox="0 0 48 48">
+
+            <path
+              fill="#EA4335"
+              d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/>
+
+            <path
+              fill="#4285F4"
+              d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/>
+
+            <path
+              fill="#FBBC05"
+              d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/>
+
+            <path
+              fill="#34A853"
+              d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.18 1.48-4.97 2.36-8.16 2.36-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/>
+
+          </svg>
+
+          Entrar com Google
+
+        </button>
+
+      </div>
+
+
+      <!-- FORM CADASTRO -->
+
+      <div
+        class="auth-form"
+        id="formRegister">
+
+        <div
+          id="registerMsg"
+          class="auth-msg">
+        </div>
+
+
+        <div class="field">
+
+          <label>
+            👤 Nome completo
+          </label>
+
+          <input
+            type="text"
+            id="registerName"
+            placeholder="Seu nome"
+            autocomplete="name">
+
+        </div>
+
+
+        <div class="field">
+
+          <label>
+            📧 E-mail
+          </label>
+
+          <input
+            type="email"
+            id="registerEmail"
+            placeholder="seu@email.com"
+            autocomplete="email">
+
+        </div>
+
+
+        <div class="field">
+
+          <label>
+            🔒 Senha
+          </label>
+
+          <div class="pwd-wrapper">
+
+            <input
+              type="password"
+              id="registerPassword"
+              placeholder="Mínimo 6 caracteres"
+              autocomplete="new-password">
+
+            <button
+              type="button"
+              class="pwd-toggle"
+              onclick="togglePwd('registerPassword', this)">
+
+              👁
+
+            </button>
+
+          </div>
+
+        </div>
+
+
+        <div class="field">
+
+          <label>
+            🔒 Confirmar senha
+          </label>
+
+          <div class="pwd-wrapper">
+
+            <input
+              type="password"
+              id="registerConfirm"
+              placeholder="Repita a senha"
+              autocomplete="new-password">
+
+            <button
+              type="button"
+              class="pwd-toggle"
+              onclick="togglePwd('registerConfirm', this)">
+
+              👁
+
+            </button>
+
+          </div>
+
+        </div>
+
+
+        <button
+          class="btn-login"
+          id="btnEmailRegister"
+          onclick="registerWithEmail()">
+
+          Criar conta
+
+        </button>
+
+
+        <div class="divider">
+          ou
+        </div>
+
+
+        <button
+          class="google-btn"
+          id="btnGoogleRegister">
+
+          <svg viewBox="0 0 48 48">
+
+            <path
+              fill="#EA4335"
+              d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/>
+
+            <path
+              fill="#4285F4"
+              d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/>
+
+            <path
+              fill="#FBBC05"
+              d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/>
+
+            <path
+              fill="#34A853"
+              d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.18 1.48-4.97 2.36-8.16 2.36-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/>
+
+          </svg>
+
+          Cadastrar com Google
+
+        </button>
+
+      </div>
+
+    </div>
+
+
+    <div class="footer">
+      © 2026 EletricaPRO
+    </div>
+
+  </div>
+
+
+  <!-- FIREBASE -->
+
+  <script type="module">
+
+    import {
+      initializeApp
+    } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+
+
+    import {
+      getAuth,
+      GoogleAuthProvider,
+      signInWithPopup,
+      signInWithEmailAndPassword,
+      createUserWithEmailAndPassword,
+      sendPasswordResetEmail,
+      updateProfile
+    } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+
+
+    const firebaseConfig = {
+
+      apiKey:
+        "AIzaSyCibrDhAmeTg-2W9TiXhomotfLEM5EqwgE",
+
+      authDomain:
+        "eletrica-pro.firebaseapp.com",
+
+      projectId:
+        "eletrica-pro",
+
+      storageBucket:
+        "eletrica-pro.firebasestorage.app",
+
+      messagingSenderId:
+        "318733768519",
+
+      appId:
+        "1:318733768519:web:93e0bdcdecd49b9570de62"
+
+    };
+
+
+    const app =
+      initializeApp(firebaseConfig);
+
+    const auth =
+      getAuth(app);
+
+
+    /* HELPERS */
+
+    function showMsg(id, text, type) {
+
+      const el =
+        document.getElementById(id);
+
+      el.textContent = text;
+
+      el.className =
+        "auth-msg " + type;
+
+      el.style.display =
+        "block";
+
+    }
+
+
+    function clearMessages() {
+
+      document
+        .querySelectorAll(".auth-msg")
+        .forEach(el => {
+
+          el.style.display = "none";
+          el.textContent = "";
+
+        });
+
+    }
+
+
+    /* LOGIN */
+
+    window.loginWithEmail = async function() {
+
+      const email =
+        document
+          .getElementById("loginEmail")
+          .value
+          .trim();
+
+      const password =
+        document
+          .getElementById("loginPassword")
+          .value;
+
+      const btn =
+        document
+          .getElementById("btnEmailLogin");
+
+
+      if (!email || !password) {
+
+        showMsg(
+          "loginMsg",
+          "⚠️ Preencha o e-mail e a senha.",
+          "error"
+        );
+
+        return;
+      }
+
+
+      btn.disabled = true;
+
+      btn.innerHTML =
+        '<div class="spinner"></div>';
+
+
+      try {
+
+        await signInWithEmailAndPassword(
+          auth,
+          email,
+          password
+        );
+
+
+        showMsg(
+          "loginMsg",
+          "✅ Login realizado com sucesso!",
+          "success"
+        );
+
+
+        /*
+          Se quiser mandar para o aplicativo
+          depois do login, coloque aqui:
+
+          window.location.href = "index.html";
+        */
+
+      } catch (e) {
+
+        const messages = {
+
+          "auth/user-not-found":
+            "❌ E-mail não cadastrado.",
+
+          "auth/wrong-password":
+            "❌ Senha incorreta.",
+
+          "auth/invalid-credential":
+            "❌ E-mail ou senha incorretos.",
+
+          "auth/invalid-email":
+            "❌ E-mail inválido.",
+
+          "auth/too-many-requests":
+            "⚠️ Muitas tentativas. Tente novamente mais tarde.",
+
+          "auth/user-disabled":
+            "⚠️ Esta conta foi desativada."
+
+        };
+
+
+        showMsg(
+          "loginMsg",
+          messages[e.code] ||
+          "❌ Erro ao entrar.",
+          "error"
+        );
+
+
+        btn.disabled = false;
+
+        btn.textContent =
+          "Entrar";
+
+      }
+
+    };
+
+
+    /* CADASTRO */
+
+    window.registerWithEmail = async function() {
+
+      const name =
+        document
+          .getElementById("registerName")
+          .value
+          .trim();
+
+      const email =
+        document
+          .getElementById("registerEmail")
+          .value
+          .trim();
+
+      const password =
+        document
+          .getElementById("registerPassword")
+          .value;
+
+      const confirm =
+        document
+          .getElementById("registerConfirm")
+          .value;
+
+      const btn =
+        document
+          .getElementById("btnEmailRegister");
+
+
+      if (!name) {
+
+        showMsg(
+          "registerMsg",
+          "⚠️ Informe seu nome.",
+          "error"
+        );
+
+        return;
+      }
+
+
+      if (!email) {
+
+        showMsg(
+          "registerMsg",
+          "⚠️ Informe seu e-mail.",
+          "error"
+        );
+
+        return;
+      }
+
+
+      if (password.length < 6) {
+
+        showMsg(
+          "registerMsg",
+          "⚠️ A senha precisa ter pelo menos 6 caracteres.",
+          "error"
+        );
+
+        return;
+      }
+
+
+      if (password !== confirm) {
+
+        showMsg(
+          "registerMsg",
+          "⚠️ As senhas não coincidem.",
+          "error"
+        );
+
+        return;
+      }
+
+
+      btn.disabled = true;
+
+      btn.innerHTML =
+        '<div class="spinner"></div>';
+
+
+      try {
+
+        const credential =
+          await createUserWithEmailAndPassword(
+            auth,
+            email,
+            password
+          );
+
+
+        await updateProfile(
+          credential.user,
+          {
+            displayName: name
+          }
+        );
+
+
+        showMsg(
+          "registerMsg",
+          "✅ Conta criada com sucesso!",
+          "success"
+        );
+
+
+        /*
+          Se quiser mandar para o aplicativo
+          depois do cadastro:
+
+          window.location.href = "index.html";
+        */
+
+
+      } catch (e) {
+
+        const messages = {
+
+          "auth/email-already-in-use":
+            "❌ Este e-mail já está cadastrado.",
+
+          "auth/invalid-email":
+            "❌ E-mail inválido.",
+
+          "auth/weak-password":
+            "❌ A senha é muito fraca."
+
+        };
+
+
+        showMsg(
+          "registerMsg",
+          messages[e.code] ||
+          "❌ Erro ao criar a conta.",
+          "error"
+        );
+
+
+        btn.disabled = false;
+
+        btn.textContent =
+          "Criar conta";
+
+      }
+
+    };
+
+
+    /* RECUPERAÇÃO DE SENHA */
+
+    window.sendPasswordReset = async function() {
+
+      const email =
+        document
+          .getElementById("loginEmail")
+          .value
+          .trim();
+
+
+      if (!email) {
+
+        showMsg(
+          "loginMsg",
+          "⚠️ Digite seu e-mail primeiro.",
+          "error"
+        );
+
+        return;
+      }
+
+
+      try {
+
+        await sendPasswordResetEmail(
+          auth,
+          email
+        );
+
+
+        showMsg(
+          "loginMsg",
+          "📧 E-mail de recuperação enviado!",
+          "success"
+        );
+
+      } catch (e) {
+
+        showMsg(
+          "loginMsg",
+          "❌ Não foi possível enviar o e-mail de recuperação.",
+          "error"
+        );
+
+      }
+
+    };
+
+
+    /* GOOGLE */
+
+    async function loginGoogle() {
+
+      try {
+
+        const provider =
+          new GoogleAuthProvider();
+
+        await signInWithPopup(
+          auth,
+          provider
+        );
+
+
+        /*
+          Se quiser redirecionar após
+          o Google:
+
+          window.location.href = "index.html";
+        */
+
+      } catch (e) {
+
+        showMsg(
+          "loginMsg",
+          "❌ Erro ao entrar com Google.",
+          "error"
+        );
+
+      }
+
+    }
+
+
+    document
+      .getElementById("btnGoogleLogin")
+      .onclick = loginGoogle;
+
+
+    document
+      .getElementById("btnGoogleRegister")
+      .onclick = loginGoogle;
+
+
+  </script>
+
+
+  <!-- FUNÇÕES DA INTERFACE -->
+
+  <script>
+
+    function switchTab(tab) {
+
+      const login =
+        tab === "login";
+
+
+      document
+        .getElementById("tabLogin")
+        .classList
+        .toggle("active", login);
+
+
+      document
+        .getElementById("tabRegister")
+        .classList
+        .toggle("active", !login);
+
+
+      document
+        .getElementById("formLogin")
+        .classList
+        .toggle("active", login);
+
+
+      document
+        .getElementById("formRegister")
+        .classList
+        .toggle("active", !login);
+
+
+      document
+        .querySelectorAll(".auth-msg")
+        .forEach(el => {
+
+          el.style.display = "none";
+
+        });
+
+    }
+
+
+    function togglePwd(inputId, button) {
+
+      const input =
+        document.getElementById(inputId);
+
+
+      if (input.type === "password") {
+
+        input.type = "text";
+
+        button.textContent = "🙈";
+
+      } else {
+
+        input.type = "password";
+
+        button.textContent = "👁";
+
+      }
+
+    }
+
+  </script>
+
 </body>
-  </html>
+</html>
