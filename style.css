@@ -563,7 +563,124 @@
         padding:16px;
         border-radius:20px
       }
-    }
+    }/* =========================================
+   MELHORIA DE LEGIBILIDADE
+   ========================================= */
+
+body{
+  color:#ffffff;
+}
+
+/* Títulos */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6{
+  color:#ffffff;
+}
+
+/* Textos secundários */
+.subtitle,
+.notice,
+.card p,
+.sheet-title p,
+.field small,
+.stat .k,
+.footer-note,
+.mini{
+  color:#d6e2f5 !important;
+}
+
+/* Labels */
+.field label{
+  color:#f3f7ff !important;
+  font-weight:600;
+}
+
+/* Textos dos cards */
+.card h3{
+  color:#ffffff !important;
+}
+
+.card p{
+  color:#d6e2f5 !important;
+}
+
+/* Botões */
+.btn{
+  color:#ffffff;
+}
+
+.btn.primary{
+  color:#06111e;
+}
+
+/* Pesquisa */
+.search input{
+  color:#ffffff !important;
+}
+
+.search input::placeholder{
+  color:#c3d2e8 !important;
+  opacity:1;
+}
+
+/* Campos */
+.field input,
+.field select{
+  color:#ffffff !important;
+}
+
+.field input::placeholder{
+  color:#c3d2e8 !important;
+  opacity:1;
+}
+
+/* Resultados */
+.stat .k{
+  color:#cbd9ed !important;
+}
+
+.stat .v{
+  color:#ffffff !important;
+}
+
+/* Fórmulas */
+.formula{
+  color:#edf4ff !important;
+}
+
+/* Avisos */
+.warn{
+  color:#fff0c4 !important;
+}
+
+/* Pílulas */
+.pill{
+  color:#e7f0ff !important;
+}
+
+/* Modal */
+.sheet-title h2{
+  color:#ffffff;
+}
+
+.sheet-title p{
+  color:#d6e2f5 !important;
+}
+
+/* Botão fechar */
+.close{
+  color:#ffffff;
+}
+
+/* Toast */
+.toast{
+  color:#06111e;
+}
+
 </style>
 ```
 
