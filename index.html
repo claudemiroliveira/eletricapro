@@ -1,0 +1,1025 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#0b1220" />
+  <meta name="description" content="PWA de calculadoras elétricas com autenticação e geração de orçamento em PDF." />
+  <title>Elétrica Pro</title>
+  <link rel="manifest" href="manifest.webmanifest" />
+  <link rel="stylesheet" href="style.css" />
+  <script src="config.js"></script>
+  <script src="https://accounts.google.com/gsi/client" async defer></script>
+  <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
+</head>
+<body>
+  <div class="auth-shell" id="authShell">
+    <div class="auth-card">
+      <div class="title-wrap compact">
+        <div class="title-accent"></div>
+        <div>
+          <h1>Elétrica Pro</h1>
+          <p class="subtitle">Entre com e-mail e senha ou habilite sua conta Google para acessar as calculadoras e criar orçamentos em PDF.</p>
+        </div>
+      </div>
+
+      <div class="auth-tabs">
+        <button class="tab active" data-auth-tab="login">Entrar</button>
+        <button class="tab" data-auth-tab="register">Criar conta</button>
+      </div>
+
+      <form id="loginForm" class="auth-form">
+        <div class="field-grid single">
+          <div class="field full">
+            <label for="loginEmail">E-mail</label>
+            <input id="loginEmail" name="email" type="email" placeholder="voce@empresa.com" required />
+          </div>
+          <div class="field full">
+            <label for="loginPassword">Senha</label>
+            <input id="loginPassword" name="password" type="password" placeholder="Digite sua senha" required />
+          </div>
+        </div>
+        <div class="actions">
+          <button class="btn primary" type="submit">Entrar</button>
+        </div>
+      </form>
+
+      <form id="registerForm" class="auth-form hidden">
+        <div class="field-grid single">
+          <div class="field full">
+            <label for="registerName">Nome</label>
+            <input id="registerName" name="name" type="text" placeholder="Seu nome" required />
+          </div>
+          <div class="field full">
+            <label for="registerEmail">E-mail</label>
+            <input id="registerEmail" name="email" type="email" placeholder="voce@empresa.com" required />
+          </div>
+          <div class="field full">
+            <label for="registerPassword">Senha</label>
+            <input id="registerPassword" name="password" type="password" placeholder="Crie uma senha" minlength="6" required />
+            <small>Cadastro local no navegador. Para produção, conecte a um backend/Firebase.</small>
+          </div>
+        </div>
+        <div class="actions">
+          <button class="btn primary" type="submit">Criar conta</button>
+        </div>
+      </form>
+
+      <div class="divider"><span>ou</span></div>
+      <div id="googleArea" class="google-area">
+        <div id="googleSignInButton"></div>
+        <p class="mini" id="googleHint">Configure o <code>googleClientId</code> em <code>config.js</code> para ativar o login com Google.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="app hidden" id="mainApp">
+    <section class="hero">
+      <div class="title-wrap">
+        <div class="title-accent"></div>
+        <div>
+          <h1>Calculadoras Elétricas Pro</h1>
+          <p class="subtitle">Agora com autenticação, orçamentos salvos localmente e exportação em PDF.</p>
+        </div>
+      </div>
+      <div class="hero-actions right-stack">
+        <div class="user-chip" id="userChip">Usuário</div>
+        <div class="hero-actions">
+          <button class="btn primary" id="installBtn" hidden>Instalar app</button>
+          <button class="btn" id="offlineBtn">Modo offline ativo</button>
+          <button class="btn danger" id="logoutBtn">Sair</button>
+        </div>
+      </div>
+    </section>
+
+    <section class="toolbar">
+      <div class="search">
+        <input id="searchInput" type="search" placeholder="Buscar calculadora, ex.: queda, potência, motor..." />
+      </div>
+      <div class="notice">
+        <span>Área autenticada pronta para uso</span>
+        <span class="mini">PWA instalável</span>
+      </div>
+    </section>
+
+    <section>
+      <div class="title-wrap section-title">
+        <div class="title-accent small"></div>
+        <div>
+          <h2>Calculadoras</h2>
+        </div>
+      </div>
+      <div class="grid" id="cards"></div>
+      <p class="footer-note">Observação: os resultados são úteis para estimativa inicial e conferência rápida. Para projeto executivo, valide critérios, método de instalação, agrupamento, temperatura, concessionária e as normas aplicáveis.</p>
+    </section>
+
+    <section class="budget-section">
+      <div class="title-wrap section-title">
+        <div class="title-accent small"></div>
+        <div>
+          <h2>Orçamentos</h2>
+          <p class="subtitle">Monte propostas, salve localmente e gere PDF para envio ao cliente.</p>
+        </div>
+      </div>
+
+      <div class="budget-grid">
+        <div class="panel">
+          <h3>Dados do orçamento</h3>
+          <div class="field-grid">
+            <div class="field full">
+              <label for="companyName">Empresa / profissional</label>
+              <input id="companyName" type="text" placeholder="Elétrica Pro Serviços" />
+            </div>
+            <div class="field">
+              <label for="budgetNumber">Número</label>
+              <input id="budgetNumber" type="text" placeholder="ORC-001" />
+            </div>
+            <div class="field">
+              <label for="budgetDate">Data</label>
+              <input id="budgetDate" type="date" />
+            </div>
+            <div class="field full">
+              <label for="clientName">Cliente</label>
+              <input id="clientName" type="text" placeholder="Nome do cliente" />
+            </div>
+            <div class="field full">
+              <label for="clientAddress">Endereço / local do serviço</label>
+              <input id="clientAddress" type="text" placeholder="Rua, número, bairro" />
+            </div>
+            <div class="field full">
+              <label for="budgetDescription">Descrição do serviço</label>
+              <textarea id="budgetDescription" rows="3" placeholder="Ex.: instalação de quadro, troca de disjuntores, revisão elétrica..."></textarea>
+            </div>
+            <div class="field">
+              <label for="discount">Desconto (R$)</label>
+              <input id="discount" type="number" step="0.01" value="0" />
+            </div>
+            <div class="field">
+              <label for="validity">Validade</label>
+              <input id="validity" type="text" placeholder="10 dias" value="10 dias" />
+            </div>
+            <div class="field full">
+              <label for="notes">Observações</label>
+              <textarea id="notes" rows="3" placeholder="Prazo, forma de pagamento, garantia, materiais inclusos..."></textarea>
+            </div>
+          </div>
+        </div>
+
+        <div class="panel">
+          <div class="between">
+            <h3>Itens</h3>
+            <button class="btn" id="addItemBtn" type="button">Adicionar item</button>
+          </div>
+          <div id="budgetItems" class="items-list"></div>
+          <div class="actions wrap-top">
+            <button class="btn primary" id="calcBudgetBtn" type="button">Calcular total</button>
+            <button class="btn" id="saveBudgetBtn" type="button">Salvar orçamento</button>
+            <button class="btn" id="loadLastBudgetBtn" type="button">Carregar último</button>
+            <button class="btn" id="pdfBudgetBtn" type="button">Salvar em PDF</button>
+          </div>
+        </div>
+
+        <div class="panel">
+          <h3>Resumo</h3>
+          <div id="budgetSummary" class="result"></div>
+        </div>
+
+        <div class="panel">
+          <div class="between">
+            <h3>Histórico local</h3>
+            <span class="mini">Últimos 5</span>
+          </div>
+          <div id="budgetHistory" class="history-list"></div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <div class="modal" id="modal">
+    <div class="sheet">
+      <div class="sheet-header">
+        <div class="sheet-title">
+          <h2 id="modalTitle"></h2>
+          <p id="modalDesc"></p>
+        </div>
+        <button class="close" id="closeModal">✕</button>
+      </div>
+      <div class="calc-layout">
+        <div class="panel">
+          <h3>Entradas</h3>
+          <div class="field-grid" id="formFields"></div>
+          <div class="actions">
+            <button class="btn primary" id="calcBtn">Calcular</button>
+            <button class="btn" id="clearBtn">Limpar</button>
+          </div>
+        </div>
+        <div class="panel result-panel">
+          <h3>Resultado</h3>
+          <div id="resultBox" class="result"></div>
+          <div class="formula" id="formulaBox"></div>
+          <div class="warn" id="warnBox">Resultado indicativo. Verifique o memorial de cálculo antes de especificar componentes ou aprovar execução.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="toast" id="toast"></div>
+
+  <script>
+    let deferredPrompt = null;
+    const storageKeys = {
+      users: 'eletricaProUsers',
+      session: 'eletricaProSession',
+      budgets: 'eletricaProBudgets'
+    };
+
+    const toast = (msg) => {
+      const el = document.getElementById('toast');
+      el.textContent = msg;
+      el.classList.add('show');
+      clearTimeout(window.__toastT);
+      window.__toastT = setTimeout(() => el.classList.remove('show'), 2400);
+    };
+
+    const icons = {
+      bolt:`<svg viewBox="0 0 24 24" fill="none"><path d="M13 2 5 13h5l-1 9 8-11h-5l1-9Z" fill="#FFD36A" stroke="#FFB347" stroke-width="1.1" stroke-linejoin="round"/></svg>`,
+      ruler:`<svg viewBox="0 0 24 24" fill="none"><rect x="4" y="5" width="16" height="14" rx="3" fill="#67B7FF"/><path d="M8 9h2M11 9h2M14 9h2M8 12h4M8 15h2M11 15h2M14 15h2" stroke="#0C3569" stroke-width="1.4" stroke-linecap="round"/></svg>`,
+      bulb:`<svg viewBox="0 0 24 24" fill="none"><path d="M12 3a7 7 0 0 0-4 12.75c.7.5 1 1.02 1 1.75h6c0-.73.3-1.25 1-1.75A7 7 0 0 0 12 3Z" fill="#FFE7A1" stroke="#F4C35C" stroke-width="1.2"/><path d="M9.5 18h5M10 20.5h4" stroke="#F4C35C" stroke-width="1.4" stroke-linecap="round"/></svg>`,
+      chart:`<svg viewBox="0 0 24 24" fill="none"><rect x="4" y="4" width="16" height="16" rx="3" fill="#8DF5D0"/><path d="M8 16V11M12 16V8M16 16V13" stroke="#135C56" stroke-width="1.8" stroke-linecap="round"/><path d="M7 7h10" stroke="#52B8A8" stroke-width="1.2"/></svg>`,
+      plug:`<svg viewBox="0 0 24 24" fill="none"><rect x="7" y="8" width="10" height="8" rx="3" fill="#FFD79C" stroke="#D99A36" stroke-width="1.2"/><path d="M10 8V5M14 8V5M12 16v3" stroke="#D99A36" stroke-width="1.5" stroke-linecap="round"/></svg>`,
+      circle:`<svg viewBox="0 0 24 24" fill="none"><path d="M12 5a7 7 0 1 0 6.88 8.3" stroke="#74D7FF" stroke-width="2" stroke-linecap="round"/><path d="m16 4 3 1-1 3" stroke="#74D7FF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>`,
+      ohm:`<svg viewBox="0 0 24 24" fill="none"><path d="M8 18h8M8 18v-2.2c-1.9-1.2-3-3.4-3-5.9C5 5.55 8.13 3 12 3s7 2.55 7 6.9c0 2.5-1.1 4.7-3 5.9V18" stroke="#A4C7FF" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><circle cx="12" cy="9" r="1.5" fill="#58D1FF"/></svg>`,
+      shield:`<svg viewBox="0 0 24 24" fill="none"><path d="M12 3 18 5v5c0 4.4-2.7 8.2-6 10-3.3-1.8-6-5.6-6-10V5l6-2Z" fill="#6FD3FF" stroke="#2A88B2" stroke-width="1.2"/><path d="M10 11h4M12 9v4" stroke="#0B3F57" stroke-width="1.6" stroke-linecap="round"/></svg>`,
+      motor:`<svg viewBox="0 0 24 24" fill="none"><path d="M8 6h8a4 4 0 0 1 4 4v4a4 4 0 0 1-4 4H8a4 4 0 0 1-4-4v-4a4 4 0 0 1 4-4Z" fill="#8AD8FF" stroke="#1D74A0" stroke-width="1.2"/><path d="M9 12h6M12 9v6" stroke="#0D4C6C" stroke-width="1.7" stroke-linecap="round"/></svg>`,
+      pipe:`<svg viewBox="0 0 24 24" fill="none"><rect x="7" y="4" width="10" height="16" rx="3" fill="#7EE4FF" stroke="#188BAA" stroke-width="1.2"/><rect x="9.5" y="7" width="5" height="10" rx="1.5" fill="#0D3650" opacity=".55"/></svg>`
+    };
+
+    const calculators = [
+      {
+        id:'ohm', title:'Lei de Ohm', subtitle:'V, I, R e potência', tag:'V = I × R', icon:'ohm',
+        fields:[
+          {name:'V', label:'Tensão (V)', type:'number'},
+          {name:'I', label:'Corrente (A)', type:'number'},
+          {name:'R', label:'Resistência (Ω)', type:'number'},
+          {name:'P', label:'Potência (W)', type:'number'}
+        ],
+        formula:'Informe pelo menos dois valores coerentes. O app tenta calcular o valor faltante principal usando V = I × R e P = V × I.',
+        compute:v=>{
+          let V=n(v.V), I=n(v.I), R=n(v.R), P=n(v.P);
+          if(isNum(V)&&isNum(I)&&!isNum(R)) R=V/I;
+          else if(isNum(V)&&isNum(R)&&!isNum(I)) I=V/R;
+          else if(isNum(I)&&isNum(R)&&!isNum(V)) V=I*R;
+          if(isNum(V)&&isNum(I)&&!isNum(P)) P=V*I;
+          else if(isNum(P)&&isNum(V)&&!isNum(I)) I=P/V;
+          else if(isNum(P)&&isNum(I)&&!isNum(V)) V=P/I;
+          return stats([
+            ['Tensão', fmt(V,'V')],['Corrente', fmt(I,'A')],['Resistência', fmt(R,'Ω')],['Potência', fmt(P,'W')]
+          ]);
+        }
+      },
+      {
+        id:'potencia', title:'Potência', subtitle:'P, Q e S', tag:'P, Q, S', icon:'bolt',
+        fields:[
+          {name:'V', label:'Tensão (V)', type:'number'},
+          {name:'I', label:'Corrente (A)', type:'number'},
+          {name:'fp', label:'Fator de potência', type:'number', step:'0.01', value:'0.92'}
+        ],
+        formula:'Monofásico: S = V × I, P = S × fp, Q = √(S² − P²).',
+        compute:v=>{
+          const V=n(v.V), I=n(v.I), fp=clamp(n(v.fp)||0,0,1);
+          const S=V*I, P=S*fp, Q=Math.sqrt(Math.max(S*S-P*P,0));
+          return stats([
+            ['Potência ativa', fmt(P,'W')],['Potência aparente', fmt(S,'VA')],['Potência reativa', fmt(Q,'var')],['FP', fp.toFixed(2)]
+          ]);
+        }
+      },
+      {
+        id:'queda', title:'Queda de Tensão', subtitle:'Máx. 4% sugerido', tag:'ΔV%', icon:'ruler',
+        fields:[
+          {name:'sistema', label:'Sistema', type:'select', options:[['mono','Monofásico'],['tri','Trifásico']]},
+          {name:'material', label:'Material', type:'select', options:[['cobre','Cobre'],['aluminio','Alumínio']]},
+          {name:'V', label:'Tensão (V)', type:'number'},
+          {name:'I', label:'Corrente (A)', type:'number'},
+          {name:'L', label:'Comprimento (m)', type:'number'},
+          {name:'S', label:'Seção do cabo (mm²)', type:'number'}
+        ],
+        formula:'Monofásico: ΔV% = (2 × L × I × ρ)/(S × V) × 100. Trifásico: ΔV% = (√3 × L × I × ρ)/(S × V) × 100.',
+        compute:v=>{
+          const rho = v.material === 'aluminio' ? 0.0282 : 0.0175;
+          const V=n(v.V), I=n(v.I), L=n(v.L), S=n(v.S);
+          const dropV = v.sistema === 'tri' ? (Math.sqrt(3)*L*I*rho/S) : (2*L*I*rho/S);
+          const perc = dropV / V * 100;
+          const status = perc <= 4 ? 'Dentro do limite prático de 4%' : 'Acima do limite prático de 4%';
+          return stats([
+            ['Queda em volts', fmt(dropV,'V')],['Queda percentual', fmt(perc,'%')],['Status', status],['ρ usado', rho+' Ω·mm²/m']
+          ]);
+        }
+      },
+      {
+        id:'dimensionamento', title:'Dimensionamento', subtitle:'Condutor & disjuntor', tag:'Cabo + DJ', icon:'ruler',
+        fields:[
+          {name:'I', label:'Corrente de projeto (A)', type:'number'},
+          {name:'circuito', label:'Tipo de circuito', type:'select', options:[['geral','Tomadas/Carga geral'],['iluminacao','Iluminação'],['motor','Motor']]},
+          {name:'material', label:'Material', type:'select', options:[['cobre','Cobre'],['aluminio','Alumínio']]}
+        ],
+        formula:'Recomendação simplificada por faixas de corrente. Confirmar ampacidade, método de instalação, agrupamento e temperatura ambiente na norma/catálogo.',
+        compute:v=>{
+          const I=n(v.I);
+          const base = v.material === 'aluminio'
+            ? [[20,'4 mm²','20 A'],[28,'6 mm²','25 A'],[38,'10 mm²','32 A'],[50,'16 mm²','50 A'],[68,'25 mm²','63 A'],[89,'35 mm²','80 A'],[111,'50 mm²','100 A']]
+            : [[15,'1,5 mm²','10 A'],[21,'2,5 mm²','20 A'],[28,'4 mm²','25 A'],[36,'6 mm²','32 A'],[50,'10 mm²','50 A'],[68,'16 mm²','63 A'],[89,'25 mm²','80 A'],[110,'35 mm²','100 A'],[140,'50 mm²','125 A']];
+          let rec = base.find(x => I <= x[0]) || base[base.length-1];
+          if(v.circuito==='iluminacao' && rec[1]==='1,5 mm²') rec=['15','1,5 mm²','10 A'];
+          return stats([
+            ['Corrente de projeto', fmt(I,'A')],['Seção sugerida', rec[1]],['Disjuntor sugerido', rec[2]],['Observação', 'Ajuste conforme instalação real']
+          ]);
+        }
+      },
+      {
+        id:'conversao', title:'Conversão', subtitle:'W, kW, CV, V, A', tag:'Conversões', icon:'circle',
+        fields:[
+          {name:'modo', label:'Conversão', type:'select', options:[['w-kw','W → kW'],['kw-w','kW → W'],['cv-kw','CV → kW'],['kw-cv','kW → CV'],['va-a','VA → A'],['a-va','A → VA']]},
+          {name:'valor', label:'Valor', type:'number'},
+          {name:'V', label:'Tensão (V)', type:'number'}
+        ],
+        formula:'1 kW = 1000 W. 1 CV ≈ 0,7355 kW. Para corrente e potência aparente: S = V × I.',
+        compute:v=>{
+          const val=n(v.valor), V=n(v.V);
+          let a='', b='';
+          switch(v.modo){
+            case 'w-kw': a=fmt(val/1000,'kW'); b=fmt(val,'W'); break;
+            case 'kw-w': a=fmt(val*1000,'W'); b=fmt(val,'kW'); break;
+            case 'cv-kw': a=fmt(val*0.7355,'kW'); b=fmt(val,'CV'); break;
+            case 'kw-cv': a=fmt(val/0.7355,'CV'); b=fmt(val,'kW'); break;
+            case 'va-a': a=fmt(val/V,'A'); b=fmt(val,'VA'); break;
+            case 'a-va': a=fmt(val*V,'VA'); b=fmt(val,'A'); break;
+          }
+          return stats([['Resultado', a],['Entrada', b],['Tensão usada', V?fmt(V,'V'):'—'],['Obs.', 'Para sistemas trifásicos e FP, aplicar fórmula específica']]);
+        }
+      },
+      {
+        id:'iluminacao', title:'Iluminação', subtitle:'Lux e luminárias', tag:'Lux', icon:'bulb',
+        fields:[
+          {name:'area', label:'Área (m²)', type:'number'},
+          {name:'lux', label:'Iluminância desejada (lux)', type:'number'},
+          {name:'fluxo', label:'Fluxo por luminária (lm)', type:'number'},
+          {name:'fu', label:'Fator de utilização', type:'number', step:'0.01', value:'0.7'},
+          {name:'fm', label:'Fator de manutenção', type:'number', step:'0.01', value:'0.8'}
+        ],
+        formula:'Fluxo total = (lux × área) / (FU × FM). Quantidade = fluxo total / fluxo por luminária.',
+        compute:v=>{
+          const area=n(v.area), lux=n(v.lux), fluxo=n(v.fluxo), fu=n(v.fu), fm=n(v.fm);
+          const total=(lux*area)/(fu*fm);
+          const qtd=Math.ceil(total/fluxo);
+          return stats([
+            ['Fluxo total necessário', fmt(total,'lm')],['Qtd. de luminárias', qtd],['Potência indireta', 'depende do modelo'],['Nível alvo', fmt(lux,'lux')]
+          ]);
+        }
+      },
+      {
+        id:'curto', title:'Curto-Circuito', subtitle:'Icc e poder de corte', tag:'Icc', icon:'bolt',
+        fields:[
+          {name:'V', label:'Tensão de falta (V)', type:'number', value:'220'},
+          {name:'Z', label:'Impedância total do circuito (Ω)', type:'number', step:'0.001', value:'0.05'}
+        ],
+        formula:'Estimativa direta: Icc = V / Z. Escolha poder de corte do dispositivo acima do valor calculado com margem.',
+        compute:v=>{
+          const V=n(v.V), Z=n(v.Z);
+          const Icc=V/Z;
+          const breaking=[3,4.5,6,10,15,25,36,50].find(k=>Icc/1000<=k) || 70;
+          return stats([
+            ['Corrente de curto', fmt(Icc,'A')],['Corrente de curto', fmt(Icc/1000,'kA')],['Poder de corte sugerido', breaking+' kA'],['Critério', 'selecionar acima do Icc calculado']
+          ]);
+        }
+      },
+      {
+        id:'demanda', title:'Fator de Demanda', subtitle:'Demanda máxima', tag:'FD', icon:'chart',
+        fields:[
+          {name:'instalada', label:'Carga instalada (kW)', type:'number'},
+          {name:'demanda', label:'Demanda máxima (kW)', type:'number'}
+        ],
+        formula:'Fator de demanda = demanda máxima / carga instalada.',
+        compute:v=>{
+          const i=n(v.instalada), d=n(v.demanda), fd=d/i;
+          return stats([
+            ['Fator de demanda', fd.toFixed(3)],['Carga instalada', fmt(i,'kW')],['Demanda máxima', fmt(d,'kW')],['Percentual', fmt(fd*100,'%')]
+          ]);
+        }
+      },
+      {
+        id:'drdps', title:'DR / DPS', subtitle:'Dimensionamento básico', tag:'Proteção', icon:'shield',
+        fields:[
+          {name:'corrente', label:'Corrente do circuito (A)', type:'number'},
+          {name:'uso', label:'Aplicação', type:'select', options:[['tomadas','Tomadas/área molhada'],['geral','Distribuição geral'],['equip','Equipamento específico']]},
+          {name:'rede', label:'Rede', type:'select', options:[['127-220','127/220 V'],['220-380','220/380 V'],['mono220','Monofásico 220 V']]}
+        ],
+        formula:'DR: adote corrente nominal acima da corrente do circuito e sensibilidade típica de 30 mA para proteção adicional de pessoas. DPS: classe e tensão dependem da rede e do nível de exposição.',
+        compute:v=>{
+          const corrente=n(v.corrente);
+          const dr=[25,40,63,80,100].find(x=>corrente<=x) || 125;
+          const sens=v.uso==='geral' ? '300 mA (seletivo/geral, quando aplicável)' : '30 mA';
+          const dps=v.rede==='220-380' ? 'DPS classe II 275/460 V' : 'DPS classe II 175/275 V';
+          return stats([
+            ['DR recomendado', dr+' A'],['Sensibilidade típica', sens],['DPS sugerido', dps],['Obs.', 'avaliar classe I na entrada com SPDA/exposição']
+          ]);
+        }
+      },
+      {
+        id:'eletroduto', title:'Eletroduto', subtitle:'Qtd. condutores', tag:'Ocupação', icon:'pipe',
+        fields:[
+          {name:'qtd', label:'Quantidade de condutores', type:'number'},
+          {name:'secao', label:'Seção do condutor (mm²)', type:'select', options:[['1.5','1,5'],['2.5','2,5'],['4','4'],['6','6'],['10','10'],['16','16']]},
+          {name:'isol', label:'Isolação', type:'select', options:[['750','750 V PVC'],['1kv','1 kV XLPE']]}
+        ],
+        formula:'Estimativa simplificada por ocupação. Para lançamento e taxa de ocupação, conferir diâmetro externo real do cabo e tabela normativa.',
+        compute:v=>{
+          const diam={1.5:3.1,2.5:3.6,4:4.2,6:4.8,10:6.1,16:7.3};
+          const q=n(v.qtd), d=diam[parseFloat(v.secao)] || 4;
+          const areaCab=q*Math.PI*(d*d)/4;
+          const fill=0.4;
+          const areas=[[16,201],[20,314],[25,490],[32,804],[40,1256],[50,1963]];
+          const rec=areas.find(([mm,a])=>a*fill>=areaCab) || areas[areas.length-1];
+          return stats([
+            ['Área ocupada estimada', fmt(areaCab,'mm²')],['Taxa considerada', '40%'],['Eletroduto sugerido', rec[0]+' mm'],['Observação', 'usar diâmetro externo real do cabo para precisão']
+          ]);
+        }
+      },
+      {
+        id:'queda3f', title:'Queda Trifásica', subtitle:'3 fases', tag:'ΔV 3φ', icon:'ruler',
+        fields:[
+          {name:'V', label:'Tensão linha-linha (V)', type:'number'},
+          {name:'I', label:'Corrente (A)', type:'number'},
+          {name:'L', label:'Comprimento (m)', type:'number'},
+          {name:'S', label:'Seção do cabo (mm²)', type:'number'},
+          {name:'material', label:'Material', type:'select', options:[['cobre','Cobre'],['aluminio','Alumínio']]}
+        ],
+        formula:'ΔV% = (√3 × L × I × ρ)/(S × V) × 100',
+        compute:v=>{
+          const rho=v.material==='aluminio'?0.0282:0.0175;
+          const V=n(v.V),I=n(v.I),L=n(v.L),S=n(v.S);
+          const drop=(Math.sqrt(3)*L*I*rho/S);
+          const perc=drop/V*100;
+          return stats([
+            ['Queda em volts', fmt(drop,'V')],['Queda percentual', fmt(perc,'%')],['Status', perc<=4?'OK para referência rápida':'Rever seção/comprimento'],['ρ usado', rho+' Ω·mm²/m']
+          ]);
+        }
+      },
+      {
+        id:'motor', title:'Bitola Motor', subtitle:'Partida direta / Y-Δ', tag:'Motor', icon:'motor',
+        fields:[
+          {name:'pot', label:'Potência do motor (kW)', type:'number'},
+          {name:'V', label:'Tensão (V)', type:'number', value:'380'},
+          {name:'fp', label:'Fator de potência', type:'number', step:'0.01', value:'0.86'},
+          {name:'rend', label:'Rendimento', type:'number', step:'0.01', value:'0.9'}
+        ],
+        formula:'Corrente trifásica aproximada: I = P / (√3 × V × fp × η). A bitola é sugerida por faixa de corrente.',
+        compute:v=>{
+          const P=n(v.pot)*1000, V=n(v.V), fp=n(v.fp), rend=n(v.rend);
+          const I=P/(Math.sqrt(3)*V*fp*rend);
+          const base=[[12,'2,5 mm²','16 A'],[18,'4 mm²','20 A'],[26,'6 mm²','32 A'],[36,'10 mm²','40 A'],[50,'16 mm²','63 A'],[68,'25 mm²','80 A'],[89,'35 mm²','100 A']];
+          const rec=base.find(x=>I<=x[0]) || base[base.length-1];
+          return stats([
+            ['Corrente estimada', fmt(I,'A')],['Bitola sugerida', rec[1]],['Proteção sugerida', rec[2]],['Partida', 'avaliar corrente de partida e método real']
+          ]);
+        }
+      }
+    ];
+
+    function n(v){ return v==='' || v==null ? NaN : Number(v); }
+    function isNum(v){ return Number.isFinite(v); }
+    function clamp(v,min,max){ return Math.max(min, Math.min(max, v)); }
+    function fmt(v, unit=''){
+      if(!isNum(v)) return '—';
+      const abs=Math.abs(v);
+      const frac = abs >= 100 ? 1 : abs >= 10 ? 2 : 3;
+      const out = new Intl.NumberFormat('pt-BR',{maximumFractionDigits:frac}).format(v);
+      return unit ? `${out} ${unit}` : out;
+    }
+    function money(v){
+      const val = Number(v || 0);
+      return new Intl.NumberFormat('pt-BR',{style:'currency',currency:'BRL'}).format(val);
+    }
+    function stats(entries){
+      return entries.map(([k,v])=>`<div class="stat"><span class="k">${k}</span><div class="v">${v}</div></div>`).join('');
+    }
+    function escapeHtml(text=''){
+      return String(text)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
+    }
+    function readJSON(key, fallback){
+      try { return JSON.parse(localStorage.getItem(key)) ?? fallback; } catch { return fallback; }
+    }
+    function writeJSON(key, value){
+      localStorage.setItem(key, JSON.stringify(value));
+    }
+
+    const cardsEl = document.getElementById('cards');
+    const modal = document.getElementById('modal');
+    const modalTitle = document.getElementById('modalTitle');
+    const modalDesc = document.getElementById('modalDesc');
+    const formFields = document.getElementById('formFields');
+    const resultBox = document.getElementById('resultBox');
+    const formulaBox = document.getElementById('formulaBox');
+    const searchInput = document.getElementById('searchInput');
+    const authShell = document.getElementById('authShell');
+    const mainApp = document.getElementById('mainApp');
+    const userChip = document.getElementById('userChip');
+    const budgetItemsEl = document.getElementById('budgetItems');
+    const budgetSummary = document.getElementById('budgetSummary');
+    const budgetHistory = document.getElementById('budgetHistory');
+    const googleHint = document.getElementById('googleHint');
+    let activeCalc = null;
+    let budgetItems = [];
+
+    function renderCards(filter=''){
+      const q = filter.trim().toLowerCase();
+      cardsEl.innerHTML = calculators
+        .filter(c => !q || `${c.title} ${c.subtitle} ${c.tag}`.toLowerCase().includes(q))
+        .map((c,i)=>`
+          <button class="card ${i===3?'active':''}" data-id="${c.id}">
+            <div class="icon-box">${icons[c.icon] || icons.bolt}</div>
+            <div>
+              <h3>${c.title}</h3>
+              <p>${c.subtitle}</p>
+            </div>
+            <span class="pill">${c.tag}</span>
+          </button>
+        `).join('');
+      cardsEl.querySelectorAll('.card').forEach(btn => btn.addEventListener('click', () => openCalc(btn.dataset.id)));
+    }
+
+    function openCalc(id){
+      activeCalc = calculators.find(c => c.id === id);
+      if(!activeCalc) return;
+      modalTitle.textContent = activeCalc.title;
+      modalDesc.textContent = activeCalc.subtitle;
+      formulaBox.textContent = activeCalc.formula;
+      formFields.innerHTML = activeCalc.fields.map(f => renderField(f)).join('');
+      resultBox.innerHTML = '<div class="stat"><span class="k">Pronto para calcular</span><div class="v">Preencha os campos e toque em “Calcular”.</div></div>';
+      modal.classList.add('open');
+    }
+
+    function renderField(f){
+      if(f.type === 'select'){
+        return `<div class="field ${f.full?'full':''}"><label>${f.label}</label><select name="${f.name}">${(f.options||[]).map(([v,l])=>`<option value="${v}">${l}</option>`).join('')}</select></div>`;
+      }
+      return `<div class="field ${f.full?'full':''}"><label>${f.label}</label><input name="${f.name}" type="${f.type||'text'}" step="${f.step||'any'}" value="${f.value||''}" placeholder="${f.placeholder||''}" /></div>`;
+    }
+
+    function getFormValues(){
+      const vals={};
+      formFields.querySelectorAll('input,select').forEach(el => vals[el.name] = el.value);
+      return vals;
+    }
+
+    function setAuthTab(tab){
+      document.querySelectorAll('[data-auth-tab]').forEach(btn => btn.classList.toggle('active', btn.dataset.authTab === tab));
+      document.getElementById('loginForm').classList.toggle('hidden', tab !== 'login');
+      document.getElementById('registerForm').classList.toggle('hidden', tab !== 'register');
+    }
+
+    function getSession(){
+      return readJSON(storageKeys.session, null);
+    }
+
+    function setSession(session){
+      writeJSON(storageKeys.session, session);
+      syncAuthUI();
+    }
+
+    function syncAuthUI(){
+      const session = getSession();
+      if(session){
+        authShell.classList.add('hidden');
+        mainApp.classList.remove('hidden');
+        userChip.textContent = `${session.name || session.email || 'Usuário'} · ${session.provider === 'google' ? 'Google' : 'E-mail'}`;
+      } else {
+        authShell.classList.remove('hidden');
+        mainApp.classList.add('hidden');
+      }
+    }
+
+    function registerUser(payload){
+      const users = readJSON(storageKeys.users, []);
+      if(users.some(user => user.email.toLowerCase() === payload.email.toLowerCase())){
+        throw new Error('Já existe uma conta com este e-mail.');
+      }
+      users.push(payload);
+      writeJSON(storageKeys.users, users);
+      return payload;
+    }
+
+    function loginUser(email, password){
+      const users = readJSON(storageKeys.users, []);
+      const user = users.find(item => item.email.toLowerCase() === email.toLowerCase() && item.password === password);
+      if(!user) throw new Error('E-mail ou senha inválidos.');
+      return user;
+    }
+
+    function parseJwt(token) {
+      try {
+        const base64Url = token.split('.')[1];
+        const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+        const jsonPayload = decodeURIComponent(atob(base64).split('').map(c => `%${('00' + c.charCodeAt(0).toString(16)).slice(-2)}`).join(''));
+        return JSON.parse(jsonPayload);
+      } catch {
+        return null;
+      }
+    }
+
+    function initGoogleAuth(){
+      const googleClientId = window.APP_CONFIG?.googleClientId;
+      if(!googleClientId){
+        googleHint.textContent = 'Configure o googleClientId em config.js para ativar o login com Google.';
+        return;
+      }
+      if(!window.google || !window.google.accounts?.id) {
+        googleHint.textContent = 'Não foi possível carregar o botão do Google.';
+        return;
+      }
+      googleHint.textContent = 'Login Google configurado.';
+      window.google.accounts.id.initialize({
+        client_id: googleClientId,
+        callback: handleGoogleResponse,
+        auto_select: false,
+        cancel_on_tap_outside: true
+      });
+      window.google.accounts.id.renderButton(document.getElementById('googleSignInButton'), {
+        type: 'standard',
+        theme: 'outline',
+        size: 'large',
+        text: 'signin_with',
+        shape: 'pill',
+        width: 280
+      });
+    }
+
+    function handleGoogleResponse(response){
+      const profile = parseJwt(response.credential);
+      if(!profile){
+        toast('Falha ao validar o login do Google.');
+        return;
+      }
+      setSession({
+        provider: 'google',
+        name: profile.name,
+        email: profile.email,
+        picture: profile.picture || ''
+      });
+      toast('Login com Google realizado com sucesso');
+    }
+
+    function logout(){
+      localStorage.removeItem(storageKeys.session);
+      if(window.google?.accounts?.id){
+        window.google.accounts.id.disableAutoSelect();
+      }
+      syncAuthUI();
+      toast('Sessão encerrada');
+    }
+
+    function createBudgetItem(data = {}){
+      return {
+        description: data.description || '',
+        quantity: Number(data.quantity ?? 1),
+        unitPrice: Number(data.unitPrice ?? 0)
+      };
+    }
+
+    function renderBudgetItems(){
+      if(!budgetItems.length){
+        budgetItems = [createBudgetItem()];
+      }
+      budgetItemsEl.innerHTML = budgetItems.map((item, index) => `
+        <div class="item-row" data-index="${index}">
+          <div class="field full">
+            <label>Descrição do item ${index + 1}</label>
+            <input type="text" data-item-field="description" value="${escapeHtml(item.description)}" placeholder="Ex.: troca de disjuntor, cabo, mão de obra" />
+          </div>
+          <div class="field">
+            <label>Qtd.</label>
+            <input type="number" data-item-field="quantity" step="0.01" value="${item.quantity}" />
+          </div>
+          <div class="field">
+            <label>Valor unitário</label>
+            <input type="number" data-item-field="unitPrice" step="0.01" value="${item.unitPrice}" />
+          </div>
+          <div class="item-total">
+            <span>Total do item</span>
+            <strong>${money(item.quantity * item.unitPrice)}</strong>
+          </div>
+          <button class="btn ghost remove-item" type="button">Remover</button>
+        </div>
+      `).join('');
+
+      budgetItemsEl.querySelectorAll('.item-row').forEach(row => {
+        const index = Number(row.dataset.index);
+        row.querySelectorAll('[data-item-field]').forEach(input => {
+          input.addEventListener('input', () => {
+            const field = input.dataset.itemField;
+            budgetItems[index][field] = field === 'description' ? input.value : Number(input.value || 0);
+            renderBudgetItems();
+            calculateBudget(false);
+          });
+        });
+        row.querySelector('.remove-item').addEventListener('click', () => {
+          budgetItems.splice(index, 1);
+          if(!budgetItems.length) budgetItems.push(createBudgetItem());
+          renderBudgetItems();
+          calculateBudget(false);
+        });
+      });
+    }
+
+    function getBudgetFormData(){
+      return {
+        companyName: document.getElementById('companyName').value.trim(),
+        budgetNumber: document.getElementById('budgetNumber').value.trim() || `ORC-${Date.now()}`,
+        budgetDate: document.getElementById('budgetDate').value,
+        clientName: document.getElementById('clientName').value.trim(),
+        clientAddress: document.getElementById('clientAddress').value.trim(),
+        budgetDescription: document.getElementById('budgetDescription').value.trim(),
+        discount: Number(document.getElementById('discount').value || 0),
+        validity: document.getElementById('validity').value.trim(),
+        notes: document.getElementById('notes').value.trim(),
+        items: budgetItems.map(createBudgetItem)
+      };
+    }
+
+    function calculateBudget(showToast = true){
+      const budget = getBudgetFormData();
+      const subtotal = budget.items.reduce((acc, item) => acc + (Number(item.quantity) * Number(item.unitPrice)), 0);
+      const total = Math.max(subtotal - budget.discount, 0);
+      budgetSummary.innerHTML = stats([
+        ['Cliente', budget.clientName || '—'],
+        ['Subtotal', money(subtotal)],
+        ['Desconto', money(budget.discount)],
+        ['Total final', money(total)]
+      ]);
+      if(showToast) toast('Orçamento atualizado');
+      return { ...budget, subtotal, total };
+    }
+
+    function saveBudget(){
+      const budget = calculateBudget(false);
+      const history = readJSON(storageKeys.budgets, []);
+      history.unshift({ ...budget, savedAt: new Date().toISOString() });
+      writeJSON(storageKeys.budgets, history.slice(0, 5));
+      renderBudgetHistory();
+      toast('Orçamento salvo localmente');
+    }
+
+    function loadBudget(budget){
+      document.getElementById('companyName').value = budget.companyName || '';
+      document.getElementById('budgetNumber').value = budget.budgetNumber || '';
+      document.getElementById('budgetDate').value = budget.budgetDate || '';
+      document.getElementById('clientName').value = budget.clientName || '';
+      document.getElementById('clientAddress').value = budget.clientAddress || '';
+      document.getElementById('budgetDescription').value = budget.budgetDescription || '';
+      document.getElementById('discount').value = budget.discount || 0;
+      document.getElementById('validity').value = budget.validity || '';
+      document.getElementById('notes').value = budget.notes || '';
+      budgetItems = (budget.items || []).map(createBudgetItem);
+      renderBudgetItems();
+      calculateBudget(false);
+    }
+
+    function renderBudgetHistory(){
+      const history = readJSON(storageKeys.budgets, []);
+      if(!history.length){
+        budgetHistory.innerHTML = '<div class="stat"><span class="k">Nenhum orçamento salvo</span><div class="v">Crie e salve seu primeiro orçamento.</div></div>';
+        return;
+      }
+      budgetHistory.innerHTML = history.map((budget, index) => `
+        <button class="history-card" data-history-index="${index}" type="button">
+          <span class="history-title">${escapeHtml(budget.clientName || budget.budgetNumber || 'Orçamento')}</span>
+          <span class="history-meta">${escapeHtml(budget.budgetNumber || 'Sem número')} · ${money(budget.total || 0)}</span>
+        </button>
+      `).join('');
+      budgetHistory.querySelectorAll('.history-card').forEach(card => {
+        card.addEventListener('click', () => {
+          const selected = history[Number(card.dataset.historyIndex)];
+          loadBudget(selected);
+          toast('Orçamento carregado');
+        });
+      });
+    }
+
+    function exportBudgetPdf(){
+      const budget = calculateBudget(false);
+      if(!budget.clientName && !budget.companyName){
+        toast('Preencha ao menos empresa ou cliente antes de exportar');
+        return;
+      }
+
+      const fileName = `${(budget.budgetNumber || 'orcamento').replace(/[^a-z0-9_-]+/gi, '-')}.pdf`;
+      const jsPDF = window.jspdf?.jsPDF;
+
+      if(!jsPDF){
+        const printWindow = window.open('', '_blank');
+        printWindow.document.write(`
+          <html><head><title>${budget.budgetNumber}</title><style>
+          body{font-family:Arial,sans-serif;padding:32px;color:#111} h1{margin:0 0 12px} table{width:100%;border-collapse:collapse;margin-top:16px} td,th{border:1px solid #ddd;padding:8px;text-align:left} .total{margin-top:18px;font-size:18px;font-weight:bold}
+          </style></head><body>
+          <h1>Orçamento ${escapeHtml(budget.budgetNumber)}</h1>
+          <p><strong>Empresa:</strong> ${escapeHtml(budget.companyName || '—')}</p>
+          <p><strong>Cliente:</strong> ${escapeHtml(budget.clientName || '—')}</p>
+          <p><strong>Data:</strong> ${escapeHtml(budget.budgetDate || '—')}</p>
+          <p><strong>Descrição:</strong> ${escapeHtml(budget.budgetDescription || '—')}</p>
+          <table><thead><tr><th>Descrição</th><th>Qtd.</th><th>Valor unitário</th><th>Total</th></tr></thead><tbody>
+          ${budget.items.map(item => `<tr><td>${escapeHtml(item.description || 'Item')}</td><td>${item.quantity}</td><td>${money(item.unitPrice)}</td><td>${money(item.quantity * item.unitPrice)}</td></tr>`).join('')}
+          </tbody></table>
+          <div class="total">Total final: ${money(budget.total)}</div>
+          <script>window.print();<\/script>
+          </body></html>
+        `);
+        printWindow.document.close();
+        toast('Abrimos a visualização para salvar em PDF');
+        return;
+      }
+
+      const doc = new jsPDF({ unit: 'pt', format: 'a4' });
+      const pageWidth = doc.internal.pageSize.getWidth();
+      const margin = 40;
+      let y = 50;
+
+      doc.setFont('helvetica', 'bold');
+      doc.setFontSize(22);
+      doc.text('Orçamento de Serviços Elétricos', margin, y);
+      y += 26;
+
+      doc.setFontSize(11);
+      doc.setFont('helvetica', 'normal');
+      doc.text(`Número: ${budget.budgetNumber || '—'}`, margin, y);
+      doc.text(`Data: ${budget.budgetDate || '—'}`, pageWidth - 190, y);
+      y += 18;
+      doc.text(`Empresa: ${budget.companyName || '—'}`, margin, y);
+      y += 18;
+      doc.text(`Cliente: ${budget.clientName || '—'}`, margin, y);
+      y += 18;
+      doc.text(`Endereço: ${budget.clientAddress || '—'}`, margin, y);
+      y += 24;
+
+      doc.setFont('helvetica', 'bold');
+      doc.text('Descrição do serviço', margin, y);
+      y += 14;
+      doc.setFont('helvetica', 'normal');
+      const descLines = doc.splitTextToSize(budget.budgetDescription || '—', pageWidth - margin * 2);
+      doc.text(descLines, margin, y);
+      y += descLines.length * 14 + 12;
+
+      doc.setFont('helvetica', 'bold');
+      doc.text('Itens', margin, y);
+      y += 16;
+
+      const colX = [margin, 300, 380, 470];
+      doc.setFillColor(240, 245, 255);
+      doc.rect(margin, y - 12, pageWidth - margin * 2, 22, 'F');
+      doc.setTextColor(20, 32, 53);
+      doc.text('Descrição', colX[0], y + 2);
+      doc.text('Qtd.', colX[1], y + 2);
+      doc.text('Unitário', colX[2], y + 2);
+      doc.text('Total', colX[3], y + 2);
+      doc.setTextColor(0,0,0);
+      y += 22;
+
+      doc.setFont('helvetica', 'normal');
+      budget.items.forEach((item) => {
+        const desc = doc.splitTextToSize(item.description || 'Item', 240);
+        const height = Math.max(20, desc.length * 14);
+        if(y + height > 760){
+          doc.addPage();
+          y = 50;
+        }
+        doc.text(desc, colX[0], y);
+        doc.text(String(item.quantity || 0), colX[1], y);
+        doc.text(money(item.unitPrice || 0), colX[2], y);
+        doc.text(money((item.quantity || 0) * (item.unitPrice || 0)), colX[3], y);
+        y += height;
+        doc.line(margin, y, pageWidth - margin, y);
+        y += 12;
+      });
+
+      y += 8;
+      doc.setFont('helvetica', 'bold');
+      doc.text(`Subtotal: ${money(budget.subtotal)}`, pageWidth - 210, y);
+      y += 18;
+      doc.text(`Desconto: ${money(budget.discount)}`, pageWidth - 210, y);
+      y += 18;
+      doc.text(`Total final: ${money(budget.total)}`, pageWidth - 210, y);
+      y += 28;
+
+      doc.setFont('helvetica', 'normal');
+      const notesLines = doc.splitTextToSize(`Validade: ${budget.validity || '—'}\nObservações: ${budget.notes || '—'}`, pageWidth - margin * 2);
+      doc.text(notesLines, margin, y);
+
+      doc.save(fileName);
+      toast('PDF gerado com sucesso');
+    }
+
+    document.getElementById('calcBtn').addEventListener('click', () => {
+      if(!activeCalc) return;
+      try {
+        resultBox.innerHTML = activeCalc.compute(getFormValues());
+        toast('Cálculo atualizado');
+      } catch (e) {
+        resultBox.innerHTML = '<div class="stat"><span class="k">Erro</span><div class="v">Revise os dados informados.</div></div>';
+      }
+    });
+
+    document.getElementById('clearBtn').addEventListener('click', () => {
+      formFields.querySelectorAll('input').forEach(i => i.value = '');
+      formFields.querySelectorAll('select').forEach((s) => s.selectedIndex = 0);
+      resultBox.innerHTML = '<div class="stat"><span class="k">Campos limpos</span><div class="v">Preencha novamente para recalcular.</div></div>';
+    });
+
+    document.getElementById('closeModal').addEventListener('click', () => modal.classList.remove('open'));
+    modal.addEventListener('click', e => { if(e.target === modal) modal.classList.remove('open'); });
+    searchInput.addEventListener('input', e => renderCards(e.target.value));
+
+    document.querySelectorAll('[data-auth-tab]').forEach(btn => {
+      btn.addEventListener('click', () => setAuthTab(btn.dataset.authTab));
+    });
+
+    document.getElementById('loginForm').addEventListener('submit', (event) => {
+      event.preventDefault();
+      const email = document.getElementById('loginEmail').value.trim();
+      const password = document.getElementById('loginPassword').value;
+      try {
+        const user = loginUser(email, password);
+        setSession({ provider: 'email', name: user.name, email: user.email });
+        toast('Login realizado com sucesso');
+      } catch (error) {
+        toast(error.message);
+      }
+    });
+
+    document.getElementById('registerForm').addEventListener('submit', (event) => {
+      event.preventDefault();
+      const payload = {
+        name: document.getElementById('registerName').value.trim(),
+        email: document.getElementById('registerEmail').value.trim(),
+        password: document.getElementById('registerPassword').value
+      };
+      try {
+        registerUser(payload);
+        setSession({ provider: 'email', name: payload.name, email: payload.email });
+        toast('Conta criada com sucesso');
+      } catch (error) {
+        toast(error.message);
+      }
+    });
+
+    document.getElementById('logoutBtn').addEventListener('click', logout);
+    document.getElementById('addItemBtn').addEventListener('click', () => {
+      budgetItems.push(createBudgetItem());
+      renderBudgetItems();
+    });
+    document.getElementById('calcBudgetBtn').addEventListener('click', () => calculateBudget(true));
+    document.getElementById('saveBudgetBtn').addEventListener('click', saveBudget);
+    document.getElementById('loadLastBudgetBtn').addEventListener('click', () => {
+      const history = readJSON(storageKeys.budgets, []);
+      if(!history.length){
+        toast('Não há orçamento salvo');
+        return;
+      }
+      loadBudget(history[0]);
+      toast('Último orçamento carregado');
+    });
+    document.getElementById('pdfBudgetBtn').addEventListener('click', exportBudgetPdf);
+
+    window.addEventListener('beforeinstallprompt', (e) => {
+      e.preventDefault();
+      deferredPrompt = e;
+      document.getElementById('installBtn').hidden = false;
+    });
+
+    document.getElementById('installBtn').addEventListener('click', async () => {
+      if(!deferredPrompt) return;
+      deferredPrompt.prompt();
+      await deferredPrompt.userChoice;
+      deferredPrompt = null;
+      document.getElementById('installBtn').hidden = true;
+    });
+
+    if('serviceWorker' in navigator){
+      window.addEventListener('load', () => navigator.serviceWorker.register('./sw.js').catch(()=>{}));
+    }
+
+    document.getElementById('budgetDate').value = new Date().toISOString().slice(0,10);
+    document.getElementById('budgetNumber').value = `ORC-${new Date().toISOString().slice(0,10).replace(/-/g,'')}`;
+    document.getElementById('companyName').value = 'Elétrica Pro Serviços';
+
+    renderCards();
+    renderBudgetItems();
+    renderBudgetHistory();
+    calculateBudget(false);
+    syncAuthUI();
+    window.addEventListener('load', initGoogleAuth);
+  </script>
+</body>
+</html>
